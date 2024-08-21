@@ -1,5 +1,5 @@
 export const axiosConfig = {
-  baseUrl: '/',
+  baseUrl: 'http://localhost:3000/',
   timeout: 10000
 }
 
@@ -36,7 +36,7 @@ export const contactInfo: LinkInfo = {
   github: {
     name: 'Github',
     fontawesomeClass: 'fa-brands fa-github',
-    description: 'haruki1953',
+    description: 'tweet-blog-vue3',
     link: 'https://github.com/haruki1953/tweet-blog-vue3'
   }
 }

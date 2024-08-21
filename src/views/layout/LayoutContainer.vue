@@ -8,9 +8,9 @@ import {
   Sunrise,
   MoreFilled
 } from '@element-plus/icons-vue'
-import LinkGroup from './components/LinkGroup.vue'
 import DecorationDot from './components/DecorationDot.vue'
 import { webName } from '@/config'
+import { dataConfirmLoginService } from '@/services'
 
 const isDark = useDark({ disableTransition: false })
 const toggleDark = useToggle(isDark)
@@ -36,11 +36,11 @@ const showMenuBoxToggle = () => {
 }
 
 // const bgmDataStore = useBangumiStore()
-onMounted(async () => {
+onMounted(() => {
+  // check login
+  dataConfirmLoginService()
   // // 初始化、请求数据
   // await bgmDataStore.initData()
-  // // 显示通知 检查已读
-  // bgmDataStore.showNotif(true)
 })
 </script>
 <template>
@@ -120,7 +120,7 @@ onMounted(async () => {
       :show-close="false"
       :with-header="false"
       :lock-scroll="false"
-      size="380"
+      :size="56 * 1 + 156"
       :z-index="29"
     >
       <div class="menu-box">

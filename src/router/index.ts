@@ -1,12 +1,18 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import LayoutContainer from '@/views/layout/LayoutContainer.vue'
 import HomePage from '@/views/home/HomePage.vue'
+import LoginPage from '@/views/login/LoginPage.vue'
 import { webName } from '@/config'
 import { ref } from 'vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/login',
+      component: LoginPage,
+      meta: { title: `登录` }
+    },
     {
       path: '/',
       component: LayoutContainer,

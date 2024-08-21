@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 // 番剧数据模块
 export const useSettingStore = defineStore(
-  'sakiko-utils-setting',
+  'tweet-setting',
   () => {
     const isLoadingData = ref(false)
     return {
