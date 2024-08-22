@@ -1,6 +1,4 @@
-<script setup lang="ts">
-ElMessage('HelloWorld')
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>

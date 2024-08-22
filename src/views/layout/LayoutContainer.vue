@@ -11,6 +11,9 @@ import {
 import DecorationDot from './components/DecorationDot.vue'
 import { webName } from '@/config'
 import { dataConfirmLoginService } from '@/services'
+import { useSettingStore } from '@/stores'
+
+const settingStore = useSettingStore()
 
 const isDark = useDark({ disableTransition: false })
 const toggleDark = useToggle(isDark)
@@ -90,9 +93,12 @@ onMounted(() => {
     <div class="menu-item decoration-item sm">
       <DecorationDot
         class="decoration-dot"
-        :class="{ hidden: !arrivedState.top }"
+        :class="{ hidden: !arrivedState.top && !settingStore.isLoadingData }"
       ></DecorationDot>
-      <div class="decoration-text" :class="{ show: !arrivedState.top }">
+      <div
+        class="decoration-text"
+        :class="{ show: !arrivedState.top && !settingStore.isLoadingData }"
+      >
         {{ $route.meta.title || webName }}
       </div>
     </div>
@@ -112,7 +118,7 @@ onMounted(() => {
     <div class="shim"></div>
   </el-menu>
 
-  <!-- 小平时顶部弹出的菜单抽屉 -->
+  <!-- 小屏时顶部弹出的菜单抽屉 -->
   <div class="sm-menu">
     <el-drawer
       v-model="showMenuBox"
@@ -313,9 +319,9 @@ $ref-padding-16: 300px;
 $ref-padding-shim-12: 100px;
 $ref-padding-shim-14: 150px;
 $ref-padding-shim-16: 200px;
-$ref-padding-top: 80px;
+$ref-padding-top: 60px;
 .container {
-  padding: $ref-padding-top 20px 20px 20px;
+  padding: $ref-padding-top 20px 0 20px;
   margin: 0 auto;
   max-width: 1920px;
 }
@@ -325,7 +331,7 @@ $ref-padding-top: 80px;
 }
 @media (min-width: 1200px) {
   .container {
-    padding: $ref-padding-top $ref-padding-12 20px $ref-padding-12;
+    padding: $ref-padding-top $ref-padding-12 0 $ref-padding-12;
   }
   .shim {
     width: $ref-padding-shim-12;
@@ -333,7 +339,7 @@ $ref-padding-top: 80px;
 }
 @media (min-width: 1400px) {
   .container {
-    padding: $ref-padding-top $ref-padding-14 20px $ref-padding-14;
+    padding: $ref-padding-top $ref-padding-14 0 $ref-padding-14;
   }
   .shim {
     width: $ref-padding-shim-14;
@@ -341,18 +347,18 @@ $ref-padding-top: 80px;
 }
 @media (min-width: 1600px) {
   .container {
-    padding: $ref-padding-top $ref-padding-16 20px $ref-padding-16;
+    padding: $ref-padding-top $ref-padding-16 0 $ref-padding-16;
   }
   .shim {
     width: $ref-padding-shim-16;
   }
 }
 // 1920px将会以6列显示，所以将padding改小
-@media (min-width: 1920px) {
-  .container {
-    padding: $ref-padding-top 100px 20px 100px;
-  }
-}
+// @media (min-width: 1920px) {
+//   .container {
+//     padding: $ref-padding-top 100px 20px 100px;
+//   }
+// }
 
 .sm.sm {
   // 增加权重

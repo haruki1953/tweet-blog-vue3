@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import userAvatar from '@/assets/haruki.jpg'
+
+// withDefaults(
+//   defineProps<{
+//     showLinkGroup?: boolean
+//   }>(),
+//   {
+//     showLinkGroup: false
+//   }
+// )
 </script>
 <template>
   <div class="profile-card">
@@ -23,8 +32,8 @@ import userAvatar from '@/assets/haruki.jpg'
         <div class="info-text">图片</div>
       </div>
     </div>
-    <div class="link-box">
-      <LinkGroup></LinkGroup>
+    <div class="solt-box">
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -57,7 +66,6 @@ import userAvatar from '@/assets/haruki.jpg'
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-bottom: 20px;
     background-color: var(--color-background-soft);
     border-radius: 20px;
     transition: all 0.5s;
@@ -73,7 +81,7 @@ import userAvatar from '@/assets/haruki.jpg'
       }
       .info-text {
         font-size: 12px;
-        // color: var(--el-border-color);
+        color: var(--color-text-soft);
       }
     }
     .el-divider {
@@ -82,7 +90,7 @@ import userAvatar from '@/assets/haruki.jpg'
       --el-border-color: var(--color-border);
     }
   }
-  .link-box {
+  .solt-box {
     display: flex;
     justify-content: center;
   }

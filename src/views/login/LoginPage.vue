@@ -126,11 +126,9 @@ const login = async () => {
           background-color: var(--color-background-soft);
           transition: all 0.5s;
           box-shadow: none;
-
           &:hover {
             box-shadow: none;
           }
-
           .el-input__inner {
             // color: var(--color-text);
             margin-left: 5px;
@@ -145,10 +143,8 @@ const login = async () => {
     display: flex;
     justify-content: center;
     margin: 0 20px;
-
     .button {
       width: 100%;
-
       :deep() {
         .el-button__text--expand {
           color: var(--color-background);
