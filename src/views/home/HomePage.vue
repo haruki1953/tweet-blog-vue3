@@ -1,8 +1,21 @@
 <script setup lang="ts">
 import ProfileCard from './components/ProfileCard.vue'
-import PostCard from './components/PostCard.vue'
+import PostGroup from './components/PostGroup.vue'
+import { usePostStore } from '@/stores'
+import { onMounted } from 'vue'
+import { computed } from 'vue'
 
 const profileHeight = window.innerHeight - 61
+
+const postStore = usePostStore()
+
+onMounted(async () => {
+  await postStore.getPosts()
+})
+
+const postList = computed(() => {
+  return postStore.postList
+})
 </script>
 <template>
   <div class="home-page">
@@ -31,8 +44,12 @@ const profileHeight = window.innerHeight - 61
       </el-col>
       <el-col :md="14" :sm="24">
         <div class="posts">
-          <PostCard></PostCard>
-          <PostCard></PostCard>
+          <PostGroup
+            v-for="postGroup in postList"
+            :key="postGroup[postGroup.length - 1].id"
+            :data="postGroup"
+          >
+          </PostGroup>
         </div>
       </el-col>
     </el-row>
@@ -70,7 +87,7 @@ const profileHeight = window.innerHeight - 61
       span {
         color: var(--color-background);
         font-weight: bold;
-        transition: all 0.5s;
+        transition: all 0.2s;
         // letter-spacing: 6px;
       }
     }

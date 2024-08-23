@@ -1,29 +1,39 @@
 <script setup lang="ts">
 import {
   ChatSquare,
+  ChatLineSquare,
   Connection,
   Delete,
   EditPen,
   Star
 } from '@element-plus/icons-vue'
+import ImageGroup from './ImageGroup.vue'
+import type { PostData } from '@/types'
+
+defineProps<{
+  data: PostData
+}>()
 </script>
 <template>
   <div class="post-card">
     <div class="info-bar">
-      <div class="repost"></div>
-      <div class="time">2024-07-09 13:15</div>
+      <div class="info">
+        <div class="repost" v-if="data.parentPost != null">
+          <el-icon :size="15">
+            <ChatLineSquare />
+          </el-icon>
+          <div class="repost-text">
+            {{ data.parentPost.content }}
+          </div>
+        </div>
+      </div>
+      <div class="time">{{ data.createdAt }}</div>
     </div>
     <div class="content-box">
-      <div class="content">这俩人以后结婚肯定天天玩4i</div>
+      <div class="content">{{ data.content }}</div>
     </div>
-    <div class="image-box">
-      <div class="image">
-        <el-image
-          class="post-img"
-          fit="cover"
-          src="https://wx2.sinaimg.cn/mw2000/008zXk04ly1hsrz9i0iu8j31hc0u0jtx.jpg"
-        ></el-image>
-      </div>
+    <div class="image-box" v-if="data.images.length > 0">
+      <ImageGroup :data="data.images"></ImageGroup>
     </div>
     <div class="button-box">
       <el-button type="primary" :icon="ChatSquare" circle size="small" />
@@ -37,58 +47,58 @@ import {
 
 <style lang="scss" scoped>
 .post-card {
-  margin-bottom: 15px;
-  padding: 12px 20px 12px 20px;
-  background-color: var(--color-background-soft);
-  border-radius: 20px;
-  transition: all 0.5s;
   .info-bar {
+    height: 12px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    .info {
+      width: 50%;
+      .repost {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        color: var(--color-text-soft);
+        .el-icon {
+          margin-right: 5px;
+        }
+        .repost-text {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
     .time {
-      line-height: 12px;
+      display: flex;
+      align-items: center;
       font-size: 12px;
       color: var(--color-text-soft);
     }
   }
   .content-box {
-    margin-top: 5px;
-    margin-bottom: 12px;
     display: flex;
     justify-content: center;
+    padding: 4px 0 8px 0;
     .content {
+      color: var(--color-text);
       white-space: pre-line;
+      transition: all 0.2s;
     }
+  }
+  .image-box {
+    margin: 0;
   }
   .button-box {
     max-width: 300px;
     margin: 0 auto;
+    margin-top: 12px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-  }
-}
-.image-box {
-  margin-bottom: 12px;
-  border-radius: 20px;
-  .post-img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 20px;
-    :deep() {
-      .el-image__inner.is-loading {
-        display: none;
-      }
-      .el-image__wrapper,
-      .el-image__error {
-        position: static;
-        width: 100%;
-        border-radius: 20px;
-        aspect-ratio: 16 / 9;
-        transition: background-color 0.5s;
-        background-color: var(--color-background);
-      }
+    .el-button {
+      margin: 0;
     }
   }
 }

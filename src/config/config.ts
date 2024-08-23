@@ -3,6 +3,12 @@ export const axiosConfig = {
   timeout: 10000
 }
 
+const imageBaseUrl = 'http://localhost:5500/'
+export const imageConfig = {
+  baseUrl: imageBaseUrl,
+  smallBaseUrl: `${imageBaseUrl}small/`
+}
+
 export const webName = '小祥の博客'
 
 // logo图标

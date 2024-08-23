@@ -78,6 +78,8 @@ import userAvatar from '@/assets/haruki.jpg'
       .info-val {
         font-size: 20px;
         font-weight: bold;
+        color: var(--color-text);
+        transition: all 0.2s;
       }
       .info-text {
         font-size: 12px;
