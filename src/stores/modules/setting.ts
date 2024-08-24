@@ -5,8 +5,12 @@ export const useSettingStore = defineStore(
   'tweet-setting',
   () => {
     const isLoadingData = ref(false)
+    const setLoading = (isLoading: boolean) => {
+      isLoadingData.value = isLoading
+    }
     return {
-      isLoadingData
+      isLoadingData,
+      setLoading
     }
   },
   {

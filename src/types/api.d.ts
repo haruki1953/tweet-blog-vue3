@@ -1,5 +1,5 @@
 import type { AxiosResponse } from 'axios'
-import type { Post } from './data'
+import type { Post, Image } from './data'
 
 // api方法返回值类型的，dataType为返回数据的类型
 export type ResData<DataType = undefined> = Promise<

@@ -1,7 +1,7 @@
 export interface PostBase {
   id: number
-  createdAt: Date
-  addedAt: Date
+  createdAt: string
+  addedAt: string
   content: string
   isDeleted: boolean
   parentPostId: number | null
@@ -20,7 +20,7 @@ export interface Image {
   id: number
   alt: string | null
   path: string
-  addedAt: Date
+  addedAt: string
   smallSize: number
   largeSize: number
   originalSize: number

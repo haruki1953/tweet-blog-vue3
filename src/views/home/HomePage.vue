@@ -4,6 +4,9 @@ import PostGroup from './components/PostGroup.vue'
 import { usePostStore } from '@/stores'
 import { onMounted } from 'vue'
 import { computed } from 'vue'
+import { useWorkStore } from '@/stores'
+
+const workStore = useWorkStore()
 
 const profileHeight = window.innerHeight - 61
 
@@ -16,13 +19,22 @@ onMounted(async () => {
 const postList = computed(() => {
   return postStore.postList
 })
+
+const sendPost = () => {
+  workStore.showPostSendDialog()
+}
 </script>
 <template>
   <div class="home-page">
     <div class="profile-m hidden-md-and-up">
       <ProfileCard>
         <div class="profile-solt">
-          <el-button class="profile-button" type="primary" round>
+          <el-button
+            class="profile-button"
+            type="primary"
+            round
+            @click="sendPost"
+          >
             发 帖
           </el-button>
         </div>
@@ -34,7 +46,12 @@ const postList = computed(() => {
           <el-scrollbar :height="profileHeight">
             <ProfileCard>
               <div class="profile-solt">
-                <el-button class="profile-button" type="primary" round>
+                <el-button
+                  class="profile-button"
+                  type="primary"
+                  round
+                  @click="sendPost"
+                >
                   发 帖
                 </el-button>
               </div>

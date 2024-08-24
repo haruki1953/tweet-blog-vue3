@@ -22,6 +22,11 @@ const router = createRouter({
           component: HomePage,
           meta: { title: `` }
         }
+        // {
+        //   path: '/send',
+        //   component: PostSend,
+        //   meta: { title: `发送 - 更新` }
+        // }
       ]
     }
   ],

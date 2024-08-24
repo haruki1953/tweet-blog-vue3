@@ -131,9 +131,10 @@ const imgSamllUrl = (path: string) => {
   border: 1px solid transparent;
   :deep() {
     .el-image__inner.is-loading {
-      display: none;
+      width: 100%;
+      aspect-ratio: var(--aspect-ratio-val);
     }
-    .el-image__wrapper,
+    .el-image__placeholder,
     .el-image__error {
       position: static;
       width: 100%;

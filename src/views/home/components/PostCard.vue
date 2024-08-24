@@ -9,6 +9,7 @@ import {
 } from '@element-plus/icons-vue'
 import ImageGroup from './ImageGroup.vue'
 import type { PostData } from '@/types'
+import { formatTime } from '@/utils'
 
 defineProps<{
   data: PostData
@@ -27,7 +28,7 @@ defineProps<{
           </div>
         </div>
       </div>
-      <div class="time">{{ data.createdAt }}</div>
+      <div class="time">{{ formatTime(data.createdAt) }}</div>
     </div>
     <div class="content-box">
       <div class="content">{{ data.content }}</div>
