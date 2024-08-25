@@ -1,9 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { webName } from '@/config'
+import { ref } from 'vue'
+// 下边这些可能是因为vue的vscode插件导致报错，先不管了
 import LayoutContainer from '@/views/layout/LayoutContainer.vue'
 import HomePage from '@/views/home/HomePage.vue'
 import LoginPage from '@/views/login/LoginPage.vue'
-import { webName } from '@/config'
-import { ref } from 'vue'
+import PostSend from '@/views/post/PostSend.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -21,12 +23,12 @@ const router = createRouter({
           path: '',
           component: HomePage,
           meta: { title: `` }
+        },
+        {
+          path: '/send',
+          component: PostSend,
+          meta: { title: `发送帖子` }
         }
-        // {
-        //   path: '/send',
-        //   component: PostSend,
-        //   meta: { title: `发送 - 更新` }
-        // }
       ]
     }
   ],
