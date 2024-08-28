@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import ProfileCard from './components/ProfileCard.vue'
-import PostGroup from './components/PostGroup.vue'
 import { usePostStore } from '@/stores'
 import { onMounted } from 'vue'
 import { computed } from 'vue'
-import { useWorkStore } from '@/stores'
 
-const workStore = useWorkStore()
 const postStore = usePostStore()
 
 onMounted(async () => {
@@ -18,7 +15,7 @@ const postList = computed(() => {
 })
 
 const sendPost = () => {
-  workStore.toPostSendPage()
+  postStore.toPostSendPage()
 }
 </script>
 <template>

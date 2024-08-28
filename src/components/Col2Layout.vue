@@ -35,7 +35,7 @@ const profileHeight = window.innerHeight - 61
 }
 
 .col2-left-sm {
-  padding-top: 20px;
+  margin-top: 20px;
 }
 .col2-left {
   position: sticky;
@@ -43,13 +43,13 @@ const profileHeight = window.innerHeight - 61
   .el-scrollbar {
     :deep() {
       .el-scrollbar__view {
-        padding-top: 20px;
+        margin: 20px 0;
       }
     }
   }
 }
 
 .col2-right {
-  padding-top: 20px;
+  margin: 20px 0;
 }
 </style>

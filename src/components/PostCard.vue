@@ -7,7 +7,6 @@ import {
   EditPen,
   Star
 } from '@element-plus/icons-vue'
-import ImageGroup from './ImageGroup.vue'
 import type { PostData } from '@/types'
 import { formatTime } from '@/utils'
 

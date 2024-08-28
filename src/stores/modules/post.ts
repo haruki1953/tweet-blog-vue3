@@ -4,6 +4,7 @@ import { postGetByCursorDataHandle } from '@/utils'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useSettingStore } from './setting'
+import { useRouter } from 'vue-router'
 
 export const usePostStore = defineStore(
   'tweet-post',
@@ -39,9 +40,22 @@ export const usePostStore = defineStore(
       settingStore.setLoading(false)
     }
 
+    const router = useRouter()
+    const toPostSendPage = () => {
+      router.push('/send')
+    }
+
+    const reGetPost = async () => {
+      cursor = 0
+      isHaveMorePost = true
+      await getPosts()
+    }
+
     return {
       postList,
-      getPosts
+      getPosts,
+      toPostSendPage,
+      reGetPost
     }
   },
   {

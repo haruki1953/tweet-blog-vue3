@@ -3,7 +3,7 @@ export const axiosConfig = {
   timeout: 10000
 }
 
-const imageBaseUrl = 'http://localhost:5500/'
+const imageBaseUrl = 'http://localhost:5500/image/'
 export const imageConfig = {
   baseUrl: imageBaseUrl,
   smallBaseUrl: `${imageBaseUrl}small/`
@@ -45,4 +45,10 @@ export const contactInfo: LinkInfo = {
     description: 'tweet-blog-vue3',
     link: 'https://github.com/haruki1953/tweet-blog-vue3'
   }
+}
+
+export const postConfig = {
+  postMaxImages: 4,
+  postNumInPage: 20,
+  imageNumInPage: 20
 }

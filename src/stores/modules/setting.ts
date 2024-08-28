@@ -1,13 +1,17 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 export const useSettingStore = defineStore(
   'tweet-setting',
   () => {
-    const isLoadingData = ref(false)
+    const loadingMark = ref(false)
+    const isLoadingData = computed(() => {
+      return loadingMark.value
+    })
     const setLoading = (isLoading: boolean) => {
-      isLoadingData.value = isLoading
+      loadingMark.value = isLoading
     }
+
     return {
       isLoadingData,
       setLoading

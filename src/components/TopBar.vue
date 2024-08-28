@@ -6,11 +6,13 @@ defineProps<{
 </script>
 <template>
   <div class="top-bar">
+    <div class="mask">
+      <div class="title">{{ title }}</div>
+    </div>
     <div class="back" @click="$router.back()">
       <el-icon size="16"><ArrowLeft /></el-icon>
       <span>返 回</span>
     </div>
-    <div class="title">{{ title }}</div>
     <div class="button">
       <slot></slot>
     </div>
@@ -26,6 +28,7 @@ defineProps<{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   .back {
     min-width: 60px;
     display: flex;
@@ -42,16 +45,28 @@ defineProps<{
       margin-left: 5px;
     }
   }
-  .title {
-    color: var(--color-text);
-    font-weight: bold;
-    transition: all 0.2s;
-  }
   .button {
     min-width: 60px;
     display: flex;
     justify-content: end;
     align-items: center;
+  }
+  .mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    pointer-events: none; /* 允许点击穿透 */
+    .title {
+      color: var(--color-text);
+      font-weight: bold;
+      transition: all 0.2s;
+    }
   }
 }
 </style>

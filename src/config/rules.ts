@@ -16,3 +16,12 @@ export const authRules = {
     }
   ]
 }
+
+export const imageRule = {
+  // 允许的文件类型
+  allowedTypes: ['image/jpeg', 'image/png', 'image/gif'],
+  typeError: '请选择 jpg、png 或 gif 格式的图片文件',
+  // 允许的大小
+  maxSize: 10 * 1024 * 1024,
+  sizeError: '图片文件大小不能超过 10MB'
+}

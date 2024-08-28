@@ -4,9 +4,15 @@ import type { Image } from '@/types'
 import { nextTick } from 'vue'
 import { ref, type ComponentPublicInstance } from 'vue'
 
-defineProps<{
-  data: Image[]
-}>()
+withDefaults(
+  defineProps<{
+    data: Image[]
+    backgroundColor?: '' | 'soft'
+  }>(),
+  {
+    backgroundColor: ''
+  }
+)
 
 const img1 = ref<ComponentPublicInstance | null>(null)
 
@@ -39,7 +45,11 @@ const imgSamllUrl = (path: string) => {
 }
 </script>
 <template>
-  <div class="image-group">
+  <div
+    class="image-group"
+    :class="{ 'img-background-soft': backgroundColor === 'soft' }"
+    v-if="data.length > 0"
+  >
     <el-row v-if="data.length === 1">
       <el-col :span="24">
         <el-image
@@ -101,14 +111,14 @@ const imgSamllUrl = (path: string) => {
         <el-image
           class="post-img img4-3"
           fit="cover"
-          :src="imgSamllUrl(data[1].path)"
+          :src="imgSamllUrl(data[2].path)"
         ></el-image>
       </el-col>
       <el-col :span="12">
         <el-image
           class="post-img img4-2"
           fit="cover"
-          :src="imgSamllUrl(data[2].path)"
+          :src="imgSamllUrl(data[1].path)"
         ></el-image>
         <el-image
           class="post-img img4-4"
@@ -129,6 +139,7 @@ const imgSamllUrl = (path: string) => {
   aspect-ratio: var(--aspect-ratio-val);
   border-radius: var(--border-radius-val);
   border: 1px solid transparent;
+  user-select: none;
   :deep() {
     .el-image__inner.is-loading {
       width: 100%;
@@ -145,6 +156,15 @@ const imgSamllUrl = (path: string) => {
     }
   }
 }
+.img-background-soft .post-img {
+  :deep() {
+    .el-image__placeholder,
+    .el-image__error {
+      background-color: var(--color-background-soft);
+    }
+  }
+}
+
 .img1-1 {
   aspect-ratio: unset;
 }

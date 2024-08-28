@@ -1,3 +1,15 @@
+export interface Image {
+  id: number
+  alt: string | null
+  path: string
+  addedAt: string
+  smallSize: number
+  largeSize: number
+  originalSize: number
+  originalPath: string | null
+  twitterLargeImageLink: string | null
+}
+
 export interface PostBase {
   id: number
   createdAt: string
@@ -14,18 +26,6 @@ export interface PostBase {
 
 export interface Post extends PostBase {
   images: Image[]
-}
-
-export interface Image {
-  id: number
-  alt: string | null
-  path: string
-  addedAt: string
-  smallSize: number
-  largeSize: number
-  originalSize: number
-  originalPath: string | null
-  twitterLargeImageLink: string | null
 }
 
 export interface PostData extends Post {

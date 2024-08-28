@@ -12,13 +12,14 @@
 $types: (
   primary: #7899CC,
   success: #799978,
-  info: #345566,
+  // info: #345566,
+  info: #5a7583,
   warning: #BB9854,
   danger: #AB4378,
   error: #AB4378
 );
 
-$light-steps: 3, 5, 7, 8, 9;
+$light-steps: 1, 3, 5, 7, 8, 9;
 $dark-steps: 2;
 
 :root:root {

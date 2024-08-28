@@ -1,22 +1,84 @@
 <script setup lang="ts">
 import { ChatLineSquare, EditPen } from '@element-plus/icons-vue'
 import { ref } from 'vue'
+import type { Image } from '@/types'
+import { useImageStore, usePostStore, useSettingStore } from '@/stores'
+import { postConfig } from '@/config'
+import { postSendApi } from '@/api'
+import { sakiMessage } from '@/utils'
+import { useRouter } from 'vue-router'
 
 const formModel = ref({
   content: ''
 })
+
+const imagesData = ref<Image[]>([])
+
+const imageStore = useImageStore()
+
+const addImage = (image: Image) => {
+  // push to imagesData, and limit length
+  imagesData.value.push(image)
+  if (imagesData.value.length > postConfig.postMaxImages) {
+    imagesData.value = imagesData.value.slice(-postConfig.postMaxImages)
+  }
+}
+
+const settingStore = useSettingStore()
+const postStore = usePostStore()
+const router = useRouter()
+
+const isSending = ref(false)
+const sendPost = async () => {
+  isSending.value = true
+  settingStore.setLoading(true)
+  try {
+    await postSendApi({
+      ...formModel.value,
+      images: imagesData.value.map((i) => i.id)
+    })
+    sakiMessage({
+      type: 'success',
+      message: '发送成功'
+    })
+    await postStore.reGetPost()
+    router.push('/')
+  } finally {
+    settingStore.setLoading(false)
+    isSending.value = false
+  }
+}
 </script>
 <template>
   <Col2Layout>
-    <template #colLeft>
-      <TopBar title="帖子发送">
-        <el-button type="primary" round size="small"> 发 送 </el-button>
-      </TopBar>
-    </template>
     <template #colLeftSm>
       <TopBar title="帖子发送">
-        <el-button type="primary" round size="small"> 发 送 </el-button>
+        <el-button
+          type="primary"
+          round
+          size="small"
+          @click="sendPost"
+          :disabled="imageStore.isImageUploading"
+          :loading="isSending"
+        >
+          发 送
+        </el-button>
       </TopBar>
+    </template>
+    <template #colLeft>
+      <TopBar title="帖子发送">
+        <el-button
+          type="primary"
+          round
+          size="small"
+          @click="sendPost"
+          :disabled="imageStore.isImageUploading"
+          :loading="isSending"
+        >
+          发 送
+        </el-button>
+      </TopBar>
+      <ImageUploader :onUploaded="addImage"></ImageUploader>
     </template>
     <template #colRight>
       <div class="info-bar">
@@ -45,11 +107,22 @@ const formModel = ref({
           show-word-limit
         />
       </div>
+      <div class="image-box" v-if="imagesData.length > 0">
+        <ImageGroup :data="imagesData" backgroundColor="soft"></ImageGroup>
+      </div>
+      <ImageUploader
+        :onUploaded="addImage"
+        class="hidden-md-and-up"
+      ></ImageUploader>
     </template>
   </Col2Layout>
 </template>
 
 <style lang="scss" scoped>
+.top-bar {
+  margin: 20px 0;
+}
+
 .info-bar {
   height: 12px;
   display: flex;
@@ -85,6 +158,7 @@ const formModel = ref({
 }
 
 .content-box {
+  margin-bottom: 15px;
   .content-textarea {
     padding: 10px;
     border-radius: 20px;
@@ -107,8 +181,17 @@ const formModel = ref({
         transition: all 0.5s;
         right: 20px;
         bottom: 15px;
+        user-select: none;
       }
     }
   }
+}
+
+.image-box {
+  margin-bottom: 15px;
+}
+
+.image-uploader {
+  margin-bottom: 15px;
 }
 </style>

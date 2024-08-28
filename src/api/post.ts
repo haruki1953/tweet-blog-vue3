@@ -1,4 +1,9 @@
-import type { PostGetByCursorQueryType, PostGetByCursorRes } from '@/types'
+import type {
+  PostGetByCursorQueryType,
+  PostGetByCursorRes,
+  PostSendJsonType,
+  PostSendRes
+} from '@/types'
 import { http } from '@/utils'
 
 export const postGetByCursorApi = (
@@ -8,4 +13,8 @@ export const postGetByCursorApi = (
   return http.get(`/post/cursor/${cursorId}`, {
     params: query
   })
+}
+
+export const postSendApi = (json: PostSendJsonType): PostSendRes => {
+  return http.post('/post', json)
 }
