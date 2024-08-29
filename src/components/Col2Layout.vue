@@ -1,9 +1,15 @@
 <script setup lang="ts">
-const profileHeight = window.innerHeight - 61
+import { useWindowSize } from '@vueuse/core'
+import { computed } from 'vue'
+
+const windowSize = useWindowSize()
+const profileHeight = computed(() => {
+  return windowSize.height.value - 61
+})
 </script>
 <template>
   <div class="col2-page">
-    <el-row :gutter="20">
+    <el-row :gutter="10">
       <el-col :md="10" :sm="24" class="hidden-sm-and-down">
         <div class="col2-left">
           <el-scrollbar :height="profileHeight">
@@ -42,8 +48,12 @@ const profileHeight = window.innerHeight - 61
   top: 60px;
   .el-scrollbar {
     :deep() {
+      // .el-scrollbar__wrap {
+      //   overflow: hidden;
+      // }
       .el-scrollbar__view {
-        margin: 20px 0;
+        margin: 20px 10px 20px 0;
+        overflow-x: hidden;
       }
     }
   }

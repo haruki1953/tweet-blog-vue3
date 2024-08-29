@@ -10,7 +10,7 @@ import {
 } from '@element-plus/icons-vue'
 import DecorationDot from './components/DecorationDot.vue'
 import { webName } from '@/config'
-import { dataConfirmLoginService } from '@/services'
+import { dataConfirmLoginService, dataFirstLoadService } from '@/services'
 import { useSettingStore } from '@/stores'
 
 const settingStore = useSettingStore()
@@ -19,14 +19,6 @@ const isDark = useDark({ disableTransition: false })
 const toggleDark = useToggle(isDark)
 
 const { arrivedState } = useScroll(document)
-
-const devMessage = () => {
-  ElMessage({
-    type: 'warning',
-    offset: 66,
-    message: '绝赞开发中'
-  })
-}
 
 const reload = () => {
   window.location.href = '/'
@@ -39,11 +31,11 @@ const showMenuBoxToggle = () => {
 }
 
 // const bgmDataStore = useBangumiStore()
-onMounted(() => {
+onMounted(async () => {
   // check login
   dataConfirmLoginService()
-  // // 初始化、请求数据
-  // await bgmDataStore.initData()
+  // 初始化、请求数据
+  await dataFirstLoadService()
 })
 </script>
 <template>

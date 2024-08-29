@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { Image } from '@/types'
 import { Upload } from '@element-plus/icons-vue'
-import type { UploadFile } from 'element-plus'
+import type { UploadFile, UploadFiles, UploadUserFile } from 'element-plus'
 import { useImageStore } from '@/stores'
+import { ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -15,10 +16,24 @@ const props = withDefaults(
 
 const imageStroe = useImageStore()
 
-const uploadImage = async (uploadFile: UploadFile) => {
+const uploadImage = async (
+  uploadFile: UploadFile,
+  uploadFiles: UploadFiles
+) => {
+  console.log('uploadFile', uploadFile)
+  console.log('uploadFiles', uploadFiles, uploadFiles.length)
+  // if have images are uploading, wait a little
+  if (uploadFiles.length > 1) {
+    await new Promise((resolve) =>
+      setTimeout(resolve, (uploadFiles.length - 1) * 500)
+    )
+  }
   const resImage = await imageStroe.uploadImage(uploadFile)
   props.onUploaded(resImage)
+  files.value.shift()
 }
+// help to mark uploading count
+const files = ref<UploadUserFile[]>([])
 </script>
 <template>
   <div class="image-uploader">
@@ -28,7 +43,9 @@ const uploadImage = async (uploadFile: UploadFile) => {
         accept="image/*"
         :on-change="uploadImage"
         :show-file-list="false"
+        v-model:file-list="files"
         drag
+        multiple
       ></el-upload>
       <div class="mask">
         <el-icon class="icon"><Upload /></el-icon>

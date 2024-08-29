@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { ChatLineSquare, EditPen } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import type { Image } from '@/types'
+import type { Image, PostSendJsonType } from '@/types'
 import { useImageStore, usePostStore, useSettingStore } from '@/stores'
 import { postConfig } from '@/config'
 import { postSendApi } from '@/api'
-import { sakiMessage } from '@/utils'
+import { formatTime, sakiMessage } from '@/utils'
 import { useRouter } from 'vue-router'
+import InfoEditDialog from './components/InfoEditDialog.vue'
+import ImageSelector from './components/ImageSelector.vue'
+import { useNow } from '@vueuse/core'
+import { computed } from 'vue'
 
-const formModel = ref({
-  content: ''
-})
+const formModel = ref<PostSendJsonType>({})
 
 const imagesData = ref<Image[]>([])
 
@@ -30,6 +32,8 @@ const router = useRouter()
 
 const isSending = ref(false)
 const sendPost = async () => {
+  console.log(formModel.value)
+  console.log(formModel.value.content)
   isSending.value = true
   settingStore.setLoading(true)
   try {
@@ -41,15 +45,27 @@ const sendPost = async () => {
       type: 'success',
       message: '发送成功'
     })
-    await postStore.reGetPost()
+    await postStore.reGetPosts()
     router.push('/')
   } finally {
     settingStore.setLoading(false)
     isSending.value = false
   }
 }
+
+const refInfoEditDialog = ref<InstanceType<typeof InfoEditDialog> | null>(null)
+
+const nowRef = useNow({ interval: 1000 }) // 每秒更新一次
+const showTime = computed(() => {
+  if (formModel.value.createdAt !== undefined) {
+    return formatTime(formModel.value.createdAt)
+  } else {
+    return formatTime(nowRef.value)
+  }
+})
 </script>
 <template>
+  <InfoEditDialog v-model="formModel" ref="refInfoEditDialog"></InfoEditDialog>
   <Col2Layout>
     <template #colLeftSm>
       <TopBar title="帖子发送">
@@ -66,7 +82,7 @@ const sendPost = async () => {
       </TopBar>
     </template>
     <template #colLeft>
-      <TopBar title="帖子发送">
+      <TopBar title="帖子发送" class="left">
         <el-button
           type="primary"
           round
@@ -79,11 +95,12 @@ const sendPost = async () => {
         </el-button>
       </TopBar>
       <ImageUploader :onUploaded="addImage"></ImageUploader>
+      <ImageSelector v-model="imagesData"></ImageSelector>
     </template>
     <template #colRight>
       <div class="info-bar">
         <div class="info">
-          <div class="repost">
+          <div class="repost" v-if="false">
             <el-icon :size="15">
               <ChatLineSquare />
             </el-icon>
@@ -91,8 +108,14 @@ const sendPost = async () => {
           </div>
         </div>
         <div class="time">
-          <span>2024-08-18 07:20</span>
-          <el-button type="info" :icon="EditPen" circle size="small" />
+          <span>{{ showTime }}</span>
+          <el-button
+            type="info"
+            :icon="EditPen"
+            circle
+            size="small"
+            @click="refInfoEditDialog?.open()"
+          />
         </div>
       </div>
       <div class="content-box">
@@ -114,13 +137,17 @@ const sendPost = async () => {
         :onUploaded="addImage"
         class="hidden-md-and-up"
       ></ImageUploader>
+      <ImageSelector
+        v-model="imagesData"
+        class="hidden-md-and-up"
+      ></ImageSelector>
     </template>
   </Col2Layout>
 </template>
 
 <style lang="scss" scoped>
 .top-bar {
-  margin: 20px 0;
+  margin-bottom: 20px;
 }
 
 .info-bar {

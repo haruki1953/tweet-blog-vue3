@@ -5,16 +5,35 @@ export const useSettingStore = defineStore(
   'tweet-setting',
   () => {
     const loadingMark = ref(false)
+    const loadingPostMark = ref(false)
+    const loadingImageMark = ref(false)
+
     const isLoadingData = computed(() => {
-      return loadingMark.value
+      if (
+        loadingMark.value ||
+        loadingPostMark.value ||
+        loadingImageMark.value
+      ) {
+        return true
+      } else {
+        return false
+      }
     })
     const setLoading = (isLoading: boolean) => {
       loadingMark.value = isLoading
     }
+    const setPostLoading = (isLoading: boolean) => {
+      loadingPostMark.value = isLoading
+    }
+    const setImageLoading = (isLoading: boolean) => {
+      loadingImageMark.value = isLoading
+    }
 
     return {
       isLoadingData,
-      setLoading
+      setLoading,
+      setPostLoading,
+      setImageLoading
     }
   },
   {

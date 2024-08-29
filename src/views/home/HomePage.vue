@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import ProfileCard from './components/ProfileCard.vue'
 import { usePostStore } from '@/stores'
-import { onMounted } from 'vue'
+// import { onMounted } from 'vue'
 import { computed } from 'vue'
 
 const postStore = usePostStore()
-
-onMounted(async () => {
-  await postStore.getPosts()
-})
 
 const postList = computed(() => {
   return postStore.postList

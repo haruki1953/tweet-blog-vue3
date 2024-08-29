@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { imageConfig } from '@/config'
 import type { Image } from '@/types'
+import { imgLargeUrl, imgSamllUrl } from '@/utils'
+import { computed } from 'vue'
 import { nextTick } from 'vue'
 import { ref, type ComponentPublicInstance } from 'vue'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     data: Image[]
     backgroundColor?: '' | 'soft'
@@ -31,8 +32,6 @@ const img1Load = async () => {
   const maxHeight = width / maxRatio
   const minHeight = width / minRatio
 
-  console.log(width, height, maxHeight, minHeight)
-
   if (height > maxHeight) {
     imgEl.style.setProperty('aspect-ratio', '4 / 5')
   } else if (height < minHeight) {
@@ -40,9 +39,17 @@ const img1Load = async () => {
   }
 }
 
-const imgSamllUrl = (path: string) => {
-  return `${imageConfig.smallBaseUrl}${path}`
-}
+const imgSmallList = computed(() => {
+  return props.data.map((i) => {
+    return imgSamllUrl(i)
+  })
+})
+
+const imgLargeList = computed(() => {
+  return props.data.map((i) => {
+    return imgLargeUrl(i)
+  })
+})
 </script>
 <template>
   <div
@@ -55,9 +62,13 @@ const imgSamllUrl = (path: string) => {
         <el-image
           class="post-img img1-1"
           fit="cover"
-          :src="imgSamllUrl(data[0].path)"
           ref="img1"
           @load="img1Load"
+          :key="imgSmallList[0]"
+          :src="imgSmallList[0]"
+          :initial-index="0"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
       </el-col>
     </el-row>
@@ -67,14 +78,20 @@ const imgSamllUrl = (path: string) => {
         <el-image
           class="post-img img2-1"
           fit="cover"
-          :src="imgSamllUrl(data[0].path)"
+          :src="imgSmallList[0]"
+          :initial-index="0"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
       </el-col>
       <el-col :span="12">
         <el-image
           class="post-img img2-2"
           fit="cover"
-          :src="imgSamllUrl(data[1].path)"
+          :src="imgSmallList[1]"
+          :initial-index="1"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
       </el-col>
     </el-row>
@@ -84,19 +101,28 @@ const imgSamllUrl = (path: string) => {
         <el-image
           class="post-img img3-1"
           fit="cover"
-          :src="imgSamllUrl(data[0].path)"
+          :src="imgSmallList[0]"
+          :initial-index="0"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
       </el-col>
       <el-col :span="12">
         <el-image
           class="post-img img3-2"
           fit="cover"
-          :src="imgSamllUrl(data[1].path)"
+          :src="imgSmallList[1]"
+          :initial-index="1"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
         <el-image
           class="post-img img3-3"
           fit="cover"
-          :src="imgSamllUrl(data[2].path)"
+          :src="imgSmallList[2]"
+          :initial-index="2"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
       </el-col>
     </el-row>
@@ -106,24 +132,36 @@ const imgSamllUrl = (path: string) => {
         <el-image
           class="post-img img4-1"
           fit="cover"
-          :src="imgSamllUrl(data[0].path)"
+          :src="imgSmallList[0]"
+          :initial-index="0"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
         <el-image
           class="post-img img4-3"
           fit="cover"
-          :src="imgSamllUrl(data[2].path)"
+          :src="imgSmallList[2]"
+          :initial-index="2"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
       </el-col>
       <el-col :span="12">
         <el-image
           class="post-img img4-2"
           fit="cover"
-          :src="imgSamllUrl(data[1].path)"
+          :src="imgSmallList[1]"
+          :initial-index="1"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
         <el-image
           class="post-img img4-4"
           fit="cover"
-          :src="imgSamllUrl(data[3].path)"
+          :src="imgSmallList[3]"
+          :initial-index="3"
+          :preview-src-list="imgLargeList"
+          hide-on-click-modal
         ></el-image>
       </el-col>
     </el-row>

@@ -6,7 +6,9 @@ export const axiosConfig = {
 const imageBaseUrl = 'http://localhost:5500/image/'
 export const imageConfig = {
   baseUrl: imageBaseUrl,
-  smallBaseUrl: `${imageBaseUrl}small/`
+  smallBaseUrl: `${imageBaseUrl}small/`,
+  largeBaseUrl: `${imageBaseUrl}large/`,
+  originalBaseUrl: `${imageBaseUrl}original/`
 }
 
 export const webName = '小祥の博客'

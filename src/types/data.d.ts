@@ -31,3 +31,10 @@ export interface Post extends PostBase {
 export interface PostData extends Post {
   parentPost: PostBase | null
 }
+
+export interface ImageStoreData extends Image {
+  posts: PostBase[]
+  _count: {
+    posts: number
+  }
+}
