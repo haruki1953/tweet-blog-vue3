@@ -1,6 +1,6 @@
 export const axiosConfig = {
   baseUrl: 'http://localhost:3000/',
-  timeout: 10000
+  timeout: 20000
 }
 
 const imageBaseUrl = 'http://localhost:5500/image/'
@@ -8,7 +8,14 @@ export const imageConfig = {
   baseUrl: imageBaseUrl,
   smallBaseUrl: `${imageBaseUrl}small/`,
   largeBaseUrl: `${imageBaseUrl}large/`,
-  originalBaseUrl: `${imageBaseUrl}original/`
+  originalBaseUrl: `${imageBaseUrl}original/`,
+  scrollAddAmounts: 12
+}
+
+export const postConfig = {
+  postMaxImages: 4,
+  postNumInPage: 20,
+  imageNumInPage: 20
 }
 
 export const webName = '小祥の博客'
@@ -47,10 +54,4 @@ export const contactInfo: LinkInfo = {
     description: 'tweet-blog-vue3',
     link: 'https://github.com/haruki1953/tweet-blog-vue3'
   }
-}
-
-export const postConfig = {
-  postMaxImages: 4,
-  postNumInPage: 20,
-  imageNumInPage: 20
 }

@@ -6,6 +6,7 @@ import LayoutContainer from '@/views/layout/LayoutContainer.vue'
 import HomePage from '@/views/home/HomePage.vue'
 import LoginPage from '@/views/login/LoginPage.vue'
 import PostSend from '@/views/post/PostSend.vue'
+import AlbumPage from '@/views/image/AlbumPage.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,11 @@ const router = createRouter({
           path: '/send',
           component: PostSend,
           meta: { title: `发送帖子` }
+        },
+        {
+          path: '/album',
+          component: AlbumPage,
+          meta: { title: `相册` }
         }
       ]
     }

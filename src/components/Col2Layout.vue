@@ -2,6 +2,15 @@
 import { useWindowSize } from '@vueuse/core'
 import { computed } from 'vue'
 
+withDefaults(
+  defineProps<{
+    reverse?: boolean
+  }>(),
+  {
+    reverse: false
+  }
+)
+
 const windowSize = useWindowSize()
 const profileHeight = computed(() => {
   return windowSize.height.value - 61
@@ -10,7 +19,7 @@ const profileHeight = computed(() => {
 <template>
   <div class="col2-page">
     <el-row :gutter="10">
-      <el-col :md="10" :sm="24" class="hidden-sm-and-down">
+      <el-col :md="10" :sm="24" class="hidden-sm-and-down" v-if="!reverse">
         <div class="col2-left">
           <el-scrollbar :height="profileHeight">
             <slot name="colLeft"></slot>
@@ -23,6 +32,13 @@ const profileHeight = computed(() => {
         </div>
         <div class="col2-right">
           <slot name="colRight"></slot>
+        </div>
+      </el-col>
+      <el-col :md="10" :sm="24" class="hidden-sm-and-down" v-if="reverse">
+        <div class="col2-left reverse">
+          <el-scrollbar :height="profileHeight">
+            <slot name="colLeft"></slot>
+          </el-scrollbar>
         </div>
       </el-col>
     </el-row>
@@ -48,12 +64,18 @@ const profileHeight = computed(() => {
   top: 60px;
   .el-scrollbar {
     :deep() {
-      // .el-scrollbar__wrap {
-      //   overflow: hidden;
-      // }
       .el-scrollbar__view {
-        margin: 20px 10px 20px 0;
         overflow-x: hidden;
+        margin: 20px 10px 20px 0;
+      }
+    }
+  }
+  &.reverse {
+    .el-scrollbar {
+      :deep() {
+        .el-scrollbar__view {
+          margin: 20px 0 20px 10px;
+        }
       }
     }
   }

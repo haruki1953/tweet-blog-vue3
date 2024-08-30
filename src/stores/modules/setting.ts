@@ -19,6 +19,12 @@ export const useSettingStore = defineStore(
         return false
       }
     })
+    const isLoadingPost = computed(() => {
+      return loadingPostMark.value
+    })
+    const isLoadingImage = computed(() => {
+      return loadingImageMark.value
+    })
     const setLoading = (isLoading: boolean) => {
       loadingMark.value = isLoading
     }
@@ -33,7 +39,9 @@ export const useSettingStore = defineStore(
       isLoadingData,
       setLoading,
       setPostLoading,
-      setImageLoading
+      setImageLoading,
+      isLoadingImage,
+      isLoadingPost
     }
   },
   {

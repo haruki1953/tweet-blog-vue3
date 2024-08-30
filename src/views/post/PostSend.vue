@@ -8,7 +8,6 @@ import { postSendApi } from '@/api'
 import { formatTime, sakiMessage } from '@/utils'
 import { useRouter } from 'vue-router'
 import InfoEditDialog from './components/InfoEditDialog.vue'
-import ImageSelector from './components/ImageSelector.vue'
 import { useNow } from '@vueuse/core'
 import { computed } from 'vue'
 
@@ -63,6 +62,14 @@ const showTime = computed(() => {
     return formatTime(nowRef.value)
   }
 })
+
+const couldNotSend = computed(() => {
+  if (!formModel.value.content && imagesData.value.length === 0) {
+    return true
+  } else {
+    return false
+  }
+})
 </script>
 <template>
   <InfoEditDialog v-model="formModel" ref="refInfoEditDialog"></InfoEditDialog>
@@ -74,7 +81,7 @@ const showTime = computed(() => {
           round
           size="small"
           @click="sendPost"
-          :disabled="imageStore.isImageUploading"
+          :disabled="imageStore.isImageUploading || couldNotSend"
           :loading="isSending"
         >
           发 送
@@ -88,14 +95,17 @@ const showTime = computed(() => {
           round
           size="small"
           @click="sendPost"
-          :disabled="imageStore.isImageUploading"
+          :disabled="imageStore.isImageUploading || couldNotSend"
           :loading="isSending"
         >
           发 送
         </el-button>
       </TopBar>
       <ImageUploader :onUploaded="addImage"></ImageUploader>
-      <ImageSelector v-model="imagesData"></ImageSelector>
+      <ImageSelector
+        v-model="imagesData"
+        :max="postConfig.postMaxImages"
+      ></ImageSelector>
     </template>
     <template #colRight>
       <div class="info-bar">
@@ -139,6 +149,7 @@ const showTime = computed(() => {
       ></ImageUploader>
       <ImageSelector
         v-model="imagesData"
+        :max="postConfig.postMaxImages"
         class="hidden-md-and-up"
       ></ImageSelector>
     </template>

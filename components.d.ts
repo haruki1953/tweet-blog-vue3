@@ -29,7 +29,9 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    ImageEditCard: typeof import('./src/components/ImageEditCard.vue')['default']
     ImageGroup: typeof import('./src/components/ImageGroup.vue')['default']
+    ImageSelector: typeof import('./src/components/ImageSelector.vue')['default']
     ImageUploader: typeof import('./src/components/ImageUploader.vue')['default']
     LinkGroup: typeof import('./src/components/LinkGroup.vue')['default']
     PostCard: typeof import('./src/components/PostCard.vue')['default']
@@ -38,5 +40,8 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     TestBox: typeof import('./src/components/TestBox.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
   }
 }

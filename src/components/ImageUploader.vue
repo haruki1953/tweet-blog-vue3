@@ -7,7 +7,7 @@ import { ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    onUploaded: (resImage: Image) => void
+    onUploaded?: (resImage: Image) => void
   }>(),
   {
     onUploaded: () => {}

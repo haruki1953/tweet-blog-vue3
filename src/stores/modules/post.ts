@@ -10,14 +10,14 @@ export const usePostStore = defineStore(
   'tweet-post',
   () => {
     let cursor = 0
-    let isHaveMore = true
+    const isHaveMore = ref(false)
 
     const postList = ref<PostData[][]>([])
 
     const settingStore = useSettingStore()
 
     const getPosts = async () => {
-      if (!isHaveMore) {
+      if (!isHaveMore.value) {
         return
       }
       settingStore.setPostLoading(true)
@@ -26,7 +26,7 @@ export const usePostStore = defineStore(
 
       const resPosts = res.data.data
       if (resPosts.length === 0) {
-        isHaveMore = false
+        isHaveMore.value = false
         return
       }
       const tempList = postGetByCursorDataHandle(resPosts)
@@ -46,7 +46,7 @@ export const usePostStore = defineStore(
 
     const reGetPosts = async () => {
       cursor = 0
-      isHaveMore = true
+      isHaveMore.value = true
       await getPosts()
     }
 

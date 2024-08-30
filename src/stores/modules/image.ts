@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { useSettingStore } from './setting'
 import { sakiMessage } from '@/utils'
 import type { UploadFile } from 'element-plus'
-import { imageRule } from '@/config'
+import { imageConfig, imageRule } from '@/config'
 import { imageGetByCursorApi, imageUploadService } from '@/api'
 import type { ImageStoreData } from '@/types'
 
@@ -11,13 +11,23 @@ export const useImageStore = defineStore(
   'tweet-image',
   () => {
     let cursor = 0
-    let isHaveMore = true
+    const haveMoreMark = ref(false)
+    const isHaveMore = computed(() => {
+      return haveMoreMark.value
+    })
     const imageList = ref<ImageStoreData[]>([])
 
-    const settingStore = useSettingStore()
+    // limit show amounts
+    const firstLimitedAmounts = imageConfig.scrollAddAmounts
+    const limitedAmounts = ref(firstLimitedAmounts)
+    const limitedList = computed(() => {
+      return imageList.value.slice(0, limitedAmounts.value)
+    })
 
+    // GET image
+    const settingStore = useSettingStore()
     const getImages = async () => {
-      if (!isHaveMore) {
+      if (!haveMoreMark.value) {
         return
       }
       settingStore.setImageLoading(true)
@@ -26,7 +36,7 @@ export const useImageStore = defineStore(
 
       const resImages = res.data.data
       if (resImages.length === 0) {
-        isHaveMore = false
+        haveMoreMark.value = false
         return
       }
 
@@ -44,7 +54,8 @@ export const useImageStore = defineStore(
     })
     const reGetImages = async () => {
       cursor = 0
-      isHaveMore = true
+      haveMoreMark.value = true
+      resetLimited()
       await getImages()
     }
 
@@ -106,12 +117,41 @@ export const useImageStore = defineStore(
       return resImage
     }
 
+    // scroll to load more
+    const loadingLimitedMark = ref(false)
+    const isLoadingLimited = computed(() => {
+      return loadingLimitedMark.value || settingStore.isLoadingImage
+    })
+    const loadLimited = async () => {
+      if (isLoadingLimited.value) {
+        return
+      }
+      loadingLimitedMark.value = true
+      limitedAmounts.value += imageConfig.scrollAddAmounts
+      if (limitedAmounts.value > imageList.value.length) {
+        await getImages()
+      }
+      loadingLimitedMark.value = false
+    }
+    const resetLimited = () => {
+      limitedAmounts.value = firstLimitedAmounts
+    }
+    const isHaveMoreLimited = computed(() => {
+      return isHaveMore.value || imageList.value.length > limitedAmounts.value
+    })
+
     return {
       imageList,
       getImages,
       reGetImages,
       isImageUploading,
-      uploadImage
+      uploadImage,
+      limitedList,
+      loadLimited,
+      resetLimited,
+      isHaveMore,
+      isHaveMoreLimited,
+      isLoadingLimited
     }
   },
   {

@@ -1,17 +1,26 @@
 <script setup lang="ts">
 import { useImageStore } from '@/stores'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { imgSamllUrl } from '@/utils'
 import type { Image } from '@/types'
-import { postConfig } from '@/config'
 import { CircleCheckFilled } from '@element-plus/icons-vue'
+import { useElementSize } from '@vueuse/core'
 
 const model = defineModel<Image[]>({ required: true })
 
+const props = withDefaults(
+  defineProps<{
+    max?: number
+    span?: number
+    infiniteScroll?: boolean
+  }>(),
+  {
+    max: 1,
+    infiniteScroll: false
+  }
+)
+
 const imageStore = useImageStore()
-const imageList = computed(() => {
-  return imageStore.imageList
-})
 
 const isSelected = (img: Image) => {
   const findImg = model.value.find((i) => i.id === img.id)
@@ -27,18 +36,54 @@ const selectImage = (img: Image) => {
     model.value = model.value.filter((selectedImg) => selectedImg.id !== img.id)
   } else {
     model.value.push(img)
-    if (model.value.length > postConfig.postMaxImages) {
-      model.value = model.value.slice(-postConfig.postMaxImages)
+    if (model.value.length > props.max) {
+      model.value = model.value.slice(-props.max)
     }
+  }
+}
+
+const boxRef = ref<HTMLElement | null>(null)
+const boxSize = useElementSize(boxRef)
+const imageSpan = computed(() => {
+  if (props.span) {
+    return props.span
+  }
+  if (boxRef.value == null) {
+    return 8
+  }
+  if (boxSize.width.value > 500) {
+    return 6
+  } else {
+    return 8
+  }
+})
+
+onMounted(() => {
+  imageStore.resetLimited()
+})
+
+const infiniteScrollFunc = () => {
+  if (props.infiniteScroll) {
+    imageStore.loadLimited()
   }
 }
 </script>
 <template>
-  <div class="image-list">
+  <div
+    class="image-list"
+    ref="boxRef"
+    v-infinite-scroll="infiniteScrollFunc"
+    :infinite-scroll-distance="200"
+    :infinite-scroll-immediate="false"
+  >
+    <!-- 
+    v-infinite-scroll="infiniteScrollFunc"
+    :infinite-scroll-distance="200" 
+    -->
     <el-row :gutter="6">
       <el-col
-        :span="8"
-        v-for="image in imageList"
+        :span="imageSpan"
+        v-for="image in imageStore.limitedList"
         :key="image.id"
         class="img-box"
       >
@@ -48,12 +93,23 @@ const selectImage = (img: Image) => {
           @click="selectImage(image)"
         ></el-image>
         <div class="img-mask">
-          <el-icon size="40" v-show="isSelected(image)"
-            ><CircleCheckFilled
-          /></el-icon>
+          <el-icon size="40" v-show="isSelected(image)">
+            <CircleCheckFilled />
+          </el-icon>
         </div>
       </el-col>
     </el-row>
+    <div class="load-button-box" v-if="imageStore.isHaveMoreLimited">
+      <el-button
+        type="primary"
+        round
+        size="small"
+        :loading="imageStore.isLoadingLimited"
+        @click="imageStore.loadLimited"
+      >
+        加载更多
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -100,6 +156,15 @@ const selectImage = (img: Image) => {
         background-color: var(--color-background-soft);
       }
     }
+  }
+}
+.load-button-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  .el-button {
+    width: 50%;
+    max-width: 200px;
   }
 }
 </style>
