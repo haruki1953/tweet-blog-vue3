@@ -42,21 +42,19 @@ const resetModelData = () => {
       @close="handleModelData"
     >
       <div class="form-box">
-        <div class="row">
-          <el-date-picker
-            v-model="model.createdAt"
-            type="datetime"
-            placeholder="选择帖子创建时间"
-          />
+        <div class="row center-box">
+          <div class="lable">帖子创建时间</div>
+          <div class="input-box">
+            <el-date-picker
+              v-model="model.createdAt"
+              type="datetime"
+              placeholder="选择帖子创建时间"
+              class="input"
+            />
+          </div>
         </div>
-        <div class="button-box">
-          <el-button
-            round
-            class="row"
-            type="info"
-            size="small"
-            @click="resetModelData"
-          >
+        <div class="row center-box">
+          <el-button round type="info" size="small" @click="resetModelData">
             重 置
           </el-button>
         </div>
@@ -71,7 +69,21 @@ const resetModelData = () => {
     .el-dialog {
       border-radius: 20px;
     }
-    .el-input {
+  }
+}
+
+.row {
+  margin-bottom: 10px;
+  .lable {
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: var(--color-text-soft);
+  }
+}
+
+.input-box {
+  :deep() {
+    .input {
       .el-input__wrapper {
         border-radius: 10px;
         background-color: var(--color-background-soft);
@@ -82,20 +94,16 @@ const resetModelData = () => {
         }
         .el-input__inner {
           // color: var(--color-text);
-          font-weight: bold;
+          // font-weight: bold;
           // text-align: center;
         }
       }
     }
   }
 }
-
-.form-box {
+.center-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  .row {
-    margin-bottom: 10px;
-  }
 }
 </style>

@@ -8,3 +8,9 @@ export type ImageGetByCursorQueryType = {
   havePost?: 'true' | 'false' | 'all' | undefined
 }
 export type ImageGetByCursorRes = ResData<ImageStoreData[]>
+
+export type imageUpdateJsonType = {
+  id: number
+  alt?: string | null | undefined
+  twitterLargeImageLink?: string | null | undefined
+}

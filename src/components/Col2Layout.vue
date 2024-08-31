@@ -66,19 +66,20 @@ const profileHeight = computed(() => {
     :deep() {
       .el-scrollbar__view {
         overflow-x: hidden;
-        margin: 20px 10px 20px 0;
+        // margin: 20px 10px 20px 0;
+        margin: 20px 10px;
       }
     }
   }
-  &.reverse {
-    .el-scrollbar {
-      :deep() {
-        .el-scrollbar__view {
-          margin: 20px 0 20px 10px;
-        }
-      }
-    }
-  }
+  // &.reverse {
+  //   .el-scrollbar {
+  //     :deep() {
+  //       .el-scrollbar__view {
+  //         margin: 20px 0 20px 10px;
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 .col2-right {

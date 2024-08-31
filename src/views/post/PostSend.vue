@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChatLineSquare, EditPen } from '@element-plus/icons-vue'
+import { ChatLineSquare, EditPen, Edit } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import type { Image, PostSendJsonType } from '@/types'
 import { useImageStore, usePostStore, useSettingStore } from '@/stores'
@@ -8,6 +8,7 @@ import { postSendApi } from '@/api'
 import { formatTime, sakiMessage } from '@/utils'
 import { useRouter } from 'vue-router'
 import InfoEditDialog from './components/InfoEditDialog.vue'
+import type ImageEditDialog from '@/components/ImageEditDialog.vue'
 import { useNow } from '@vueuse/core'
 import { computed } from 'vue'
 
@@ -53,6 +54,9 @@ const sendPost = async () => {
 }
 
 const refInfoEditDialog = ref<InstanceType<typeof InfoEditDialog> | null>(null)
+const refImageEditDialog = ref<InstanceType<typeof ImageEditDialog> | null>(
+  null
+)
 
 const nowRef = useNow({ interval: 1000 }) // 每秒更新一次
 const showTime = computed(() => {
@@ -72,7 +76,12 @@ const couldNotSend = computed(() => {
 })
 </script>
 <template>
-  <InfoEditDialog v-model="formModel" ref="refInfoEditDialog"></InfoEditDialog>
+  <InfoEditDialog ref="refInfoEditDialog" v-model="formModel"></InfoEditDialog>
+  <ImageEditDialog
+    ref="refImageEditDialog"
+    v-model="imagesData"
+    notPreview
+  ></ImageEditDialog>
   <Col2Layout>
     <template #colLeftSm>
       <TopBar title="帖子发送">
@@ -142,6 +151,17 @@ const couldNotSend = computed(() => {
       </div>
       <div class="image-box" v-if="imagesData.length > 0">
         <ImageGroup :data="imagesData" backgroundColor="soft"></ImageGroup>
+        <div class="image-edit-button">
+          <el-button
+            type="primary"
+            :icon="Edit"
+            round
+            size="small"
+            @click="refImageEditDialog?.open()"
+          >
+            修改图片
+          </el-button>
+        </div>
       </div>
       <ImageUploader
         :onUploaded="addImage"
@@ -227,6 +247,12 @@ const couldNotSend = computed(() => {
 
 .image-box {
   margin-bottom: 15px;
+  .image-edit-button {
+    margin: 5px 10px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
 }
 
 .image-uploader {

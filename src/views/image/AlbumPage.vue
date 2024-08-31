@@ -9,12 +9,22 @@ const imagesData = ref<Image[]>([])
   <Col2Layout reverse>
     <template #colLeftSm>
       <AlbumInfo></AlbumInfo>
+      <ImageEditDialog
+        v-model="imagesData"
+        autoOpen
+        cancelOnClose
+      ></ImageEditDialog>
     </template>
     <template #colLeft>
       <AlbumInfo></AlbumInfo>
+      <ImageEditCard v-model="imagesData"></ImageEditCard>
     </template>
     <template #colRight>
-      <ImageSelector v-model="imagesData" infiniteScroll></ImageSelector>
+      <ImageSelector
+        v-model="imagesData"
+        infiniteScroll
+        :max="1"
+      ></ImageSelector>
     </template>
   </Col2Layout>
 </template>
