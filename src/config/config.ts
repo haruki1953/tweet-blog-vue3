@@ -9,13 +9,20 @@ export const imageConfig = {
   smallBaseUrl: `${imageBaseUrl}small/`,
   largeBaseUrl: `${imageBaseUrl}large/`,
   originalBaseUrl: `${imageBaseUrl}original/`,
-  scrollAddAmounts: 12
+  imageNumInOnceRequest: 20,
+  limitShow: {
+    startAmounts: 12,
+    limitAmounts: 12
+  }
 }
 
 export const postConfig = {
   postMaxImages: 4,
-  postNumInPage: 20,
-  imageNumInPage: 20
+  postNumInOnceRequest: 20,
+  limitShow: {
+    startAmounts: 6,
+    limitAmounts: 6
+  }
 }
 
 export const webName = '小祥の博客'

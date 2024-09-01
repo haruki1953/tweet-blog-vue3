@@ -32,8 +32,6 @@ const router = useRouter()
 
 const isSending = ref(false)
 const sendPost = async () => {
-  console.log(formModel.value)
-  console.log(formModel.value.content)
   isSending.value = true
   settingStore.setLoading(true)
   try {

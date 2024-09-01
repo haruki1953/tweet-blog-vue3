@@ -164,6 +164,7 @@ const infiniteScrollFunc = () => {
   margin-top: 10px;
   .el-button {
     width: 50%;
+    min-width: 100px;
     max-width: 200px;
   }
 }

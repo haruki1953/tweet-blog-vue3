@@ -7,8 +7,8 @@ import type { Image } from '@/types'
 const selectedImages = defineModel<Image[]>({ required: true })
 const props = withDefaults(
   defineProps<{
-    autoOpen: boolean
-    cancelOnClose: boolean
+    autoOpen?: boolean
+    cancelOnClose?: boolean
     notPreview?: boolean
   }>(),
   {

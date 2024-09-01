@@ -2,17 +2,17 @@
 import ProfileCard from './components/ProfileCard.vue'
 import { usePostStore } from '@/stores'
 // import { onMounted } from 'vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 
 const postStore = usePostStore()
-
-const postList = computed(() => {
-  return postStore.postList
-})
 
 const sendPost = () => {
   postStore.toPostSendPage()
 }
+
+onMounted(() => {
+  postStore.resetLimited()
+})
 </script>
 <template>
   <Col2Layout>
@@ -45,12 +45,29 @@ const sendPost = () => {
       </ProfileCard>
     </template>
     <template #colRight>
-      <PostGroup
-        v-for="postGroup in postList"
-        :key="postGroup[postGroup.length - 1].id"
-        :data="postGroup"
+      <div
+        v-infinite-scroll="postStore.loadLimited"
+        :infinite-scroll-distance="200"
+        :infinite-scroll-immediate="false"
       >
-      </PostGroup>
+        <PostGroup
+          v-for="postGroup in postStore.limitedList"
+          :key="postGroup[postGroup.length - 1].id"
+          :data="postGroup"
+        >
+        </PostGroup>
+        <div class="load-button-box" v-if="postStore.isHaveMoreLimited">
+          <el-button
+            type="primary"
+            round
+            size="small"
+            :loading="postStore.isLoadingLimited"
+            @click="postStore.loadLimited"
+          >
+            加载更多
+          </el-button>
+        </div>
+      </div>
     </template>
   </Col2Layout>
 </template>
@@ -71,6 +88,15 @@ const sendPost = () => {
         // letter-spacing: 6px;
       }
     }
+  }
+}
+.load-button-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  .el-button {
+    width: 50%;
+    max-width: 200px;
   }
 }
 </style>

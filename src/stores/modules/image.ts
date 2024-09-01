@@ -18,8 +18,8 @@ export const useImageStore = defineStore(
     const imageList = ref<ImageStoreData[]>([])
 
     // limit show amounts
-    const firstLimitedAmounts = imageConfig.scrollAddAmounts
-    const limitedAmounts = ref(firstLimitedAmounts)
+    const startLimitedAmounts = imageConfig.limitShow.startAmounts
+    const limitedAmounts = ref(startLimitedAmounts)
     const limitedList = computed(() => {
       return imageList.value.slice(0, limitedAmounts.value)
     })
@@ -127,14 +127,14 @@ export const useImageStore = defineStore(
         return
       }
       loadingLimitedMark.value = true
-      limitedAmounts.value += imageConfig.scrollAddAmounts
+      limitedAmounts.value += imageConfig.limitShow.limitAmounts
       if (limitedAmounts.value > imageList.value.length) {
         await getImages()
       }
       loadingLimitedMark.value = false
     }
     const resetLimited = () => {
-      limitedAmounts.value = firstLimitedAmounts
+      limitedAmounts.value = startLimitedAmounts
     }
     const isHaveMoreLimited = computed(() => {
       return isHaveMore.value || imageList.value.length > limitedAmounts.value

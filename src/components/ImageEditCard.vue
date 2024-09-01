@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import type { Image, imageUpdateJsonType } from '@/types'
+import { imageUpdateApi } from '@/api'
+import { useImageStore, useSettingStore } from '@/stores'
+import type { Image, ImageUpdateJsonType } from '@/types'
+import { sakiMessage } from '@/utils'
 import { computed, watch } from 'vue'
 import { ref } from 'vue'
 
@@ -13,20 +16,79 @@ withDefaults(
   }
 )
 
-const formModel = ref<Omit<imageUpdateJsonType, 'id'>>({})
+const formModel = ref<Omit<ImageUpdateJsonType, 'id'>>({})
 
 const imgIndex = ref(0)
 const handleIndex = () => {
+  if (imgIndex.value < 0) {
+    imgIndex.value = 0
+  }
   if (imgIndex.value >= selectedImages.value.length) {
     imgIndex.value = Math.max(0, selectedImages.value.length - 1)
   }
 }
+
+const isIndexAble = computed(() => {
+  if (imgIndex.value < 0) {
+    return false
+  }
+  if (imgIndex.value >= selectedImages.value.length) {
+    return false
+  }
+  return true
+})
+
+const imageByIndex = computed(() => {
+  return selectedImages.value[imgIndex.value]
+})
+
+const initFormModel = () => {
+  if (!isIndexAble.value) return
+  formModel.value.alt = imageByIndex.value.alt
+}
+
 watch(
-  () => selectedImages.value.length,
+  () => ({
+    imgIds: selectedImages.value.map((i) => i.id),
+    imgIndex: imgIndex.value
+  }),
   () => {
     handleIndex()
-  }
+    initFormModel()
+  },
+  { immediate: true }
 )
+
+const settingStore = useSettingStore()
+const imageStore = useImageStore()
+
+const isSending = ref(false)
+const updateImage = async () => {
+  if (!isIndexAble.value) {
+    return
+  }
+  isSending.value = true
+  settingStore.setLoading(true)
+  try {
+    const imgId = imageByIndex.value.id
+    const res = await imageUpdateApi({
+      ...formModel.value,
+      id: imgId
+    })
+    const resImgIndex = selectedImages.value.findIndex((i) => i.id === imgId)
+    if (resImgIndex >= 0) {
+      selectedImages.value[resImgIndex] = res.data.data
+    }
+    sakiMessage({
+      type: 'success',
+      message: '修改成功'
+    })
+    await imageStore.reGetImages()
+  } finally {
+    settingStore.setLoading(false)
+    isSending.value = false
+  }
+}
 
 const isMultiple = computed(() => {
   if (selectedImages.value.length > 1) {
@@ -99,10 +161,22 @@ const isCanNext = computed(() => {
           />
         </div>
         <div class="update-button-box">
-          <el-button round type="info" size="small" @click="() => {}">
+          <el-button
+            round
+            type="info"
+            size="small"
+            @click="initFormModel"
+            :disabled="isSending"
+          >
             重置
           </el-button>
-          <el-button round type="primary" size="small" @click="() => {}">
+          <el-button
+            round
+            type="primary"
+            size="small"
+            @click="updateImage"
+            :loading="isSending"
+          >
             修改
           </el-button>
         </div>

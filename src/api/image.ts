@@ -1,7 +1,9 @@
 import type {
   ImageGetByCursorQueryType,
   ImageGetByCursorRes,
-  ImageUploadRes
+  ImageUploadRes,
+  ImageUpdateJsonType,
+  ImageUpdateRes
 } from '@/types'
 import { http } from '@/utils'
 import type { UploadRawFile } from 'element-plus'
@@ -21,4 +23,8 @@ export const imageGetByCursorApi = (
   return http.get(`/image/cursor/${cursorId}`, {
     params: query
   })
+}
+
+export const imageUpdateApi = (json: ImageUpdateJsonType): ImageUpdateRes => {
+  return http.patch('/image', json)
 }

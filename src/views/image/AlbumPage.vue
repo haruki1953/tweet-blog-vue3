@@ -20,11 +20,7 @@ const imagesData = ref<Image[]>([])
       <ImageEditCard v-model="imagesData"></ImageEditCard>
     </template>
     <template #colRight>
-      <ImageSelector
-        v-model="imagesData"
-        infiniteScroll
-        :max="1"
-      ></ImageSelector>
+      <ImageSelector v-model="imagesData" infiniteScroll></ImageSelector>
     </template>
   </Col2Layout>
 </template>
