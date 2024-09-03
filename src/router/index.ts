@@ -6,6 +6,7 @@ import LayoutContainer from '@/views/layout/LayoutContainer.vue'
 import HomePage from '@/views/home/HomePage.vue'
 import LoginPage from '@/views/login/LoginPage.vue'
 import PostSend from '@/views/post/PostSend.vue'
+import PostPage from '@/views/post/PostPage.vue'
 import AlbumPage from '@/views/image/AlbumPage.vue'
 
 const router = createRouter({
@@ -24,6 +25,11 @@ const router = createRouter({
           path: '',
           component: HomePage,
           meta: { title: `` }
+        },
+        {
+          path: '/post/:id',
+          component: PostPage,
+          meta: { title: `帖子` }
         },
         {
           path: '/send',
