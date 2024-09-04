@@ -36,11 +36,18 @@ defineProps<{
       <ImageGroup :data="data.images"></ImageGroup>
     </div>
     <div class="button-box">
-      <el-button type="primary" :icon="ChatSquare" circle size="small" />
-      <el-button type="info" :icon="EditPen" circle size="small" />
-      <el-button type="warning" :icon="Star" circle size="small" />
-      <el-button type="danger" :icon="Delete" circle size="small" />
-      <el-button type="success" :icon="Connection" circle size="small" />
+      <div class="replies-lable">
+        <div class="count" v-if="data._count.replies > 0">
+          {{ data._count.replies }}
+        </div>
+      </div>
+      <div class="button-layout">
+        <el-button type="primary" :icon="ChatSquare" circle size="small" />
+        <el-button type="info" :icon="EditPen" circle size="small" />
+        <el-button type="warning" :icon="Star" circle size="small" />
+        <el-button type="danger" :icon="Delete" circle size="small" />
+        <el-button type="success" :icon="Connection" circle size="small" />
+      </div>
     </div>
   </div>
 </template>
@@ -94,11 +101,30 @@ defineProps<{
     max-width: 300px;
     margin: 0 auto;
     margin-top: 12px;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    .el-button {
-      margin: 0;
+    position: relative;
+    .replies-lable {
+      width: 30px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      padding-right: 4px;
+      .count {
+        font-size: 12px;
+        color: var(--color-text-soft);
+      }
+    }
+    .button-layout {
+      margin: 0 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .el-button {
+        margin: 0;
+      }
     }
   }
 }

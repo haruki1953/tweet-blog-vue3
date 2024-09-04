@@ -242,7 +242,8 @@ const onImgClick = (num: number) => {
   --border-radius-val: 20px;
   aspect-ratio: var(--aspect-ratio-val);
   border-radius: var(--border-radius-val);
-  border: 1px solid transparent;
+  border: 1px solid var(--color-background);
+  transition: border 0.5s;
   user-select: none;
   :deep() {
     .el-image__inner.is-loading {

@@ -1,15 +1,11 @@
-import type { Post } from '../data'
+import type { Post, PostData } from '../data'
 import type { ResData } from './base'
 
 export type PostGetByCursorQueryType = {
   content?: string | undefined
   isDelete?: 'true' | 'false' | 'all' | undefined
 }
-export type PostGetByCursorData = Array<
-  Post & {
-    parentPost: Post | null
-  }
->
+export type PostGetByCursorData = PostData[]
 export type PostGetByCursorRes = ResData<PostGetByCursorData>
 
 export type PostSendJsonType = {
@@ -22,3 +18,16 @@ export type PostSendJsonType = {
   isDeleted?: boolean | undefined
 }
 export type PostSendRes = ResData<Post>
+
+export type PostGetByIdQueryType = {
+  keepIsDetele?: 'true' | 'false' | undefined
+}
+export type PostGetByIdData = Post & {
+  parentPost: Post | null
+  replies: Array<
+    Post & {
+      replies: Post[]
+    }
+  >
+}
+export type PostGetByIdRes = ResData<PostGetByIdData>

@@ -1,5 +1,5 @@
-import { postGetByCursorApi } from '@/api'
-import type { PostData } from '@/types'
+import { postGetByCursorApi, postGetByIdApi } from '@/api'
+import type { PostByIdData, PostData } from '@/types'
 import { postGetByCursorDataHandle } from '@/utils'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
@@ -10,12 +10,13 @@ import { postConfig } from '@/config'
 export const usePostStore = defineStore(
   'tweet-post',
   () => {
+    // home
     let cursor = 0
+    const postList = ref<PostData[][]>([])
     const haveMoreMark = ref(false)
     const isHaveMore = computed(() => {
       return haveMoreMark.value
     })
-    const postList = ref<PostData[][]>([])
 
     // limit show amounts
     const startLimitedAmounts = postConfig.limitShow.startAmounts
@@ -24,7 +25,13 @@ export const usePostStore = defineStore(
       return postList.value.slice(0, limitedAmounts.value)
     })
 
+    // post page
+    const requestedPostIds = ref<number[]>([])
+    const postPool = ref<PostByIdData[]>([])
+
+    // useSomething
     const settingStore = useSettingStore()
+    const router = useRouter()
 
     // GET post
     const getPosts = async () => {
@@ -49,16 +56,23 @@ export const usePostStore = defineStore(
       }
       cursor = resPosts[resPosts.length - 1].id
     }
-
-    const router = useRouter()
-    const toPostSendPage = () => {
-      router.push('/send')
-    }
-
     const reGetPosts = async () => {
       cursor = 0
       haveMoreMark.value = true
       await getPosts()
+    }
+
+    const getPostById = async (id: number) => {
+      settingStore.setPostIdLoading(id)
+      const res = await postGetByIdApi(id)
+      settingStore.setPostIdLoaded(id)
+
+      const resPostByIdData = res.data.data
+      // TODO
+    }
+
+    const toPostSendPage = () => {
+      router.push('/send')
     }
 
     // scroll to load more

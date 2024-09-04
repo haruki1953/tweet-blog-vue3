@@ -49,12 +49,12 @@ const imageSpan = computed(() => {
     return props.span
   }
   if (boxRef.value == null) {
-    return 8
+    return 12
   }
   if (boxSize.width.value > 500) {
-    return 6
-  } else {
     return 8
+  } else {
+    return 12
   }
 })
 
@@ -93,7 +93,7 @@ const infiniteScrollFunc = () => {
           @click="selectImage(image)"
         ></el-image>
         <div class="img-mask">
-          <el-icon size="40" v-show="isSelected(image)">
+          <el-icon size="50" v-show="isSelected(image)">
             <CircleCheckFilled />
           </el-icon>
         </div>

@@ -29,7 +29,7 @@ export interface Post extends PostBase {
 }
 
 export interface PostData extends Post {
-  parentPost: PostBase | null
+  parentPost: Post | null
 }
 
 export interface ImageStoreData extends Image {
@@ -37,4 +37,13 @@ export interface ImageStoreData extends Image {
   _count: {
     posts: number
   }
+}
+
+export interface PostByIdData {
+  id: number
+  pushAt: string // Date
+  updateAt: string // Date
+  mainPost: PostData
+  parentPost: PostData
+  replies: PostData[][]
 }

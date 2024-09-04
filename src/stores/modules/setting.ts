@@ -7,12 +7,14 @@ export const useSettingStore = defineStore(
     const loadingMark = ref(false)
     const loadingPostMark = ref(false)
     const loadingImageMark = ref(false)
+    const loadingPostIds = ref<number[]>([])
 
     const isLoadingData = computed(() => {
       if (
         loadingMark.value ||
         loadingPostMark.value ||
-        loadingImageMark.value
+        loadingImageMark.value ||
+        loadingPostIds.value.length > 0
       ) {
         return true
       } else {
@@ -34,14 +36,31 @@ export const useSettingStore = defineStore(
     const setImageLoading = (isLoading: boolean) => {
       loadingImageMark.value = isLoading
     }
+    const setPostIdLoading = (id: number) => {
+      loadingPostIds.value.push(id)
+    }
+    const setPostIdLoaded = (id: number) => {
+      loadingPostIds.value.filter((i) => i !== id)
+    }
+    const isLoadingPostId = (id: number) => {
+      const loadingId = loadingPostIds.value.find((i) => i === id)
+      if (loadingId === undefined) {
+        return false
+      } else {
+        return true
+      }
+    }
 
     return {
       isLoadingData,
+      isLoadingImage,
+      isLoadingPost,
       setLoading,
       setPostLoading,
       setImageLoading,
-      isLoadingImage,
-      isLoadingPost
+      setPostIdLoading,
+      setPostIdLoaded,
+      isLoadingPostId
     }
   },
   {
