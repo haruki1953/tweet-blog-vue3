@@ -49,12 +49,12 @@ const imageSpan = computed(() => {
     return props.span
   }
   if (boxRef.value == null) {
-    return 12
+    return 8
   }
   if (boxSize.width.value > 500) {
-    return 8
+    return 6
   } else {
-    return 12
+    return 8
   }
 })
 

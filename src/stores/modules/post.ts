@@ -33,7 +33,7 @@ export const usePostStore = defineStore(
     const settingStore = useSettingStore()
     const router = useRouter()
 
-    // GET post
+    // GET post to postList
     const getPosts = async () => {
       if (!isHaveMore.value) {
         return
@@ -62,6 +62,7 @@ export const usePostStore = defineStore(
       await getPosts()
     }
 
+    // // GET post to postPool
     const getPostById = async (id: number) => {
       settingStore.setPostIdLoading(id)
       const res = await postGetByIdApi(id)
