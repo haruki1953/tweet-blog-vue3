@@ -40,7 +40,7 @@ export const useSettingStore = defineStore(
       loadingPostIds.value.push(id)
     }
     const setPostIdLoaded = (id: number) => {
-      loadingPostIds.value.filter((i) => i !== id)
+      loadingPostIds.value = loadingPostIds.value.filter((i) => i !== id)
     }
     const isLoadingPostId = (id: number) => {
       const loadingId = loadingPostIds.value.find((i) => i === id)

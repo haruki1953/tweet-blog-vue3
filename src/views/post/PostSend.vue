@@ -74,104 +74,109 @@ const couldNotSend = computed(() => {
 })
 </script>
 <template>
-  <InfoEditDialog ref="refInfoEditDialog" v-model="formModel"></InfoEditDialog>
-  <ImageEditDialog
-    ref="refImageEditDialog"
-    v-model="imagesData"
-    notPreview
-  ></ImageEditDialog>
-  <Col2Layout>
-    <template #colLeftSm>
-      <TopBar title="帖子发送">
-        <el-button
-          type="primary"
-          round
-          size="small"
-          @click="sendPost"
-          :disabled="imageStore.isImageUploading || couldNotSend"
-          :loading="isSending"
-        >
-          发 送
-        </el-button>
-      </TopBar>
-    </template>
-    <template #colLeft>
-      <TopBar title="帖子发送" class="left">
-        <el-button
-          type="primary"
-          round
-          size="small"
-          @click="sendPost"
-          :disabled="imageStore.isImageUploading || couldNotSend"
-          :loading="isSending"
-        >
-          发 送
-        </el-button>
-      </TopBar>
-      <ImageUploader :onUploaded="addImage"></ImageUploader>
-      <ImageSelector
-        v-model="imagesData"
-        :max="postConfig.postMaxImages"
-      ></ImageSelector>
-    </template>
-    <template #colRight>
-      <div class="info-bar">
-        <div class="info">
-          <div class="repost" v-if="false">
-            <el-icon :size="15">
-              <ChatLineSquare />
-            </el-icon>
-            <div class="repost-text">帖子</div>
-          </div>
-        </div>
-        <div class="time">
-          <span>{{ showTime }}</span>
-          <el-button
-            type="info"
-            :icon="EditPen"
-            circle
-            size="small"
-            @click="refInfoEditDialog?.open()"
-          />
-        </div>
-      </div>
-      <div class="content-box">
-        <el-input
-          v-model="formModel.content"
-          placeholder="有什么新鲜事？！"
-          :rows="10"
-          type="textarea"
-          size="large"
-          class="content-textarea"
-          :maxlength="140"
-          show-word-limit
-        />
-      </div>
-      <div class="image-box" v-if="imagesData.length > 0">
-        <ImageGroup :data="imagesData" backgroundColor="soft"></ImageGroup>
-        <div class="image-edit-button">
+  <div>
+    <InfoEditDialog
+      ref="refInfoEditDialog"
+      v-model="formModel"
+    ></InfoEditDialog>
+    <ImageEditDialog
+      ref="refImageEditDialog"
+      v-model="imagesData"
+      notPreview
+    ></ImageEditDialog>
+    <Col2Layout>
+      <template #colLeftSm>
+        <TopBar title="帖子发送">
           <el-button
             type="primary"
-            :icon="Edit"
             round
             size="small"
-            @click="refImageEditDialog?.open()"
+            @click="sendPost"
+            :disabled="imageStore.isImageUploading || couldNotSend"
+            :loading="isSending"
           >
-            修改图片
+            发 送
           </el-button>
+        </TopBar>
+      </template>
+      <template #colLeft>
+        <TopBar title="帖子发送" class="left">
+          <el-button
+            type="primary"
+            round
+            size="small"
+            @click="sendPost"
+            :disabled="imageStore.isImageUploading || couldNotSend"
+            :loading="isSending"
+          >
+            发 送
+          </el-button>
+        </TopBar>
+        <ImageUploader :onUploaded="addImage"></ImageUploader>
+        <ImageSelector
+          v-model="imagesData"
+          :max="postConfig.postMaxImages"
+        ></ImageSelector>
+      </template>
+      <template #colRight>
+        <div class="info-bar">
+          <div class="info">
+            <div class="repost" v-if="false">
+              <el-icon :size="15">
+                <ChatLineSquare />
+              </el-icon>
+              <div class="repost-text">帖子</div>
+            </div>
+          </div>
+          <div class="time">
+            <span>{{ showTime }}</span>
+            <el-button
+              type="info"
+              :icon="EditPen"
+              circle
+              size="small"
+              @click="refInfoEditDialog?.open()"
+            />
+          </div>
         </div>
-      </div>
-      <ImageUploader
-        :onUploaded="addImage"
-        class="hidden-md-and-up"
-      ></ImageUploader>
-      <ImageSelector
-        v-model="imagesData"
-        :max="postConfig.postMaxImages"
-        class="hidden-md-and-up"
-      ></ImageSelector>
-    </template>
-  </Col2Layout>
+        <div class="content-box">
+          <el-input
+            v-model="formModel.content"
+            placeholder="有什么新鲜事？！"
+            :rows="10"
+            type="textarea"
+            size="large"
+            class="content-textarea"
+            :maxlength="140"
+            show-word-limit
+          />
+        </div>
+        <div class="image-box" v-if="imagesData.length > 0">
+          <ImageGroup :data="imagesData" backgroundColor="soft"></ImageGroup>
+          <div class="image-edit-button">
+            <el-button
+              type="primary"
+              :icon="Edit"
+              round
+              size="small"
+              @click="refImageEditDialog?.open()"
+            >
+              修改图片
+            </el-button>
+          </div>
+        </div>
+        <ImageUploader
+          :onUploaded="addImage"
+          class="hidden-md-and-up"
+        ></ImageUploader>
+        <ImageSelector
+          v-model="imagesData"
+          :max="postConfig.postMaxImages"
+          class="hidden-md-and-up"
+        ></ImageSelector>
+      </template>
+    </Col2Layout>
+  </div>
 </template>
 
 <style lang="scss" scoped>

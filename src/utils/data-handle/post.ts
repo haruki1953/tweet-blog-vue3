@@ -1,6 +1,6 @@
 import type {
   Post,
-  PostByIdData,
+  PosPoolItem,
   PostData,
   PostGetByCursorData,
   PostGetByIdData
@@ -89,9 +89,64 @@ export const postGetByCursorDataHandle = (
   return postGroupList
 }
 
-// export const postGetByIdDataHandle = (data: PostGetByIdData): PostByIdData => {
-//   const post = {
-//     ...data,
-//     replies: undefined
-//   }
-// }
+const handlePostWithNotReplies = (post: PostData | Post): PostData => {
+  let parentPost = null
+  if ('parentPost' in post && post.parentPost != null) {
+    parentPost = post.parentPost
+  }
+  const postData = {
+    ...post,
+    parentPost,
+    replies: undefined
+  }
+  return postData
+}
+const handlePostWithNotParent = (post: PostData | Post): Post => {
+  const postData = {
+    ...post,
+    parentPost: undefined,
+    replies: undefined
+  }
+  return postData
+}
+
+export const postGetByIdDataHandle = (data: PostGetByIdData): PosPoolItem => {
+  const mainPost = handlePostWithNotReplies(data)
+
+  const parentPost = data.parentPost
+    ? handlePostWithNotReplies(data.parentPost)
+    : null
+
+  const replies: PostData[][] = data.replies.map((post) => {
+    const mainPostInGroup = handlePostWithNotReplies(post)
+    mainPostInGroup.parentPost = handlePostWithNotParent(mainPost)
+
+    const repliePostListInGroup = post.replies.map((p) => {
+      const repliePostInGroup = handlePostWithNotReplies(p)
+      repliePostInGroup.parentPost = handlePostWithNotParent(mainPostInGroup)
+      return repliePostInGroup
+    })
+    // 升序排序 （二级回复）
+    repliePostListInGroup.sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    )
+    const postGroup: PostData[] = [mainPostInGroup, ...repliePostListInGroup]
+    return postGroup
+  })
+  // 升序排序 依据第一个帖子（一级回复）
+  replies.sort(
+    (a, b) =>
+      new Date(a[0].createdAt).getTime() - new Date(b[0].createdAt).getTime()
+  )
+
+  const now = new Date().toISOString()
+  return {
+    id: mainPost.id,
+    pushAt: now,
+    updateAt: now,
+    mainPost,
+    parentPost,
+    replies
+  }
+}

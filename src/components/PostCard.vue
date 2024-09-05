@@ -42,7 +42,13 @@ defineProps<{
         </div>
       </div>
       <div class="button-layout">
-        <el-button type="primary" :icon="ChatSquare" circle size="small" />
+        <el-button
+          type="primary"
+          :icon="ChatSquare"
+          circle
+          size="small"
+          @click="$router.push(`/post/${data.id}`)"
+        />
         <el-button type="info" :icon="EditPen" circle size="small" />
         <el-button type="warning" :icon="Star" circle size="small" />
         <el-button type="danger" :icon="Delete" circle size="small" />

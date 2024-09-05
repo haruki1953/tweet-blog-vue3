@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BgmEmpty: typeof import('./src/components/BgmEmpty.vue')['default']
     Col1Layout: typeof import('./src/components/Col1Layout.vue')['default']
     Col2Layout: typeof import('./src/components/Col2Layout.vue')['default']
     copy: typeof import('./src/components/ImageGroup copy.vue')['default']
@@ -18,6 +19,7 @@ declare module 'vue' {
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
+    ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -42,6 +44,7 @@ declare module 'vue' {
     PostGroup: typeof import('./src/components/PostGroup.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SakiEmpty: typeof import('./src/components/SakiEmpty.vue')['default']
     TestBox: typeof import('./src/components/TestBox.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
   }

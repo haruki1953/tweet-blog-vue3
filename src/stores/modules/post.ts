@@ -1,6 +1,6 @@
 import { postGetByCursorApi, postGetByIdApi } from '@/api'
-import type { PostByIdData, PostData } from '@/types'
-import { postGetByCursorDataHandle } from '@/utils'
+import type { PosPoolItem, PostData } from '@/types'
+import { postGetByCursorDataHandle, postGetByIdDataHandle } from '@/utils'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useSettingStore } from './setting'
@@ -26,8 +26,19 @@ export const usePostStore = defineStore(
     })
 
     // post page
+    const postPool = ref<PosPoolItem[]>([])
+    const getPostPoolItem = (id: number): PosPoolItem | undefined => {
+      return postPool.value.find((i) => i.id === id)
+    }
     const requestedPostIds = ref<number[]>([])
-    const postPool = ref<PostByIdData[]>([])
+    const isPostRequested = (id: number) => {
+      const find = requestedPostIds.value.find((i) => i === id)
+      if (find == null) {
+        return false
+      } else {
+        return true
+      }
+    }
 
     // useSomething
     const settingStore = useSettingStore()
@@ -68,8 +79,32 @@ export const usePostStore = defineStore(
       const res = await postGetByIdApi(id)
       settingStore.setPostIdLoaded(id)
 
-      const resPostByIdData = res.data.data
-      // TODO
+      const resPostGetByIdData = res.data.data
+      const newPostPoolItem = postGetByIdDataHandle(resPostGetByIdData)
+      requestedPostIds.value.push(newPostPoolItem.id)
+
+      const index = postPool.value.findIndex((p) => p.id === newPostPoolItem.id)
+      if (index >= 0) {
+        const oldPostPoolItem = postPool.value[index]
+        postPool.value[index] = newPostPoolItem
+        postPool.value[index].pushAt = oldPostPoolItem.pushAt
+      } else {
+        postPool.value.push(newPostPoolItem)
+      }
+
+      tryLimitPostPoolSize()
+    }
+    const tryLimitPostPoolSize = () => {
+      // limit postPool size
+      if (postPool.value.length > 150) {
+        // Sort the postPool by updateAt date in ascending order
+        postPool.value.sort(
+          (a, b) =>
+            new Date(a.updateAt).getTime() - new Date(b.updateAt).getTime()
+        )
+        // Remove the oldest 50 items
+        postPool.value.splice(0, 50)
+      }
     }
 
     const toPostSendPage = () => {
@@ -109,7 +144,11 @@ export const usePostStore = defineStore(
       resetLimited,
       isHaveMore,
       isHaveMoreLimited,
-      isLoadingLimited
+      isLoadingLimited,
+      isPostRequested,
+      postPool,
+      getPostPoolItem,
+      getPostById
     }
   },
   {

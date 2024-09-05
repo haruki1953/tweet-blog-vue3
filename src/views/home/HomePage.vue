@@ -15,61 +15,64 @@ onMounted(() => {
 })
 </script>
 <template>
-  <Col2Layout>
-    <template #colLeftSm>
-      <ProfileCard>
-        <div class="profile-solt">
-          <el-button
-            class="profile-button"
-            type="primary"
-            round
-            @click="sendPost"
-          >
-            发 帖
-          </el-button>
-        </div>
-      </ProfileCard>
-    </template>
-    <template #colLeft>
-      <ProfileCard>
-        <div class="profile-solt">
-          <el-button
-            class="profile-button"
-            type="primary"
-            round
-            @click="sendPost"
-          >
-            发 帖
-          </el-button>
-        </div>
-      </ProfileCard>
-    </template>
-    <template #colRight>
-      <div
-        v-infinite-scroll="postStore.loadLimited"
-        :infinite-scroll-distance="200"
-        :infinite-scroll-immediate="false"
-      >
-        <PostGroup
-          v-for="postGroup in postStore.limitedList"
-          :key="postGroup[postGroup.length - 1].id"
-          :data="postGroup"
+  <div>
+    <Col2Layout>
+      <template #colLeftSm>
+        <ProfileCard>
+          <div class="profile-solt">
+            <el-button
+              class="profile-button"
+              type="primary"
+              round
+              @click="sendPost"
+            >
+              发 帖
+            </el-button>
+          </div>
+        </ProfileCard>
+      </template>
+      <template #colLeft>
+        <ProfileCard>
+          <div class="profile-solt">
+            <el-button
+              class="profile-button"
+              type="primary"
+              round
+              @click="sendPost"
+            >
+              发 帖
+            </el-button>
+          </div>
+        </ProfileCard>
+      </template>
+      <template #colRight>
+        <div
+          v-infinite-scroll="postStore.loadLimited"
+          :infinite-scroll-distance="200"
+          :infinite-scroll-delay="0"
+          :infinite-scroll-immediate="false"
         >
-        </PostGroup>
-        <div class="load-button-box" v-if="postStore.isHaveMoreLimited">
-          <el-button
-            type="primary"
-            round
-            size="small"
-            :loading="postStore.isLoadingLimited"
-            @click="postStore.loadLimited"
+          <PostGroup
+            v-for="postGroup in postStore.limitedList"
+            :key="postGroup.map((p) => p.id).toString()"
+            :data="postGroup"
           >
-            加载更多
-          </el-button>
+          </PostGroup>
+          <div class="load-button-box" v-if="postStore.isHaveMoreLimited">
+            <el-button
+              type="primary"
+              round
+              size="small"
+              :loading="postStore.isLoadingLimited"
+              @click="postStore.loadLimited"
+            >
+              加载更多
+            </el-button>
+          </div>
         </div>
-      </div>
-    </template>
-  </Col2Layout>
+      </template>
+    </Col2Layout>
+  </div>
 </template>
 
 <style lang="scss" scoped>

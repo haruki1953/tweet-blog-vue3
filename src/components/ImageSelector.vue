@@ -74,6 +74,7 @@ const infiniteScrollFunc = () => {
     ref="boxRef"
     v-infinite-scroll="infiniteScrollFunc"
     :infinite-scroll-distance="200"
+    :infinite-scroll-delay="0"
     :infinite-scroll-immediate="false"
   >
     <!-- 

@@ -31,6 +31,11 @@ export const webName = '小祥の博客'
 import logoImage from '@/assets/logo.png'
 export { logoImage }
 
+// 海报 占位 失败
+import sakiPlaceholder from '@/assets/saki-placeholder.jpg'
+import sakiError from '@/assets/saki-error.jpg'
+export { sakiPlaceholder, sakiError }
+
 interface LinkInfo {
   [key: string]: {
     name: string

@@ -6,6 +6,8 @@ import { MoonNight, Sunrise, MoreFilled } from '@element-plus/icons-vue'
 import DecorationDot from './DecorationDot.vue'
 import { webName } from '@/config'
 import { useSettingStore } from '@/stores'
+import { computed } from 'vue'
+import { watch } from 'vue'
 
 defineProps<{
   menu: {
@@ -31,6 +33,30 @@ const showMenuBox = ref(false)
 const showMenuBoxToggle = () => {
   showMenuBox.value = !showMenuBox.value
 }
+
+const shouldDecorationDotHidden = computed(() => {
+  const isShould = !arrivedState.top && !settingStore.isLoadingData
+  return isShould
+})
+const limitedSDDH = ref(false)
+const isUpdateing = ref(false)
+
+watch(
+  shouldDecorationDotHidden,
+  async () => {
+    if (isUpdateing.value) return
+    isUpdateing.value = true
+    limitedSDDH.value = shouldDecorationDotHidden.value
+    if (settingStore.isLoadingData) {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, 300))
+    }
+    limitedSDDH.value = shouldDecorationDotHidden.value
+    isUpdateing.value = false
+  },
+  { immediate: true }
+)
 </script>
 <template>
   <div class="menu-bar">
@@ -89,12 +115,9 @@ const showMenuBoxToggle = () => {
       <div class="menu-item decoration-item sm">
         <DecorationDot
           class="decoration-dot"
-          :class="{ hidden: !arrivedState.top && !settingStore.isLoadingData }"
+          :class="{ hidden: limitedSDDH }"
         ></DecorationDot>
-        <div
-          class="decoration-text"
-          :class="{ show: !arrivedState.top && !settingStore.isLoadingData }"
-        >
+        <div class="decoration-text" :class="{ show: limitedSDDH }">
           {{ $route.meta.title || webName }}
         </div>
       </div>

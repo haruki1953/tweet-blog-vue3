@@ -45,10 +45,20 @@ const router = createRouter({
     }
   ],
   // 路由滚动行为定制
-  scrollBehavior() {
-    return {
-      top: 0
-    }
+  scrollBehavior: (to, from, savedPosition) => {
+    return { top: 0 }
+    //   if (savedPosition) {
+    //     return new Promise((resolve, reject) => {
+    //       setTimeout(() => {
+    //         resolve({
+    //           ...savedPosition,
+    //           behavior: 'smooth'
+    //         })
+    //       }, 100)
+    //     })
+    //   } else {
+    //     return { top: 0 }
+    //   }
   }
 })
 

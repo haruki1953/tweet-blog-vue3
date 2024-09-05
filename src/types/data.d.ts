@@ -39,11 +39,11 @@ export interface ImageStoreData extends Image {
   }
 }
 
-export interface PostByIdData {
+export interface PosPoolItem {
   id: number
   pushAt: string // Date
   updateAt: string // Date
   mainPost: PostData
-  parentPost: PostData
+  parentPost: PostData | null
   replies: PostData[][]
 }

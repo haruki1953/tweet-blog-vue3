@@ -21,6 +21,7 @@ defineProps<{
 
 <style lang="scss" scoped>
 .top-bar {
+  height: 48px;
   padding: 12px;
   background-color: var(--color-background-soft);
   border-radius: 20px;
