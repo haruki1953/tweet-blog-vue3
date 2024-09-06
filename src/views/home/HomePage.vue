@@ -11,7 +11,7 @@ const sendPost = () => {
 }
 
 onMounted(() => {
-  postStore.resetLimited()
+  // postStore.resetLimited()
 })
 </script>
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { usePostStore } from '@/stores'
-import type { PostData } from '@/types'
+import { usePostStore, useSettingStore } from '@/stores'
+import type { PosPoolItem, PostData } from '@/types'
 import { watch } from 'vue'
 import { onMounted } from 'vue'
 import { computed } from 'vue'
@@ -9,6 +9,7 @@ import { House } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const postStore = usePostStore()
+const settingStore = useSettingStore()
 
 const routePostId = computed(() => {
   const userId = Number(route.params.id)
@@ -18,7 +19,7 @@ const routePostId = computed(() => {
     return userId
   }
 })
-const postPoolItem = computed(() => {
+const postPoolItem = computed((): PosPoolItem | undefined => {
   if (routePostId.value == null) {
     return undefined
   }
@@ -59,79 +60,59 @@ const loadPostPoolItemData = () => {
 
 onMounted(loadPostPoolItemData)
 watch(routePostId, loadPostPoolItemData)
+
+const replyPost = () => {
+  if (!postPoolItem.value) {
+    return
+  }
+  postStore.toReplySendPage(postPoolItem.value.mainPost)
+}
 </script>
 <template>
   <div>
     <Col1Layout v-if="!shouldShow2Col">
-      <TopBar title="查看帖子">
-        <el-button
-          type="primary"
-          round
-          size="small"
-          :icon="House"
-          @click="$router.push('/')"
-        >
-          首页
-        </el-button>
-      </TopBar>
+      <TopBar title="查看帖子"></TopBar>
       <!-- id参数无效 -->
       <div v-if="routePostId == null">
-        <SakiEmpty description="帖子 id 无效" type="error">
-          <el-button type="primary" round @click="$router.replace('/')">
-            返回首页
-          </el-button>
-        </SakiEmpty>
+        <SakiEmpty description="帖子 id 无效" type="error"></SakiEmpty>
       </div>
       <!-- 暂无此贴，显示骨架屏 -->
-      <div v-else-if="mainPostGroup == null">骨架屏TODO</div>
+      <div v-else-if="mainPostGroup == null">
+        <PostGroup :data="[]"></PostGroup>
+      </div>
       <!-- 显示帖子 -->
       <div v-else>
         <div class="main-post-group-box">
           <PostGroup :data="mainPostGroup"></PostGroup>
         </div>
-        <div class="replie-button-box">
-          <el-button type="primary" round> 回 复 </el-button>
+        <div class="replie-button-box col1">
+          <el-button type="primary" round @click="replyPost"> 回 复 </el-button>
+        </div>
+        <div
+          v-if="postPoolItem && settingStore.isLoadingPostId(postPoolItem.id)"
+        >
+          <PostGroup :data="[]"></PostGroup>
         </div>
       </div>
       <!-- 没有回帖 -->
     </Col1Layout>
     <Col2Layout v-else>
       <template #colLeftSm>
-        <TopBar title="查看帖子">
-          <el-button
-            type="primary"
-            round
-            size="small"
-            :icon="House"
-            @click="$router.push('/')"
-          >
-            首页
-          </el-button>
-        </TopBar>
+        <TopBar title="查看帖子"></TopBar>
         <div class="main-post-group-box" v-if="mainPostGroup">
           <PostGroup :data="mainPostGroup"></PostGroup>
         </div>
         <div class="replie-button-box">
-          <el-button type="primary" round> 回 复 </el-button>
+          <el-button type="primary" round @click="replyPost"> 回 复 </el-button>
         </div>
       </template>
       <template #colLeft>
-        <TopBar title="查看帖子">
-          <el-button
-            type="primary"
-            round
-            size="small"
-            :icon="House"
-            @click="$router.push('/')"
-          >
-            首页
-          </el-button>
-        </TopBar>
+        <TopBar title="查看帖子"></TopBar>
         <div class="main-post-group-box" v-if="mainPostGroup">
           <PostGroup :data="mainPostGroup"></PostGroup>
         </div>
         <div class="replie-button-box">
-          <el-button type="primary" round> 回 复 </el-button>
+          <el-button type="primary" round @click="replyPost"> 回 复 </el-button>
         </div>
       </template>
       <template #colRight>
@@ -142,6 +123,11 @@ watch(routePostId, loadPostPoolItemData)
             :data="postGroup"
           >
           </PostGroup>
+        </div>
+        <div
+          v-if="postPoolItem && settingStore.isLoadingPostId(postPoolItem.id)"
+        >
+          <PostGroup :data="[]"></PostGroup>
         </div>
       </template>
     </Col2Layout>
@@ -155,6 +141,7 @@ watch(routePostId, loadPostPoolItemData)
 .main-post-group-box {
 }
 .replie-button-box {
+  margin: 20px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -169,6 +156,9 @@ watch(routePostId, loadPostPoolItemData)
         // letter-spacing: 6px;
       }
     }
+  }
+  &.col1 {
+    margin-bottom: 20px;
   }
 }
 </style>

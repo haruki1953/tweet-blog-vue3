@@ -5,7 +5,7 @@ export const dataConfirmLoginService = () => {
   const router = useRouter()
   const authStore = useAuthStore()
   if (authStore.token === '') {
-    router.push('/login')
+    router.push({ name: 'login' })
   }
 }
 

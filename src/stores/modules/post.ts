@@ -39,6 +39,9 @@ export const usePostStore = defineStore(
         return true
       }
     }
+    const resetPostRequested = () => {
+      requestedPostIds.value = []
+    }
 
     // useSomething
     const settingStore = useSettingStore()
@@ -107,8 +110,28 @@ export const usePostStore = defineStore(
       }
     }
 
+    // info to control SendPage
+    const infoForSend = ref<{
+      type: 'post' | 'reply' | 'update'
+      data: PostData | null
+    }>({
+      type: 'post',
+      data: null
+    })
+
     const toPostSendPage = () => {
-      router.push('/send')
+      infoForSend.value.type = 'post'
+      router.push({ name: 'send' })
+    }
+    const toReplySendPage = (data: PostData) => {
+      infoForSend.value.type = 'reply'
+      infoForSend.value.data = data
+      router.push({ name: 'send' })
+    }
+    const toUpdateSendPage = (data: PostData) => {
+      infoForSend.value.type = 'update'
+      infoForSend.value.data = data
+      router.push({ name: 'send' })
     }
 
     // scroll to load more
@@ -137,7 +160,6 @@ export const usePostStore = defineStore(
     return {
       postList,
       getPosts,
-      toPostSendPage,
       reGetPosts,
       limitedList,
       loadLimited,
@@ -146,9 +168,14 @@ export const usePostStore = defineStore(
       isHaveMoreLimited,
       isLoadingLimited,
       isPostRequested,
+      resetPostRequested,
       postPool,
       getPostPoolItem,
-      getPostById
+      getPostById,
+      infoForSend,
+      toPostSendPage,
+      toReplySendPage,
+      toUpdateSendPage
     }
   },
   {

@@ -10,11 +10,13 @@ const props = withDefaults(
     autoOpen?: boolean
     cancelOnClose?: boolean
     notPreview?: boolean
+    imageSelect?: boolean
   }>(),
   {
     autoOpen: false,
     cancelOnClose: false,
-    notPreview: false
+    notPreview: false,
+    imageSelect: false
   }
 )
 
@@ -76,6 +78,7 @@ const handleClose = () => {
       <ImageEditCard
         v-model="selectedImages"
         :notPreview="notPreview"
+        :imageSelect="imageSelect"
       ></ImageEditCard>
     </el-dialog>
   </div>

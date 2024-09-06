@@ -10,9 +10,11 @@ const selectedImages = defineModel<Image[]>({ required: true })
 withDefaults(
   defineProps<{
     notPreview?: boolean
+    imageSelect?: boolean
   }>(),
   {
-    notPreview: false
+    notPreview: false,
+    imageSelect: false
   }
 )
 
@@ -58,6 +60,10 @@ watch(
   },
   { immediate: true }
 )
+
+const cancelSelectedImg = () => {
+  selectedImages.value.splice(imgIndex.value, 1)
+}
 
 const settingStore = useSettingStore()
 const imageStore = useImageStore()
@@ -121,27 +127,19 @@ const isCanNext = computed(() => {
           v-model:index="imgIndex"
           :notPreview="notPreview"
         ></ImageGroup>
-      </div>
-      <div class="row" v-if="isMultiple">
-        <div class="image-select-box">
+        <div class="image-select-box row" v-if="imageSelect">
+          <div class="lable">
+            <template v-if="isMultiple">
+              第 {{ imgIndex + 1 }} 个图片
+            </template>
+          </div>
           <el-button
             round
-            type="primary"
+            type="danger"
             size="small"
-            @click="imgIndex -= 1"
-            :disabled="!isCanPrevious"
+            @click="cancelSelectedImg"
           >
-            上一个
-          </el-button>
-          <div class="lable">第 {{ imgIndex + 1 }} 个图片</div>
-          <el-button
-            round
-            type="primary"
-            size="small"
-            @click="imgIndex += 1"
-            :disabled="!isCanNext"
-          >
-            下一个
+            取消选择
           </el-button>
         </div>
       </div>
@@ -205,7 +203,7 @@ const isCanNext = computed(() => {
   }
 }
 .image-select-box {
-  margin: 0 10px;
+  margin: 5px 10px -5px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;

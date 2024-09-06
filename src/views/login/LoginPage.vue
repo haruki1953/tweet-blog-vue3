@@ -32,7 +32,7 @@ const login = async () => {
     // save token
     authStore.setToken(res.data.data)
     // push to home
-    await router.push('/')
+    await router.push({ name: 'home' })
     ElMessage.success('登录成功')
   } finally {
     // reset submit states mark

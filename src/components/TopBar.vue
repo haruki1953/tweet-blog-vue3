@@ -1,20 +1,44 @@
 <script setup lang="ts">
 import { ArrowLeft } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { House } from '@element-plus/icons-vue'
+
 defineProps<{
   title: string
 }>()
+
+const router = useRouter()
+const goBack = () => {
+  console.log(window.history.length)
+  if (window.history.length > 2) {
+    router.back()
+  } else {
+    // 如果没有历史记录，则导航到首页
+    router.push({ name: 'home' })
+  }
+}
 </script>
 <template>
   <div class="top-bar">
     <div class="mask">
       <div class="title">{{ title }}</div>
     </div>
-    <div class="back" @click="$router.back()">
+    <div class="back" @click="goBack">
       <el-icon size="16"><ArrowLeft /></el-icon>
       <span>返 回</span>
     </div>
     <div class="button">
-      <slot></slot>
+      <slot>
+        <el-button
+          type="primary"
+          round
+          size="small"
+          :icon="House"
+          @click="$router.push({ name: 'home' })"
+        >
+          首页
+        </el-button>
+      </slot>
     </div>
   </div>
 </template>

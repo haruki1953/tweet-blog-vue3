@@ -5,12 +5,13 @@ import type { Image, PostSendJsonType } from '@/types'
 import { useImageStore, usePostStore, useSettingStore } from '@/stores'
 import { postConfig } from '@/config'
 import { postSendApi } from '@/api'
-import { formatTime, sakiMessage } from '@/utils'
+import { formatTime, sakiGoBack, sakiMessage } from '@/utils'
 import { useRouter } from 'vue-router'
 import InfoEditDialog from './components/InfoEditDialog.vue'
 import type ImageEditDialog from '@/components/ImageEditDialog.vue'
 import { useNow } from '@vueuse/core'
 import { computed } from 'vue'
+import { onMounted } from 'vue'
 
 const formModel = ref<PostSendJsonType>({})
 
@@ -29,27 +30,6 @@ const addImage = (image: Image) => {
 const settingStore = useSettingStore()
 const postStore = usePostStore()
 const router = useRouter()
-
-const isSending = ref(false)
-const sendPost = async () => {
-  isSending.value = true
-  settingStore.setLoading(true)
-  try {
-    await postSendApi({
-      ...formModel.value,
-      images: imagesData.value.map((i) => i.id)
-    })
-    sakiMessage({
-      type: 'success',
-      message: '发送成功'
-    })
-    await postStore.reGetPosts()
-    router.push('/')
-  } finally {
-    settingStore.setLoading(false)
-    isSending.value = false
-  }
-}
 
 const refInfoEditDialog = ref<InstanceType<typeof InfoEditDialog> | null>(null)
 const refImageEditDialog = ref<InstanceType<typeof ImageEditDialog> | null>(
@@ -72,6 +52,156 @@ const couldNotSend = computed(() => {
     return false
   }
 })
+
+const isSending = ref(false)
+const sendPost = async () => {
+  isSending.value = true
+  settingStore.setLoading(true)
+  try {
+    await postSendApi({
+      ...formModel.value,
+      images: imagesData.value.map((i) => i.id)
+    })
+    sakiMessage({
+      type: 'success',
+      message: '发送成功'
+    })
+    await postStore.reGetPosts()
+    router.push({ name: 'home' })
+  } finally {
+    settingStore.setLoading(false)
+    isSending.value = false
+  }
+}
+
+const sendReply = async () => {
+  if (!infoBySendType.value.data) {
+    return
+  }
+  isSending.value = true
+  settingStore.setLoading(true)
+  try {
+    await postSendApi({
+      ...formModel.value,
+      images: imagesData.value.map((i) => i.id),
+      parentPostId: infoBySendType.value.data.id
+    })
+    sakiMessage({
+      type: 'success',
+      message: '回复成功'
+    })
+    await postStore.reGetPosts()
+    postStore.resetPostRequested()
+    sakiGoBack(router)
+  } finally {
+    settingStore.setLoading(false)
+    isSending.value = false
+  }
+}
+
+const sendUpdate = async () => {
+  if (!infoBySendType.value.data) {
+    return
+  }
+  isSending.value = true
+  settingStore.setLoading(true)
+  try {
+    // await postSendApi({
+    //   ...formModel.value,
+    //   images: imagesData.value.map((i) => i.id),
+    //   parentPostId: infoBySendType.value.data.id
+    // })
+    sakiMessage({
+      type: 'success',
+      message: '修改成功'
+    })
+    await postStore.reGetPosts()
+    postStore.resetPostRequested()
+    sakiGoBack(router)
+  } finally {
+    settingStore.setLoading(false)
+    isSending.value = false
+  }
+}
+
+type InfoBySendType = {
+  type: typeof postStore.infoForSend.type
+  data: typeof postStore.infoForSend.data
+  topBarTitle: string
+  topBarBtnText: string
+  sendFunc: () => void
+  repostLableText: string | null
+  textareaPlaceholder: string
+}
+const infoBySendType = computed((): InfoBySendType => {
+  // type === 'post'
+  const info: InfoBySendType = {
+    type: 'post',
+    data: null,
+    topBarTitle: '帖子发送',
+    topBarBtnText: '发 送',
+    sendFunc: sendPost,
+    repostLableText: null,
+    textareaPlaceholder: '有什么新鲜事？！'
+  }
+  if (postStore.infoForSend.type === 'reply' && postStore.infoForSend.data) {
+    info.type = 'reply'
+    info.data = postStore.infoForSend.data
+    info.topBarTitle = '帖子回复'
+    info.topBarBtnText = '回 复'
+    info.sendFunc = sendReply
+    info.repostLableText = postStore.infoForSend.data.content
+    info.textareaPlaceholder = '发布你的回复'
+  }
+  if (postStore.infoForSend.type === 'update' && postStore.infoForSend.data) {
+    info.type = 'update'
+    info.data = postStore.infoForSend.data
+    info.topBarTitle = '帖子修改'
+    info.topBarBtnText = '修 改'
+    info.sendFunc = sendUpdate
+    info.repostLableText = postStore.infoForSend.data.content
+    info.textareaPlaceholder = '有什么新鲜事？！'
+  }
+  return info
+})
+
+const initFormModelForUpdate = () => {
+  if (!(infoBySendType.value.type === 'update' && infoBySendType.value.data)) {
+    return
+  }
+  const {
+    content,
+    createdAt,
+    parentPostId,
+    twitterId,
+    twitterLink,
+    isDeleted,
+    images
+  } = infoBySendType.value.data
+  formModel.value = {
+    content,
+    createdAt: new Date(createdAt),
+    parentPostId,
+    twitterId,
+    twitterLink,
+    isDeleted
+  }
+  // deep copy, to prevent it change the post in home page
+  imagesData.value = [...images]
+}
+// formModel: {
+//     content?: string | undefined;
+//     images?: number[] | undefined;
+//     createdAt?: Date | undefined;
+//     parentPostId?: number | null | undefined;
+//     twitterId?: string | null | undefined;
+//     twitterLink?: string | null | undefined;
+//     isDeleted?: boolean | undefined;
+// }
+
+onMounted(() => {
+  initFormModelForUpdate()
+})
 </script>
 <template>
   <div>
@@ -83,35 +213,42 @@ const couldNotSend = computed(() => {
       ref="refImageEditDialog"
       v-model="imagesData"
       notPreview
+      imageSelect
     ></ImageEditDialog>
     <Col2Layout>
       <template #colLeftSm>
-        <TopBar title="帖子发送">
+        <TopBar :title="infoBySendType.topBarTitle">
           <el-button
             type="primary"
             round
             size="small"
-            @click="sendPost"
+            @click="infoBySendType.sendFunc"
             :disabled="imageStore.isImageUploading || couldNotSend"
             :loading="isSending"
           >
-            发 送
+            {{ infoBySendType.topBarBtnText }}
           </el-button>
         </TopBar>
       </template>
       <template #colLeft>
-        <TopBar title="帖子发送" class="left">
+        <TopBar :title="infoBySendType.topBarTitle">
           <el-button
             type="primary"
             round
             size="small"
-            @click="sendPost"
+            @click="infoBySendType.sendFunc"
             :disabled="imageStore.isImageUploading || couldNotSend"
             :loading="isSending"
           >
-            发 送
+            {{ infoBySendType.topBarBtnText }}
           </el-button>
         </TopBar>
+        <div
+          class="post-group-box"
+          v-if="['reply'].includes(infoBySendType.type) && infoBySendType.data"
+        >
+          <PostGroup :data="[infoBySendType.data]" mini></PostGroup>
+        </div>
         <ImageUploader :onUploaded="addImage"></ImageUploader>
         <ImageSelector
           v-model="imagesData"
@@ -121,11 +258,13 @@ const couldNotSend = computed(() => {
       <template #colRight>
         <div class="info-bar">
           <div class="info">
-            <div class="repost" v-if="false">
+            <div class="repost" v-if="infoBySendType.repostLableText != null">
               <el-icon :size="15">
                 <ChatLineSquare />
               </el-icon>
-              <div class="repost-text">帖子</div>
+              <div class="repost-text">
+                {{ infoBySendType.repostLableText }}
+              </div>
             </div>
           </div>
           <div class="time">
@@ -142,7 +281,7 @@ const couldNotSend = computed(() => {
         <div class="content-box">
           <el-input
             v-model="formModel.content"
-            placeholder="有什么新鲜事？！"
+            :placeholder="infoBySendType.textareaPlaceholder"
             :rows="10"
             type="textarea"
             size="large"

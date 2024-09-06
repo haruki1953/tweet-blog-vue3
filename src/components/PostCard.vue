@@ -9,10 +9,22 @@ import {
 } from '@element-plus/icons-vue'
 import type { PostData } from '@/types'
 import { formatTime } from '@/utils'
+import { usePostStore } from '@/stores'
 
-defineProps<{
-  data: PostData
-}>()
+const props = withDefaults(
+  defineProps<{
+    data: PostData
+    mini?: boolean
+  }>(),
+  {
+    mini: false
+  }
+)
+
+const postStore = usePostStore()
+const editPost = () => {
+  postStore.toUpdateSendPage(props.data)
+}
 </script>
 <template>
   <div class="post-card">
@@ -33,9 +45,9 @@ defineProps<{
       <div class="content">{{ data.content }}</div>
     </div>
     <div class="image-box" v-if="data.images.length > 0">
-      <ImageGroup :data="data.images"></ImageGroup>
+      <ImageGroup :data="data.images" :mini="mini"></ImageGroup>
     </div>
-    <div class="button-box">
+    <div class="button-box" v-if="!mini">
       <div class="replies-lable">
         <div class="count" v-if="data._count.replies > 0">
           {{ data._count.replies }}
@@ -47,9 +59,15 @@ defineProps<{
           :icon="ChatSquare"
           circle
           size="small"
-          @click="$router.push(`/post/${data.id}`)"
+          @click="$router.push({ name: 'post', params: { id: data.id } })"
         />
-        <el-button type="info" :icon="EditPen" circle size="small" />
+        <el-button
+          type="info"
+          :icon="EditPen"
+          circle
+          size="small"
+          @click="editPost"
+        />
         <el-button type="warning" :icon="Star" circle size="small" />
         <el-button type="danger" :icon="Delete" circle size="small" />
         <el-button type="success" :icon="Connection" circle size="small" />

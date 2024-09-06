@@ -1,14 +1,23 @@
 <script setup lang="ts">
 import type { PostData } from '@/types'
 
-defineProps<{
-  data: PostData[]
-}>()
+withDefaults(
+  defineProps<{
+    data: PostData[]
+    mini?: boolean
+  }>(),
+  {
+    mini: false
+  }
+)
 </script>
 <template>
-  <div class="post-group">
+  <div class="post-group post-group-skeleton" v-if="data.length === 0">
+    <el-skeleton :rows="5" animated />
+  </div>
+  <div class="post-group" :class="{ 'card-mini': mini }" v-else>
     <template v-for="(post, index) in data" :key="post.id">
-      <PostCard :data="post"></PostCard>
+      <PostCard :data="post" :mini="mini"></PostCard>
       <el-divider v-if="index < data.length - 1" border-style="dotted" />
     </template>
   </div>
@@ -21,6 +30,37 @@ defineProps<{
   background-color: var(--color-background-soft);
   border-radius: 20px;
   transition: all 0.5s;
+  &.card-mini {
+    padding-bottom: 18px;
+    .el-divider {
+      margin-top: 18px;
+    }
+  }
+}
+.post-group-skeleton {
+  .el-skeleton {
+    :deep() {
+      .el-skeleton__item {
+        background: linear-gradient(
+          90deg,
+          var(--color-background) 25%,
+          var(--color-background-mute) 37%,
+          var(--color-background) 63%
+        );
+        background-size: 400% 100%;
+        transition: all 0.5s;
+      }
+      .is-first {
+        width: 40%;
+        margin-left: 60%;
+      }
+      .is-last {
+        width: 60%;
+        margin: 0 20%;
+        margin-top: 16px;
+      }
+    }
+  }
 }
 .el-divider {
   width: 90%;

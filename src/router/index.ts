@@ -1,18 +1,20 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { webName } from '@/config'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 // 下边这些可能是因为vue的vscode插件导致报错，先不管了
 import LayoutContainer from '@/views/layout/LayoutContainer.vue'
 import HomePage from '@/views/home/HomePage.vue'
 import LoginPage from '@/views/login/LoginPage.vue'
-import PostSend from '@/views/post/PostSend.vue'
+import SendPage from '@/views/post/SendPage.vue'
 import PostPage from '@/views/post/PostPage.vue'
 import AlbumPage from '@/views/image/AlbumPage.vue'
+import { useImageStore, usePostStore } from '@/stores'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      name: 'login',
       path: '/login',
       component: LoginPage,
       meta: { title: `登录` }
@@ -22,21 +24,25 @@ const router = createRouter({
       component: LayoutContainer,
       children: [
         {
+          name: 'home',
           path: '',
           component: HomePage,
           meta: { title: `` }
         },
         {
+          name: 'post',
           path: '/post/:id',
           component: PostPage,
-          meta: { title: `帖子` }
+          meta: { title: `` }
         },
         {
+          name: 'send',
           path: '/send',
-          component: PostSend,
-          meta: { title: `发送帖子` }
+          component: SendPage,
+          meta: { title: `` }
         },
         {
+          name: 'album',
           path: '/album',
           component: AlbumPage,
           meta: { title: `相册` }
@@ -45,20 +51,30 @@ const router = createRouter({
     }
   ],
   // 路由滚动行为定制
-  scrollBehavior: (to, from, savedPosition) => {
+  scrollBehavior: async (to, from, savedPosition) => {
+    // 刷新时会有savedPosition，但自己想回到顶部
+    if (to.path === from.path) {
+      return { top: 0 }
+    }
+    // 保留有位置信息时滚动到原先位置
+    if (savedPosition) {
+      // 延迟一点会使滚动更准确
+      await new Promise((resolve) => setTimeout(resolve, 1))
+      return savedPosition
+    }
+    // 跳转至首页或其他包含无限滚动的页面时，重置显示限制
+    if (to.path === '/') {
+      const postStore = usePostStore()
+      postStore.resetLimited()
+      return { top: 0 }
+    }
+    if (['/album', '/send'].includes(to.path)) {
+      const imageStore = useImageStore()
+      imageStore.resetLimited()
+      return { top: 0 }
+    }
+    // 默认回到顶部
     return { top: 0 }
-    //   if (savedPosition) {
-    //     return new Promise((resolve, reject) => {
-    //       setTimeout(() => {
-    //         resolve({
-    //           ...savedPosition,
-    //           behavior: 'smooth'
-    //         })
-    //       }, 100)
-    //     })
-    //   } else {
-    //     return { top: 0 }
-    //   }
   }
 })
 

@@ -59,7 +59,7 @@ const imageSpan = computed(() => {
 })
 
 onMounted(() => {
-  imageStore.resetLimited()
+  // imageStore.resetLimited()
 })
 
 const infiniteScrollFunc = () => {

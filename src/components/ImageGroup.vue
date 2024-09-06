@@ -12,10 +12,12 @@ const props = withDefaults(
     data: Image[]
     backgroundColor?: '' | 'soft'
     notPreview?: boolean
+    mini?: boolean
   }>(),
   {
     backgroundColor: '',
-    notPreview: false
+    notPreview: false,
+    mini: false
   }
 )
 
@@ -29,17 +31,27 @@ const img1Load = async () => {
   // width / height
   const maxRatio = 4 / 5
   const minRatio = 4 / 1
+  const normalRatio = 16 / 9
 
   const width = imgEl.offsetWidth
   const height = imgEl.offsetHeight
 
   const maxHeight = width / maxRatio
   const minHeight = width / minRatio
+  const normalHeight = width / normalRatio
 
-  if (height > maxHeight) {
-    imgEl.style.setProperty('aspect-ratio', '4 / 5')
-  } else if (height < minHeight) {
-    imgEl.style.setProperty('aspect-ratio', '4 / 1')
+  if (props.mini) {
+    if (height > normalHeight) {
+      imgEl.style.setProperty('aspect-ratio', '16 / 9')
+    } else if (height < minHeight) {
+      imgEl.style.setProperty('aspect-ratio', '4 / 1')
+    }
+  } else {
+    if (height > maxHeight) {
+      imgEl.style.setProperty('aspect-ratio', '4 / 5')
+    } else if (height < minHeight) {
+      imgEl.style.setProperty('aspect-ratio', '4 / 1')
+    }
   }
 }
 
