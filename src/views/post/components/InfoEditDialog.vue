@@ -2,9 +2,15 @@
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { useWindowSize } from '@vueuse/core'
-import type { PostSendJsonType } from '@/types'
+import type { InfoBySendType, PostSendJsonType } from '@/types'
+import { Connection, Link } from '@element-plus/icons-vue'
 
 const model = defineModel<PostSendJsonType>({ required: true })
+
+const props = defineProps<{
+  resetFunc?: () => void
+  info: InfoBySendType
+}>()
 
 const dialogVisible = ref(false)
 
@@ -30,8 +36,23 @@ const handleModelData = () => {
 }
 
 const resetModelData = () => {
+  if (props.resetFunc != null) {
+    props.resetFunc()
+    return
+  }
+  // default reset
   model.value.createdAt = undefined
+  model.value.twitterId = undefined
+  model.value.twitterLink = undefined
 }
+
+const placeholderByType = computed(() => {
+  if (props.info.type === 'update') {
+    return '（空）'
+  } else {
+    return undefined
+  }
+})
 </script>
 <template>
   <div class="info-edit-dialog">
@@ -54,6 +75,28 @@ const resetModelData = () => {
           </div>
         </div>
         <div class="row center-box">
+          <div class="lable">X Id</div>
+          <div class="input-box">
+            <el-input
+              v-model="model.twitterId"
+              :placeholder="placeholderByType || '设置帖子在 X 的 id'"
+              :prefix-icon="Connection"
+              class="input"
+            />
+          </div>
+        </div>
+        <div class="row center-box">
+          <div class="lable">X Link</div>
+          <div class="input-box">
+            <el-input
+              v-model="model.twitterLink"
+              :placeholder="placeholderByType || '设置帖子在 X 的 链接'"
+              :prefix-icon="Link"
+              class="input"
+            />
+          </div>
+        </div>
+        <div class="button-box">
           <el-button round type="info" size="small" @click="resetModelData">
             重 置
           </el-button>
@@ -105,5 +148,15 @@ const resetModelData = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.button-box {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  .el-button {
+    display: flex;
+    margin: 0;
+  }
 }
 </style>

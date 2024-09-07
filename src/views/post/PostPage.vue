@@ -88,11 +88,13 @@ const replyPost = () => {
         <div class="replie-button-box col1">
           <el-button type="primary" round @click="replyPost"> 回 复 </el-button>
         </div>
-        <div
-          v-if="postPoolItem && settingStore.isLoadingPostId(postPoolItem.id)"
-        >
-          <PostGroup :data="[]"></PostGroup>
-        </div>
+        <Transition name="fade-slide">
+          <div
+            v-if="postPoolItem && settingStore.isLoadingPostId(postPoolItem.id)"
+          >
+            <PostGroup :data="[]"></PostGroup>
+          </div>
+        </Transition>
       </div>
       <!-- 没有回帖 -->
     </Col1Layout>
@@ -117,18 +119,22 @@ const replyPost = () => {
       </template>
       <template #colRight>
         <div class="replies-post-group-box" v-if="postPoolItem">
+          <!-- <TransitionGroup name="fade-slide-list"> -->
           <PostGroup
             v-for="postGroup in postPoolItem.replies"
             :key="postGroup.map((p) => p.id).toString()"
             :data="postGroup"
           >
           </PostGroup>
+          <!-- </TransitionGroup> -->
         </div>
-        <div
-          v-if="postPoolItem && settingStore.isLoadingPostId(postPoolItem.id)"
-        >
-          <PostGroup :data="[]"></PostGroup>
-        </div>
+        <Transition name="fade-slide">
+          <div
+            v-if="postPoolItem && settingStore.isLoadingPostId(postPoolItem.id)"
+          >
+            <PostGroup :data="[]"></PostGroup>
+          </div>
+        </Transition>
       </template>
     </Col2Layout>
   </div>

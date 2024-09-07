@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ChatLineSquare, EditPen, Edit } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import type { Image, PostSendJsonType } from '@/types'
+import type { Image, InfoBySendType, PostSendJsonType } from '@/types'
 import { useImageStore, usePostStore, useSettingStore } from '@/stores'
 import { postConfig } from '@/config'
 import { postSendApi } from '@/api'
@@ -124,15 +124,6 @@ const sendUpdate = async () => {
   }
 }
 
-type InfoBySendType = {
-  type: typeof postStore.infoForSend.type
-  data: typeof postStore.infoForSend.data
-  topBarTitle: string
-  topBarBtnText: string
-  sendFunc: () => void
-  repostLableText: string | null
-  textareaPlaceholder: string
-}
 const infoBySendType = computed((): InfoBySendType => {
   // type === 'post'
   const info: InfoBySendType = {
@@ -198,6 +189,12 @@ const initFormModelForUpdate = () => {
 //     twitterLink?: string | null | undefined;
 //     isDeleted?: boolean | undefined;
 // }
+const resetFuncForInfoEditDialog = computed(() => {
+  if (!(infoBySendType.value.type === 'update' && infoBySendType.value.data)) {
+    return undefined
+  }
+  return initFormModelForUpdate
+})
 
 onMounted(() => {
   initFormModelForUpdate()
@@ -208,6 +205,8 @@ onMounted(() => {
     <InfoEditDialog
       ref="refInfoEditDialog"
       v-model="formModel"
+      :info="infoBySendType"
+      :resetFunc="resetFuncForInfoEditDialog"
     ></InfoEditDialog>
     <ImageEditDialog
       ref="refImageEditDialog"

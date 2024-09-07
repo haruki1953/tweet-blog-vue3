@@ -1,5 +1,5 @@
 import { postGetByCursorApi, postGetByIdApi } from '@/api'
-import type { PosPoolItem, PostData } from '@/types'
+import type { InfoForSendType, PosPoolItem, PostData } from '@/types'
 import { postGetByCursorDataHandle, postGetByIdDataHandle } from '@/utils'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
@@ -111,10 +111,7 @@ export const usePostStore = defineStore(
     }
 
     // info to control SendPage
-    const infoForSend = ref<{
-      type: 'post' | 'reply' | 'update'
-      data: PostData | null
-    }>({
+    const infoForSend = ref<InfoForSendType>({
       type: 'post',
       data: null
     })
