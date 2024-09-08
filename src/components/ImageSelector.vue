@@ -58,15 +58,25 @@ const imageSpan = computed(() => {
   }
 })
 
-onMounted(() => {
-  // imageStore.resetLimited()
-})
-
 const infiniteScrollFunc = () => {
   if (props.infiniteScroll) {
     imageStore.loadLimited()
   }
 }
+
+// 测试新增动画
+// onMounted(async () => {
+//   let i = 0
+//   while (i < imageStore.limitedList.length) {
+//     await new Promise((resolve) => setTimeout(resolve, 2000))
+//     addToList.value.unshift(imageStore.limitedList[i])
+//     i += 1
+//   }
+// })
+// const addToList = ref<typeof imageStore.limitedList>([])
+// const imageListForShow = computed(() => {
+//   return [...addToList.value, ...imageStore.limitedList]
+// })
 </script>
 <template>
   <div
@@ -82,23 +92,28 @@ const infiniteScrollFunc = () => {
     :infinite-scroll-distance="200" 
     -->
     <el-row :gutter="6">
-      <el-col
-        :span="imageSpan"
-        v-for="image in imageStore.limitedList"
-        :key="image.id"
-        class="img-box"
-      >
-        <el-image
-          fit="cover"
-          :src="imgSamllUrl(image)"
-          @click="selectImage(image)"
-        ></el-image>
-        <div class="img-mask">
-          <el-icon size="50" v-show="isSelected(image)">
-            <CircleCheckFilled />
-          </el-icon>
-        </div>
-      </el-col>
+      <TransitionGroup name="fade-slide-list">
+        <el-col :span="24" v-if="imageStore.limitedList.length === 0">
+          <SakiEmpty description="暂无图片"></SakiEmpty>
+        </el-col>
+        <el-col
+          :span="imageSpan"
+          v-for="image in imageStore.limitedList"
+          :key="image.id"
+          class="img-box"
+        >
+          <el-image
+            fit="cover"
+            :src="imgSamllUrl(image)"
+            @click="selectImage(image)"
+          ></el-image>
+          <div class="img-mask">
+            <el-icon size="50" v-show="isSelected(image)">
+              <CircleCheckFilled />
+            </el-icon>
+          </div>
+        </el-col>
+      </TransitionGroup>
     </el-row>
     <div class="load-button-box" v-if="imageStore.isHaveMoreLimited">
       <el-button

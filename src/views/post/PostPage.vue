@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePostStore, useSettingStore } from '@/stores'
 import type { PosPoolItem, PostData } from '@/types'
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
 import { onMounted } from 'vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
@@ -58,8 +58,39 @@ const loadPostPoolItemData = () => {
   postStore.getPostById(routePostId.value)
 }
 
-onMounted(loadPostPoolItemData)
-watch(routePostId, loadPostPoolItemData)
+const shouldShowSkeletonOnMounted = ref(false)
+const checkShouldShowSkeletonOnMounted = async () => {
+  if (!postPoolItem.value) {
+    return
+  }
+  if (!postStore.isPostRequested(postPoolItem.value.id)) {
+    // 最少显示Skeleton 2秒
+    shouldShowSkeletonOnMounted.value = true
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+  }
+  shouldShowSkeletonOnMounted.value = false
+}
+const isShowSkeleton = computed(() => {
+  if (!postPoolItem.value) {
+    return false
+  }
+  if (shouldShowSkeletonOnMounted.value) {
+    return true
+  }
+  if (!postStore.isPostRequested(postPoolItem.value.id)) {
+    return true
+  }
+  return false
+})
+
+watch(
+  routePostId,
+  () => {
+    loadPostPoolItemData()
+    checkShouldShowSkeletonOnMounted()
+  },
+  { immediate: true }
+)
 
 const replyPost = () => {
   if (!postPoolItem.value) {
@@ -70,11 +101,12 @@ const replyPost = () => {
 </script>
 <template>
   <div>
+    <!-- <Transition name="fade-slide"> -->
     <Col1Layout v-if="!shouldShow2Col">
-      <TopBar title="查看帖子"></TopBar>
+      <TopBar title="查看推文"></TopBar>
       <!-- id参数无效 -->
       <div v-if="routePostId == null">
-        <SakiEmpty description="帖子 id 无效" type="error"></SakiEmpty>
+        <SakiEmpty description="推文 id 无效" type="error"></SakiEmpty>
       </div>
       <!-- 暂无此贴，显示骨架屏 -->
       <div v-else-if="mainPostGroup == null">
@@ -89,9 +121,7 @@ const replyPost = () => {
           <el-button type="primary" round @click="replyPost"> 回 复 </el-button>
         </div>
         <Transition name="fade-slide">
-          <div
-            v-if="postPoolItem && settingStore.isLoadingPostId(postPoolItem.id)"
-          >
+          <div v-if="isShowSkeleton">
             <PostGroup :data="[]"></PostGroup>
           </div>
         </Transition>
@@ -100,7 +130,7 @@ const replyPost = () => {
     </Col1Layout>
     <Col2Layout v-else>
       <template #colLeftSm>
-        <TopBar title="查看帖子"></TopBar>
+        <TopBar title="查看推文"></TopBar>
         <div class="main-post-group-box" v-if="mainPostGroup">
           <PostGroup :data="mainPostGroup"></PostGroup>
         </div>
@@ -109,7 +139,7 @@ const replyPost = () => {
         </div>
       </template>
       <template #colLeft>
-        <TopBar title="查看帖子"></TopBar>
+        <TopBar title="查看推文"></TopBar>
         <div class="main-post-group-box" v-if="mainPostGroup">
           <PostGroup :data="mainPostGroup"></PostGroup>
         </div>
@@ -119,7 +149,7 @@ const replyPost = () => {
       </template>
       <template #colRight>
         <div class="replies-post-group-box" v-if="postPoolItem">
-          <!-- <TransitionGroup name="fade-slide-list"> -->
+          <!-- <TransitionGroup name="fade-slide"> -->
           <PostGroup
             v-for="postGroup in postPoolItem.replies"
             :key="postGroup.map((p) => p.id).toString()"
@@ -129,14 +159,13 @@ const replyPost = () => {
           <!-- </TransitionGroup> -->
         </div>
         <Transition name="fade-slide">
-          <div
-            v-if="postPoolItem && settingStore.isLoadingPostId(postPoolItem.id)"
-          >
+          <div v-if="isShowSkeleton">
             <PostGroup :data="[]"></PostGroup>
           </div>
         </Transition>
       </template>
     </Col2Layout>
+    <!-- </Transition> -->
   </div>
 </template>
 
@@ -162,9 +191,6 @@ const replyPost = () => {
         // letter-spacing: 6px;
       }
     }
-  }
-  &.col1 {
-    margin-bottom: 20px;
   }
 }
 </style>

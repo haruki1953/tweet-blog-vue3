@@ -1,6 +1,15 @@
 import { postGetByCursorApi, postGetByIdApi } from '@/api'
-import type { InfoForSendType, PosPoolItem, PostData } from '@/types'
-import { postGetByCursorDataHandle, postGetByIdDataHandle } from '@/utils'
+import type {
+  InfoForSendType,
+  PosPoolItem,
+  PostData,
+  PostGetByCursorQueryType
+} from '@/types'
+import {
+  postGetByCursorDataHandle,
+  postGetByIdDataHandle,
+  sakiMessage
+} from '@/utils'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useSettingStore } from './setting'
@@ -11,12 +20,18 @@ export const usePostStore = defineStore(
   'tweet-post',
   () => {
     // home
-    let cursor = 0
+    const cursor = ref(0)
     const postList = ref<PostData[][]>([])
     const haveMoreMark = ref(false)
     const isHaveMore = computed(() => {
       return haveMoreMark.value
     })
+    const isFirstRequest = computed(() => {
+      return cursor.value === 0
+    })
+
+    // search
+    const postGetByCursorQuery = ref<PostGetByCursorQueryType>({})
 
     // limit show amounts
     const startLimitedAmounts = postConfig.limitShow.startAmounts
@@ -50,31 +65,66 @@ export const usePostStore = defineStore(
     // GET post to postList
     const getPosts = async () => {
       if (!isHaveMore.value) {
-        return
+        return false
       }
       settingStore.setPostLoading(true)
-      const res = await postGetByCursorApi(cursor)
+      // 测试加载时的骨架屏
+      // await new Promise((resolve) => setTimeout(resolve, 500))
+      const res = await postGetByCursorApi(
+        cursor.value,
+        postGetByCursorQuery.value
+      )
       settingStore.setPostLoading(false)
 
       const resPosts = res.data.data
+      // const resPosts: typeof res.data.data = []
       if (resPosts.length === 0) {
         haveMoreMark.value = false
-        return
+        return false
       }
       const tempList = postGetByCursorDataHandle(resPosts)
 
-      if (cursor === 0) {
+      if (cursor.value === 0) {
         postList.value = tempList
       } else {
         postList.value.push(...tempList)
       }
-      cursor = resPosts[resPosts.length - 1].id
+      cursor.value = resPosts[resPosts.length - 1].id
+      return true
+    }
+    const resetCursorInfo = () => {
+      cursor.value = 0
+      haveMoreMark.value = true
+      resetLimited()
     }
     const reGetPosts = async () => {
-      cursor = 0
-      haveMoreMark.value = true
+      resetCursorInfo()
+      postGetByCursorQuery.value = {}
       await getPosts()
     }
+
+    const searchGetPosts = async (content: string) => {
+      resetCursorInfo()
+      postGetByCursorQuery.value = { content }
+      const isFind = await getPosts()
+      if (!isFind) {
+        postList.value = []
+        sakiMessage({
+          type: 'error',
+          message: '没有相关推文'
+        })
+      }
+    }
+
+    const isNormalGetPostsMode = computed(() => {
+      if (postGetByCursorQuery.value.content != null) {
+        return false
+      }
+      if (postGetByCursorQuery.value.isDelete != null) {
+        return false
+      }
+      return true
+    })
 
     // // GET post to postPool
     const getPostById = async (id: number) => {
@@ -172,7 +222,10 @@ export const usePostStore = defineStore(
       infoForSend,
       toPostSendPage,
       toReplySendPage,
-      toUpdateSendPage
+      toUpdateSendPage,
+      isFirstRequest,
+      isNormalGetPostsMode,
+      searchGetPosts
     }
   },
   {

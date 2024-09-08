@@ -52,9 +52,12 @@ const router = createRouter({
   ],
   // 路由滚动行为定制
   scrollBehavior: async (to, from, savedPosition) => {
-    // 刷新时会有savedPosition，但自己想回到顶部
+    // console.log(to, from)
+    // console.log(to.path, from.path)
+
+    // 刷新时会有savedPosition，但自己想默认
     if (to.path === from.path) {
-      return { top: 0 }
+      return
     }
     // 保留有位置信息时滚动到原先位置
     if (savedPosition) {

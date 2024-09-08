@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import type { Image, InfoBySendType, PostSendJsonType } from '@/types'
 import { useImageStore, usePostStore, useSettingStore } from '@/stores'
 import { postConfig } from '@/config'
-import { postSendApi } from '@/api'
+import { postSendApi, postUpdateApi } from '@/api'
 import { formatTime, sakiGoBack, sakiMessage } from '@/utils'
 import { useRouter } from 'vue-router'
 import InfoEditDialog from './components/InfoEditDialog.vue'
@@ -106,18 +106,21 @@ const sendUpdate = async () => {
   isSending.value = true
   settingStore.setLoading(true)
   try {
-    // await postSendApi({
-    //   ...formModel.value,
-    //   images: imagesData.value.map((i) => i.id),
-    //   parentPostId: infoBySendType.value.data.id
-    // })
+    const res = await postUpdateApi({
+      ...formModel.value,
+      id: infoBySendType.value.data.id,
+      images: imagesData.value.map((i) => i.id)
+    })
     sakiMessage({
       type: 'success',
       message: '修改成功'
     })
     await postStore.reGetPosts()
     postStore.resetPostRequested()
-    sakiGoBack(router)
+    router.replace({
+      name: 'post',
+      params: { id: res.data.data.id }
+    })
   } finally {
     settingStore.setLoading(false)
     isSending.value = false
@@ -129,7 +132,7 @@ const infoBySendType = computed((): InfoBySendType => {
   const info: InfoBySendType = {
     type: 'post',
     data: null,
-    topBarTitle: '帖子发送',
+    topBarTitle: '推文发送',
     topBarBtnText: '发 送',
     sendFunc: sendPost,
     repostLableText: null,
@@ -138,7 +141,7 @@ const infoBySendType = computed((): InfoBySendType => {
   if (postStore.infoForSend.type === 'reply' && postStore.infoForSend.data) {
     info.type = 'reply'
     info.data = postStore.infoForSend.data
-    info.topBarTitle = '帖子回复'
+    info.topBarTitle = '推文回复'
     info.topBarBtnText = '回 复'
     info.sendFunc = sendReply
     info.repostLableText = postStore.infoForSend.data.content
@@ -147,10 +150,13 @@ const infoBySendType = computed((): InfoBySendType => {
   if (postStore.infoForSend.type === 'update' && postStore.infoForSend.data) {
     info.type = 'update'
     info.data = postStore.infoForSend.data
-    info.topBarTitle = '帖子修改'
+    info.topBarTitle = '推文修改'
     info.topBarBtnText = '修 改'
     info.sendFunc = sendUpdate
-    info.repostLableText = postStore.infoForSend.data.content
+    info.repostLableText =
+      postStore.infoForSend.data.parentPost?.content == null
+        ? null
+        : postStore.infoForSend.data.parentPost.content
     info.textareaPlaceholder = '有什么新鲜事？！'
   }
   return info

@@ -9,7 +9,7 @@ defineProps<{
 
 const router = useRouter()
 const goBack = () => {
-  console.log(window.history.length)
+  // console.log(window.history.length)
   if (window.history.length > 2) {
     router.back()
   } else {

@@ -4,7 +4,9 @@ import type {
   PostGetByIdQueryType,
   PostGetByIdRes,
   PostSendJsonType,
-  PostSendRes
+  PostSendRes,
+  PostUpdateJsonType,
+  PostUpdateRes
 } from '@/types'
 import { http } from '@/utils'
 
@@ -19,6 +21,10 @@ export const postGetByCursorApi = (
 
 export const postSendApi = (json: PostSendJsonType): PostSendRes => {
   return http.post('/post', json)
+}
+
+export const postUpdateApi = (json: PostUpdateJsonType): PostUpdateRes => {
+  return http.put('/post', json)
 }
 
 export const postGetByIdApi = (

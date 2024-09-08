@@ -1,49 +1,61 @@
 <script setup lang="ts">
 import ProfileCard from './components/ProfileCard.vue'
-import { usePostStore } from '@/stores'
-// import { onMounted } from 'vue'
-import { computed, onMounted } from 'vue'
+import { usePostStore, useSettingStore } from '@/stores'
+import { computed, onMounted, ref, watch } from 'vue'
 
 const postStore = usePostStore()
+const settingStore = useSettingStore()
 
-const sendPost = () => {
-  postStore.toPostSendPage()
+const shouldShowSkeletonOnMounted = ref(false)
+let isChecking = false
+const checkShouldShowSkeletonOnMounted = async () => {
+  if (isChecking) {
+    return
+  }
+  isChecking = true
+  if (postStore.isFirstRequest) {
+    shouldShowSkeletonOnMounted.value = true
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+  }
+  shouldShowSkeletonOnMounted.value = false
+  isChecking = false
 }
 
-onMounted(() => {
-  // postStore.resetLimited()
+watch(
+  () => postStore.isFirstRequest,
+  () => {
+    checkShouldShowSkeletonOnMounted()
+  },
+  { immediate: true }
+)
+
+// onMounted(async () => {
+//   // postStore.resetLimited()
+//   checkShouldShowSkeletonOnMounted()
+// })
+
+const isShowSkeleton = computed(() => {
+  if (shouldShowSkeletonOnMounted.value) {
+    // 骨架屏至少显示一段时间
+    return true
+  }
+  if (settingStore.isLoadingPost && postStore.isFirstRequest) {
+    return true
+  }
+  if (postStore.limitedList.length === 0) {
+    return true
+  }
+  return false
 })
 </script>
 <template>
   <div>
     <Col2Layout>
       <template #colLeftSm>
-        <ProfileCard>
-          <div class="profile-solt">
-            <el-button
-              class="profile-button"
-              type="primary"
-              round
-              @click="sendPost"
-            >
-              发 帖
-            </el-button>
-          </div>
-        </ProfileCard>
+        <ProfileCard> </ProfileCard>
       </template>
       <template #colLeft>
-        <ProfileCard>
-          <div class="profile-solt">
-            <el-button
-              class="profile-button"
-              type="primary"
-              round
-              @click="sendPost"
-            >
-              发 帖
-            </el-button>
-          </div>
-        </ProfileCard>
+        <ProfileCard> </ProfileCard>
       </template>
       <template #colRight>
         <div
@@ -52,12 +64,19 @@ onMounted(() => {
           :infinite-scroll-delay="0"
           :infinite-scroll-immediate="false"
         >
-          <PostGroup
-            v-for="postGroup in postStore.limitedList"
-            :key="postGroup.map((p) => p.id).toString()"
-            :data="postGroup"
-          >
-          </PostGroup>
+          <TransitionGroup name="fade-slide-list">
+            <PostGroup
+              key="skeleton"
+              :data="[]"
+              v-if="isShowSkeleton"
+            ></PostGroup>
+            <PostGroup
+              v-for="postGroup in postStore.limitedList"
+              :key="postGroup.map((p) => p.id).toString()"
+              :data="postGroup"
+            >
+            </PostGroup>
+          </TransitionGroup>
           <div class="load-button-box" v-if="postStore.isHaveMoreLimited">
             <el-button
               type="primary"
@@ -76,23 +95,6 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.profile-solt {
-  // margin: 10px 0;
-  width: 50%;
-  .profile-button {
-    display: flex;
-    margin: 20px 0 0 0;
-    width: 100%;
-    :deep() {
-      span {
-        color: var(--color-background);
-        font-weight: bold;
-        transition: all 0.2s;
-        // letter-spacing: 6px;
-      }
-    }
-  }
-}
 .load-button-box {
   display: flex;
   justify-content: center;

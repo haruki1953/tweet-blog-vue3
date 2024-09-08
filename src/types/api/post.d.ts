@@ -19,6 +19,11 @@ export type PostSendJsonType = {
 }
 export type PostSendRes = ResData<Post>
 
+export type PostUpdateJsonType = PostSendJsonType & {
+  id: number
+}
+export type PostUpdateRes = ResData<Post>
+
 export type PostGetByIdQueryType = {
   keepIsDetele?: 'true' | 'false' | undefined
 }

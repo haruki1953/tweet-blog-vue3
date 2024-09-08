@@ -35,6 +35,7 @@ export const useImageStore = defineStore(
       settingStore.setImageLoading(false)
 
       const resImages = res.data.data
+      // const resImages: typeof res.data.data = []
       if (resImages.length === 0) {
         haveMoreMark.value = false
         return
