@@ -3,7 +3,8 @@ import type {
   InfoForSendType,
   PosPoolItem,
   PostData,
-  PostGetByCursorQueryType
+  PostGetByCursorQueryType,
+  PostsGetMode
 } from '@/types'
 import {
   postGetByCursorDataHandle,
@@ -95,14 +96,13 @@ export const usePostStore = defineStore(
     const resetCursorInfo = () => {
       cursor.value = 0
       haveMoreMark.value = true
+      postGetByCursorQuery.value = {}
       resetLimited()
     }
     const reGetPosts = async () => {
       resetCursorInfo()
-      postGetByCursorQuery.value = {}
       await getPosts()
     }
-
     const searchGetPosts = async (content: string) => {
       resetCursorInfo()
       postGetByCursorQuery.value = { content }
@@ -110,20 +110,39 @@ export const usePostStore = defineStore(
       if (!isFind) {
         postList.value = []
         sakiMessage({
-          type: 'error',
+          type: 'warning',
           message: '没有相关推文'
         })
       }
     }
+    const deleteGetPosts = async () => {
+      resetCursorInfo()
+      postGetByCursorQuery.value = { isDelete: 'true' }
+      const isFind = await getPosts()
+      if (!isFind) {
+        postList.value = []
+        sakiMessage({
+          type: 'warning',
+          message: '回收站为空'
+        })
+      }
+    }
 
-    const isNormalGetPostsMode = computed(() => {
+    const nowSearchKey = computed(() => {
+      if (postGetByCursorQuery.value.content == null) {
+        return null
+      }
+      return postGetByCursorQuery.value.content
+    })
+
+    const postsGetMode = computed((): PostsGetMode => {
       if (postGetByCursorQuery.value.content != null) {
-        return false
+        return 'search'
       }
       if (postGetByCursorQuery.value.isDelete != null) {
-        return false
+        return 'delete'
       }
-      return true
+      return 'normal'
     })
 
     // // GET post to postPool
@@ -224,8 +243,10 @@ export const usePostStore = defineStore(
       toReplySendPage,
       toUpdateSendPage,
       isFirstRequest,
-      isNormalGetPostsMode,
-      searchGetPosts
+      postsGetMode,
+      searchGetPosts,
+      nowSearchKey,
+      deleteGetPosts
     }
   },
   {

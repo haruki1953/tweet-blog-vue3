@@ -12,3 +12,5 @@ export interface InfoBySendType extends InfoForSendType {
   repostLableText: string | null
   textareaPlaceholder: string
 }
+
+export type PostsGetMode = 'normal' | 'search' | 'delete'

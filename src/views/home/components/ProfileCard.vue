@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import userAvatar from '@/assets/haruki.jpg'
 import { computed, onMounted, ref } from 'vue'
-import { Search } from '@element-plus/icons-vue'
+import { Search, House } from '@element-plus/icons-vue'
 import { usePostStore, useSettingStore } from '@/stores'
+import type { PostsGetMode } from '@/types'
 
 // withDefaults(
 //   defineProps<{
@@ -31,6 +32,10 @@ const handleSearch = async () => {
   if (isLoading.value) {
     return
   }
+  if (searchVal.value === '') {
+    showAll()
+    return
+  }
   await postStore.searchGetPosts(searchVal.value)
 }
 
@@ -39,15 +44,36 @@ const showAll = async () => {
   if (isLoading.value) {
     return
   }
-  await postStore.reGetPosts()
+  if (postStore.postsGetMode !== 'normal') {
+    await postStore.reGetPosts()
+  }
+}
+
+const showDelete = async () => {
+  if (isLoading.value) {
+    return
+  }
+  if (postStore.postsGetMode !== 'delete') {
+    await postStore.deleteGetPosts()
+  }
 }
 
 onMounted(() => {
   // 当切换至首页时，必须为正常模式
-  if (!postStore.isNormalGetPostsMode) {
-    postStore.reGetPosts()
-  }
+  showAll()
 })
+
+const shouldDisableSearchButton = computed(() => {
+  if (postStore.postsGetMode === 'normal' && searchVal.value === '') {
+    return true
+  }
+  if (postStore.nowSearchKey === searchVal.value) {
+    return true
+  }
+  return false
+})
+
+const postsGetModeMark = ref<PostsGetMode>('normal')
 </script>
 <template>
   <div class="profile-card">
@@ -60,35 +86,94 @@ onMounted(() => {
     <div class="bio-box">
       <div class="bio">可怜的孩子 不再胆怯</div>
     </div>
-    <div class="blog-info">
-      <div class="info-box">
-        <div class="info-val">100</div>
-        <div class="info-text">推文</div>
+
+    <TransitionGroup name="fade-slide-list">
+      <div class="blog-info" :class="{ normal: postsGetModeMark === 'normal' }">
+        <div class="info-box">
+          <div class="info-val">100</div>
+          <div class="info-text">推文</div>
+        </div>
+        <el-divider direction="vertical" />
+        <div class="info-box">
+          <div class="info-val">30</div>
+          <div class="info-text">图片</div>
+        </div>
       </div>
-      <el-divider direction="vertical" />
-      <div class="info-box">
-        <div class="info-val">30</div>
-        <div class="info-text">图片</div>
+
+      <div
+        class="block-part-box search-input-box"
+        v-if="postsGetModeMark === 'search'"
+      >
+        <el-input
+          v-model="searchVal"
+          placeholder="推文搜索"
+          clearable
+          :prefix-icon="Search"
+          size="large"
+          @change="handleSearch"
+          @clear="showAll"
+        />
+        <el-button
+          type="info"
+          :icon="Search"
+          circle
+          @click="handleSearch"
+          :loading="isLoading"
+          :disabled="shouldDisableSearchButton"
+        />
       </div>
-    </div>
-    <div class="search-input-box">
-      <el-input
-        v-model="searchVal"
-        placeholder="推文搜索"
-        clearable
-        :prefix-icon="Search"
-        size="large"
-        @change="handleSearch"
-        @clear="showAll"
-      />
-      <el-button
-        type="info"
-        :icon="Search"
-        circle
-        @click="handleSearch"
-        :loading="isLoading"
-      />
-    </div>
+      <div
+        class="block-part-box delete-mode-box"
+        v-else-if="postsGetModeMark === 'delete'"
+      >
+        <div class="info-lable">回收站</div>
+        <div class="button-row">
+          <el-button round type="warning" size="small"> 全部恢复 </el-button>
+          <el-button round type="danger" size="small"> 清空回收站 </el-button>
+        </div>
+      </div>
+
+      <div class="small-button-bar">
+        <el-button
+          round
+          type="success"
+          size="small"
+          :icon="postsGetModeMark === 'normal' ? House : undefined"
+          @click="
+            () => {
+              postsGetModeMark = 'normal'
+              showAll()
+            }
+          "
+        >
+          全部推文
+        </el-button>
+        <el-button
+          round
+          type="info"
+          size="small"
+          :icon="postsGetModeMark === 'search' ? House : undefined"
+          @click="postsGetModeMark = 'search'"
+        >
+          搜索推文
+        </el-button>
+        <el-button
+          round
+          type="danger"
+          size="small"
+          :icon="postsGetModeMark === 'delete' ? House : undefined"
+          @click="
+            () => {
+              postsGetModeMark = 'delete'
+              showDelete()
+            }
+          "
+        >
+          回收站
+        </el-button>
+      </div>
+    </TransitionGroup>
+
     <div class="send-button-box">
       <el-button class="profile-button" type="primary" round @click="sendPost">
         发 推
@@ -120,14 +205,18 @@ onMounted(() => {
       white-space: pre-line;
     }
   }
+
   .blog-info {
     height: 80px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     background-color: var(--color-background-soft);
-    border-radius: 20px 20px 0 0;
     transition: all 0.5s;
+    border-radius: 20px 20px 0 0;
+    &.normal {
+      border-radius: 20px;
+    }
     .info-box {
       min-width: 100px;
       display: flex;
@@ -151,41 +240,68 @@ onMounted(() => {
       --el-border-color: var(--color-border);
     }
   }
-  .solt-box {
-    display: flex;
-    justify-content: center;
+  .block-part-box {
+    height: 40px;
+    margin-top: 2px;
+    border-radius: 0 0 20px 20px;
+    background-color: var(--color-background-soft);
+    transition: all 0.5s;
   }
-}
-
-.search-input-box {
-  margin: 2px 0 20px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 0 0 20px 20px;
-  background-color: var(--color-background-soft);
-  transition: all 0.5s;
-  .el-input {
-    :deep() {
-      .el-input__wrapper {
-        border-radius: 20px;
-        background-color: var(--color-background-soft);
-        transition: all 0.5s;
-        box-shadow: none;
-        &:hover {
-          box-shadow: none;
-        }
-        .el-input__inner {
-          color: var(--color-text);
-          transition: all 0.2s;
-          font-weight: bold;
-          // text-align: center;
-        }
+  .delete-mode-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 0 15px;
+    .info-lable {
+      font-size: 12px;
+      color: var(--color-text-soft);
+    }
+    .button-row {
+      .el-button {
+        margin-left: 10px;
       }
     }
   }
-  .el-button {
-    margin-right: 4px;
+  .search-input-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .el-input {
+      :deep() {
+        .el-input__wrapper {
+          border-radius: 20px;
+          background-color: var(--color-background-soft);
+          transition: all 0.5s;
+          box-shadow: none;
+          &:hover {
+            box-shadow: none;
+          }
+          .el-input__inner {
+            color: var(--color-text);
+            transition: all 0.2s;
+            font-weight: bold;
+            // text-align: center;
+          }
+        }
+      }
+    }
+    .el-button {
+      margin-right: 4px;
+    }
+  }
+  .small-button-bar {
+    display: flex;
+    align-items: center;
+    // justify-content: center;
+    margin: 5px 0 20px 0;
+    .el-button {
+      margin-left: 10px;
+    }
+  }
+
+  .solt-box {
+    display: flex;
+    justify-content: center;
   }
 }
 
