@@ -64,9 +64,9 @@ const checkShouldShowSkeletonOnMounted = async () => {
     return
   }
   if (!postStore.isPostRequested(postPoolItem.value.id)) {
-    // 最少显示Skeleton 2秒
+    // 骨架屏至少显示一段时间
     shouldShowSkeletonOnMounted.value = true
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
   }
   shouldShowSkeletonOnMounted.value = false
 }

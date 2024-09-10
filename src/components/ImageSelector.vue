@@ -64,6 +64,12 @@ const infiniteScrollFunc = () => {
   }
 }
 
+onMounted(() => {
+  if (imageStore.isNeedReget) {
+    imageStore.reGetImages()
+  }
+})
+
 // 测试新增动画
 // onMounted(async () => {
 //   let i = 0

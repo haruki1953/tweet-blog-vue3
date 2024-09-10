@@ -69,13 +69,14 @@ export const usePostStore = defineStore(
         return false
       }
       settingStore.setPostLoading(true)
-      // 测试加载时的骨架屏
-      // await new Promise((resolve) => setTimeout(resolve, 500))
-      const res = await postGetByCursorApi(
-        cursor.value,
-        postGetByCursorQuery.value
-      )
-      settingStore.setPostLoading(false)
+      let res
+      try {
+        res = await postGetByCursorApi(cursor.value, postGetByCursorQuery.value)
+      } catch (error) {
+        return false
+      } finally {
+        settingStore.setPostLoading(false)
+      }
 
       const resPosts = res.data.data
       // const resPosts: typeof res.data.data = []
@@ -148,8 +149,14 @@ export const usePostStore = defineStore(
     // // GET post to postPool
     const getPostById = async (id: number) => {
       settingStore.setPostIdLoading(id)
-      const res = await postGetByIdApi(id)
-      settingStore.setPostIdLoaded(id)
+      let res
+      try {
+        res = await postGetByIdApi(id)
+      } catch (error) {
+        return
+      } finally {
+        settingStore.setPostIdLoaded(id)
+      }
 
       const resPostGetByIdData = res.data.data
       const newPostPoolItem = postGetByIdDataHandle(resPostGetByIdData)
@@ -223,6 +230,23 @@ export const usePostStore = defineStore(
       return isHaveMore.value || postList.value.length > limitedAmounts.value
     })
 
+    // update post in postList to isDeleted=true
+    const updatePostListIsDeleted = (id: number, isDeleted: boolean) => {
+      postList.value.forEach((group) => {
+        const findPost = group.find((post) => post.id === id)
+        if (findPost) {
+          findPost.isDeleted = isDeleted
+        }
+      })
+    }
+    const updatePostListToRemove = (id: number) => {
+      postList.value = postList.value
+        .map((group) => {
+          return group.filter((post) => post.id !== id)
+        })
+        .filter((group) => group.length > 0)
+    }
+
     return {
       postList,
       getPosts,
@@ -246,7 +270,9 @@ export const usePostStore = defineStore(
       postsGetMode,
       searchGetPosts,
       nowSearchKey,
-      deleteGetPosts
+      deleteGetPosts,
+      updatePostListIsDeleted,
+      updatePostListToRemove
     }
   },
   {

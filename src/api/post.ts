@@ -1,4 +1,8 @@
 import type {
+  PostDeleteAllQueryType,
+  PostDeleteAllRes,
+  PostDeleteQueryType,
+  PostDeleteRes,
   PostGetByCursorQueryType,
   PostGetByCursorRes,
   PostGetByIdQueryType,
@@ -32,6 +36,23 @@ export const postGetByIdApi = (
   query?: PostGetByIdQueryType
 ): PostGetByIdRes => {
   return http.get(`/post/id/${postId}`, {
+    params: query
+  })
+}
+
+export const postDeleteApi = (
+  postId: number,
+  query?: PostDeleteQueryType
+): PostDeleteRes => {
+  return http.delete(`/post/id/${postId}`, {
+    params: query
+  })
+}
+
+export const postDeleteAllApi = (
+  query?: PostDeleteAllQueryType
+): PostDeleteAllRes => {
+  return http.delete(`/post/all`, {
     params: query
   })
 }

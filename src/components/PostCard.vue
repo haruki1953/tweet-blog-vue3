@@ -5,11 +5,15 @@ import {
   Connection,
   Delete,
   EditPen,
-  Star
+  Star,
+  RefreshLeft,
+  Remove
 } from '@element-plus/icons-vue'
 import type { PostData } from '@/types'
-import { formatTime } from '@/utils'
-import { usePostStore } from '@/stores'
+import { formatTime, sakiMessage } from '@/utils'
+import { useImageStore, usePostStore } from '@/stores'
+import { ref } from 'vue'
+import { postDeleteApi, postUpdateApi } from '@/api'
 
 const props = withDefaults(
   defineProps<{
@@ -21,9 +25,61 @@ const props = withDefaults(
   }
 )
 
+const imageStore = useImageStore()
 const postStore = usePostStore()
 const editPost = () => {
   postStore.toUpdateSendPage(props.data)
+}
+
+const isDeleting = ref(false)
+const deletePost = async () => {
+  isDeleting.value = true
+  try {
+    await postUpdateApi({ id: props.data.id, isDeleted: true })
+    sakiMessage({
+      type: 'success',
+      message: '已移至回收站'
+    })
+    postStore.updatePostListIsDeleted(props.data.id, true)
+    postStore.resetPostRequested()
+  } finally {
+    isDeleting.value = false
+  }
+}
+
+const isRestoring = ref(false)
+const restorePost = async () => {
+  isRestoring.value = true
+  try {
+    await postUpdateApi({ id: props.data.id, isDeleted: false })
+    sakiMessage({
+      type: 'success',
+      message: '已将推文还原'
+    })
+    postStore.updatePostListIsDeleted(props.data.id, false)
+    postStore.resetPostRequested()
+  } finally {
+    isRestoring.value = false
+  }
+}
+
+const isDeleteEverlasting = ref(false)
+const deletePostEverlast = async () => {
+  isDeleteEverlasting.value = true
+  try {
+    // TODO 帖子永久删除对话框，可选是否删除图片
+    const res = await postDeleteApi(props.data.id)
+    sakiMessage({
+      type: 'success',
+      message: '推文已永久删除'
+    })
+    postStore.updatePostListToRemove(props.data.id)
+    if (res.data.data.deletedImages.find((i) => i != null)) {
+      imageStore.setNeedReget()
+    }
+  } finally {
+    isDeleteEverlasting.value = false
+  }
 }
 </script>
 <template>
@@ -47,32 +103,66 @@ const editPost = () => {
     <div class="image-box" v-if="data.images.length > 0">
       <ImageGroup :data="data.images" :mini="mini"></ImageGroup>
     </div>
-    <div class="button-box" v-if="!mini">
-      <div class="replies-lable">
-        <div class="count" v-if="data._count.replies > 0">
-          {{ data._count.replies }}
+    <template v-if="mini"></template>
+    <template v-else>
+      <div class="button-box" v-if="data.isDeleted">
+        <div class="button-center">
+          <el-button
+            type="success"
+            :icon="RefreshLeft"
+            round
+            size="small"
+            :loading="isRestoring"
+            @click="restorePost"
+          >
+            还原推文
+          </el-button>
+          <el-button
+            type="danger"
+            :icon="Remove"
+            round
+            size="small"
+            :loading="isDeleteEverlasting"
+            @click="deletePostEverlast"
+          >
+            永久删除
+          </el-button>
         </div>
       </div>
-      <div class="button-layout">
-        <el-button
-          type="primary"
-          :icon="ChatSquare"
-          circle
-          size="small"
-          @click="$router.push({ name: 'post', params: { id: data.id } })"
-        />
-        <el-button
-          type="info"
-          :icon="EditPen"
-          circle
-          size="small"
-          @click="editPost"
-        />
-        <el-button type="warning" :icon="Star" circle size="small" />
-        <el-button type="danger" :icon="Delete" circle size="small" />
-        <el-button type="success" :icon="Connection" circle size="small" />
+      <div class="button-box" v-else>
+        <div class="replies-lable">
+          <div class="count" v-if="data._count.replies > 0">
+            {{ data._count.replies }}
+          </div>
+        </div>
+        <div class="button-layout">
+          <el-button
+            type="primary"
+            :icon="ChatSquare"
+            circle
+            size="small"
+            @click="$router.push({ name: 'post', params: { id: data.id } })"
+          />
+          <el-button
+            type="info"
+            :icon="EditPen"
+            circle
+            size="small"
+            @click="editPost"
+          />
+          <el-button type="warning" :icon="Star" circle size="small" />
+          <el-button
+            type="danger"
+            :icon="Delete"
+            circle
+            size="small"
+            :loading="isDeleting"
+            @click="deletePost"
+          />
+          <el-button type="success" :icon="Connection" circle size="small" />
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -149,6 +239,11 @@ const editPost = () => {
       .el-button {
         margin: 0;
       }
+    }
+    .button-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

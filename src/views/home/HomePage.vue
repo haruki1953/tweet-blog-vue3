@@ -15,7 +15,7 @@ const checkShouldShowSkeletonOnMounted = async () => {
   isChecking = true
   if (postStore.isFirstRequest) {
     shouldShowSkeletonOnMounted.value = true
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
   }
   shouldShowSkeletonOnMounted.value = false
   isChecking = false

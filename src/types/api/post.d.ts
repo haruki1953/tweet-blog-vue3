@@ -1,4 +1,4 @@
-import type { Post, PostData } from '../data'
+import type { Post, PostData, Image } from '../data'
 import type { ResData } from './base'
 
 export type PostGetByCursorQueryType = {
@@ -36,3 +36,16 @@ export type PostGetByIdData = Post & {
   >
 }
 export type PostGetByIdRes = ResData<PostGetByIdData>
+
+export type PostDeleteQueryType = {
+  delateImage?: 'true' | 'false' | undefined
+}
+export type PostDeleteData = {
+  deletedPost: Post
+  deletedImages: (Image | null)[]
+}
+export type PostDeleteRes = ResData<PostDeleteData>
+
+export type PostDeleteAllQueryType = PostDeleteQueryType
+export type PostDeleteAllData = PostDeleteData[]
+export type PostDeleteAllRes = ResData<PostDeleteAllData>

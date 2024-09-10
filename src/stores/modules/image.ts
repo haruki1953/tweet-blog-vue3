@@ -16,6 +16,11 @@ export const useImageStore = defineStore(
       return haveMoreMark.value
     })
     const imageList = ref<ImageStoreData[]>([])
+    const needRegetMark = ref(false)
+    const isNeedReget = computed(() => needRegetMark.value)
+    const setNeedReget = () => {
+      needRegetMark.value = true
+    }
 
     // limit show amounts
     const startLimitedAmounts = imageConfig.limitShow.startAmounts
@@ -31,14 +36,20 @@ export const useImageStore = defineStore(
         return
       }
       settingStore.setImageLoading(true)
-      const res = await imageGetByCursorApi(cursor)
-      settingStore.setImageLoading(false)
+      let res
+      try {
+        res = await imageGetByCursorApi(cursor)
+      } catch (error) {
+        return false
+      } finally {
+        settingStore.setImageLoading(false)
+      }
 
       const resImages = res.data.data
       // const resImages: typeof res.data.data = []
       if (resImages.length === 0) {
         haveMoreMark.value = false
-        return
+        return false
       }
 
       if (cursor === 0) {
@@ -47,6 +58,7 @@ export const useImageStore = defineStore(
         imageList.value.push(...resImages)
       }
       cursor = resImages[resImages.length - 1].id
+      return true
     }
 
     const uploadingImageCount = ref(0)
@@ -152,7 +164,9 @@ export const useImageStore = defineStore(
       resetLimited,
       isHaveMore,
       isHaveMoreLimited,
-      isLoadingLimited
+      isLoadingLimited,
+      isNeedReget,
+      setNeedReget
     }
   },
   {
