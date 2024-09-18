@@ -14,6 +14,7 @@ import { formatTime, sakiMessage } from '@/utils'
 import { useImageStore, usePostStore } from '@/stores'
 import { ref } from 'vue'
 import { postDeleteApi, postUpdateApi } from '@/api'
+import type PostDeleteDialog from './PostDeleteDialog.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -63,27 +64,22 @@ const restorePost = async () => {
   }
 }
 
+const refPostDeleteDialog = ref<InstanceType<typeof PostDeleteDialog> | null>(
+  null
+)
 const isDeleteEverlasting = ref(false)
 const deletePostEverlast = async () => {
-  isDeleteEverlasting.value = true
-  try {
-    // TODO 帖子永久删除对话框，可选是否删除图片
-    const res = await postDeleteApi(props.data.id)
-    sakiMessage({
-      type: 'success',
-      message: '推文已永久删除'
-    })
-    postStore.updatePostListToRemove(props.data.id)
-    if (res.data.data.deletedImages.find((i) => i != null)) {
-      imageStore.setNeedReget()
-    }
-  } finally {
-    isDeleteEverlasting.value = false
-  }
+  refPostDeleteDialog.value?.open()
 }
 </script>
 <template>
   <div class="post-card">
+    <PostDeleteDialog
+      v-if="!mini"
+      ref="refPostDeleteDialog"
+      :data="data"
+      v-model:isDeleteEverlasting="isDeleteEverlasting"
+    ></PostDeleteDialog>
     <div class="info-bar">
       <div class="info">
         <div class="repost" v-if="data.parentPost != null">

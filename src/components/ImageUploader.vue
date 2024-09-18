@@ -20,8 +20,8 @@ const uploadImage = async (
   uploadFile: UploadFile,
   uploadFiles: UploadFiles
 ) => {
-  console.log('uploadFile', uploadFile)
-  console.log('uploadFiles', uploadFiles, uploadFiles.length)
+  // console.log('uploadFile', uploadFile)
+  // console.log('uploadFiles', uploadFiles, uploadFiles.length)
   // if have images are uploading, wait a little
   if (uploadFiles.length > 1) {
     await new Promise((resolve) =>

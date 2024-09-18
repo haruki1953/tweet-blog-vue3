@@ -6,6 +6,7 @@ import { useImageStore, usePostStore, useSettingStore } from '@/stores'
 import type { PostsGetMode } from '@/types'
 import { postDeleteAllApi } from '@/api'
 import { sakiMessage } from '@/utils'
+import PostDeleteAllDialog from './PostDeleteAllDialog.vue'
 
 // withDefaults(
 //   defineProps<{
@@ -45,65 +46,41 @@ const handleSearch = async () => {
   await postStore.searchGetPosts(searchVal.value)
   scrollToTop()
 }
-// const handleSearchClear = async () => {
-//   console.log(postStore.postsGetMode)
-//   if (postStore.postsGetMode !== 'normal') {
-//     showAll()
-//   }
-// }
 
 // showAll 显示全部
 const showAll = async () => {
   if (isLoading.value) {
     return
   }
-  // if (postStore.postsGetMode !== 'normal') {
   scrollToTop()
   await postStore.reGetPosts()
   scrollToTop()
-  // }
 }
 
 const showDelete = async () => {
   if (isLoading.value) {
     return
   }
-  // if (postStore.postsGetMode !== 'delete') {
   scrollToTop()
   await postStore.deleteGetPosts()
   scrollToTop()
-  // }
 }
 
+// 清空回收站
+const refPostDeleteAllDialog = ref<InstanceType<
+  typeof PostDeleteAllDialog
+> | null>(null)
 const isDeleteAlling = ref(false)
 const deleteAll = async () => {
-  isDeleteAlling.value = true
-  try {
-    // TODO 帖子永久删除对话框，可选是否删除图片
-    const res = await postDeleteAllApi()
-    sakiMessage({
-      type: 'success',
-      message: '回收站已清空'
-    })
-    postsGetModeMark.value = 'normal'
-    showAll()
-    if (
-      res.data.data.find(
-        (item) => item.deletedImages.find((i) => i != null) != null
-      )
-    ) {
-      imageStore.setNeedReget()
-    }
-  } finally {
-    isDeleteAlling.value = false
-  }
+  refPostDeleteAllDialog.value?.open()
+}
+const onDeleteAlled = () => {
+  postsGetModeMark.value = 'normal'
+  showAll()
 }
 
 onMounted(() => {
-  // // 当切换至首页时，必须为正常模式（算了，其实保留状态也挺好）
-  // if (postStore.postsGetMode !== 'normal') {
-  //   showAll()
-  // }
+  // 当切换至首页时，保留模式
   searchVal.value = postStore.nowSearchKey ?? ''
   postsGetModeMark.value = postStore.postsGetMode
 })
@@ -152,6 +129,11 @@ const setModeToDelete = () => {
 </script>
 <template>
   <div class="profile-card">
+    <PostDeleteAllDialog
+      ref="refPostDeleteAllDialog"
+      v-model:isDeleteAlling="isDeleteAlling"
+      @deleted="onDeleteAlled"
+    ></PostDeleteAllDialog>
     <div class="user">
       <div class="avatar">
         <el-avatar :size="72" :src="userAvatar" />
@@ -174,84 +156,87 @@ const setModeToDelete = () => {
       </div>
     </div>
 
-    <TransitionGroup name="fade-slide-list">
-      <div
-        class="block-part-box search-input-box"
-        v-if="postsGetModeMark === 'search'"
-        key="search-input-box"
-      >
-        <el-input
-          v-model="searchVal"
-          placeholder="搜索推文"
-          clearable
-          :prefix-icon="Search"
-          size="large"
-          @change="handleSearch"
-        />
-        <el-button
-          type="info"
-          :icon="Search"
-          circle
-          @click="handleSearch"
-          :loading="isLoading"
-          :disabled="shouldDisableSearchButton"
-        />
-      </div>
-      <div
-        class="block-part-box delete-mode-box"
-        v-else-if="postsGetModeMark === 'delete'"
-        key="delete-mode-box"
-      >
-        <div class="info-lable">回收站</div>
-        <div class="button-row">
+    <div class="block-part-container">
+      <Transition name="fade-slide">
+        <div
+          class="block-part-box search-input-box"
+          v-if="postsGetModeMark === 'search'"
+          key="search-input-box"
+        >
+          <el-input
+            v-model="searchVal"
+            placeholder="搜索推文"
+            clearable
+            :prefix-icon="Search"
+            size="large"
+            @change="handleSearch"
+          />
           <el-button
-            round
-            type="danger"
-            :icon="Delete"
-            size="small"
-            :loading="isDeleteAlling"
-            @click="deleteAll"
-          >
-            清空回收站
+            type="info"
+            :icon="Search"
+            circle
+            @click="handleSearch"
+            :loading="isLoading"
+            :disabled="shouldDisableSearchButton"
+          />
+        </div>
+        <div
+          class="block-part-box delete-mode-box"
+          v-else-if="postsGetModeMark === 'delete'"
+          key="delete-mode-box"
+        >
+          <div class="info-lable">回收站</div>
+          <div class="button-row">
+            <el-button
+              round
+              type="danger"
+              :icon="Delete"
+              size="small"
+              :loading="isDeleteAlling"
+              @click="deleteAll"
+            >
+              清空回收站
+            </el-button>
+          </div>
+        </div>
+        <div v-else class="block-part-box normal-mode-box">
+          <div class="info-lable">全部推文【新推文 10+】</div>
+          <el-button round type="success" :icon="Finished" size="small">
+            全部已读
           </el-button>
         </div>
-      </div>
-      <div v-else class="block-part-box normal-mode-box">
-        <div class="info-lable">全部推文【新推文 10+】</div>
-        <el-button round type="success" :icon="Finished" size="small">
-          全部已读
-        </el-button>
-      </div>
-      <div class="small-button-bar" key="small-button-bar">
-        <el-button
-          round
-          type="success"
-          size="small"
-          :icon="postsGetModeMark === 'normal' ? House : undefined"
-          @click="setModeToNormal"
-        >
-          全部推文
-        </el-button>
-        <el-button
-          round
-          type="info"
-          size="small"
-          :icon="postsGetModeMark === 'search' ? House : undefined"
-          @click="setModeToSearch"
-        >
-          搜索推文
-        </el-button>
-        <el-button
-          round
-          type="danger"
-          size="small"
-          :icon="postsGetModeMark === 'delete' ? House : undefined"
-          @click="setModeToDelete"
-        >
-          回收站
-        </el-button>
-      </div>
-    </TransitionGroup>
+      </Transition>
+    </div>
+
+    <div class="small-button-bar" key="small-button-bar">
+      <el-button
+        round
+        type="success"
+        size="small"
+        :icon="postsGetModeMark === 'normal' ? House : undefined"
+        @click="setModeToNormal"
+      >
+        全部推文
+      </el-button>
+      <el-button
+        round
+        type="info"
+        size="small"
+        :icon="postsGetModeMark === 'search' ? House : undefined"
+        @click="setModeToSearch"
+      >
+        搜索推文
+      </el-button>
+      <el-button
+        round
+        type="danger"
+        size="small"
+        :icon="postsGetModeMark === 'delete' ? House : undefined"
+        @click="setModeToDelete"
+      >
+        回收站
+      </el-button>
+    </div>
 
     <div class="send-button-box">
       <el-button class="profile-button" type="primary" round @click="sendPost">
@@ -319,9 +304,15 @@ const setModeToDelete = () => {
       --el-border-color: var(--color-border);
     }
   }
-  .block-part-box {
+  .block-part-container {
+    position: relative;
     height: 40px;
     margin-top: 2px;
+  }
+  .block-part-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
     border-radius: 0 0 20px 20px;
     background-color: var(--color-background-soft);
     transition: all 0.5s;
