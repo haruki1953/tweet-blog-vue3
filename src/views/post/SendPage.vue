@@ -295,20 +295,26 @@ onMounted(() => {
             show-word-limit
           />
         </div>
-        <div class="image-box" v-if="imagesData.length > 0">
-          <ImageGroup :data="imagesData" backgroundColor="soft"></ImageGroup>
-          <div class="image-edit-button">
-            <el-button
-              type="primary"
-              :icon="Edit"
-              round
-              size="small"
-              @click="refImageEditDialog?.open()"
-            >
-              修改图片
-            </el-button>
+        <Transition name="fade-slide">
+          <div class="image-box" v-if="imagesData.length > 0">
+            <ImageGroup
+              :data="imagesData"
+              backgroundColor="soft"
+              mini
+            ></ImageGroup>
+            <div class="image-edit-button">
+              <el-button
+                type="primary"
+                :icon="Edit"
+                round
+                size="small"
+                @click="refImageEditDialog?.open()"
+              >
+                修改图片
+              </el-button>
+            </div>
           </div>
-        </div>
+        </Transition>
         <ImageUploader
           :onUploaded="addImage"
           class="hidden-md-and-up"

@@ -61,6 +61,22 @@ html {
   border-radius: 20px;
 }
 
+/* fade-down */
+.fade-down-leave-active,
+.fade-down-enter-active {
+  transition: all 0.3s;
+}
+
+.fade-down-enter-from {
+  transform: translateY(-30px);
+  opacity: 0;
+}
+
+.fade-down-leave-to {
+  transform: translateY(30px);
+  opacity: 0;
+}
+
 /* fade-slide */
 .fade-slide-leave-active,
 .fade-slide-enter-active {

@@ -2,10 +2,8 @@
 import userAvatar from '@/assets/haruki.jpg'
 import { computed, onMounted, ref } from 'vue'
 import { Search, House, Delete, Finished } from '@element-plus/icons-vue'
-import { useImageStore, usePostStore, useSettingStore } from '@/stores'
+import { usePostStore, useSettingStore } from '@/stores'
 import type { PostsGetMode } from '@/types'
-import { postDeleteAllApi } from '@/api'
-import { sakiMessage } from '@/utils'
 import PostDeleteAllDialog from './PostDeleteAllDialog.vue'
 
 // withDefaults(
@@ -19,7 +17,6 @@ import PostDeleteAllDialog from './PostDeleteAllDialog.vue'
 
 const postStore = usePostStore()
 const settingStore = useSettingStore()
-const imageStore = useImageStore()
 
 const sendPost = () => {
   postStore.toPostSendPage()

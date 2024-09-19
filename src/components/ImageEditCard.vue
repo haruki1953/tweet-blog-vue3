@@ -5,6 +5,7 @@ import type { Image, ImageUpdateJsonType } from '@/types'
 import { sakiMessage } from '@/utils'
 import { computed, watch } from 'vue'
 import { ref } from 'vue'
+import { openLink, imgLargeUrl, imgSamllUrl, imgOriginalUrl } from '@/utils'
 
 const selectedImages = defineModel<Image[]>({ required: true })
 withDefaults(
@@ -179,6 +180,40 @@ const isCanNext = computed(() => {
           </el-button>
         </div>
       </div>
+      <template v-if="!imageSelect">
+        <div class="row">
+          <div class="lable center-box">各版本图片</div>
+          <div class="button-box">
+            <el-button
+              round
+              type="info"
+              size="small"
+              :disabled="imageByIndex.smallSize === 0"
+              @click="openLink(imgSamllUrl(imageByIndex))"
+            >
+              查看小图
+            </el-button>
+            <el-button
+              round
+              type="success"
+              size="small"
+              :disabled="imageByIndex.largeSize === 0"
+              @click="openLink(imgLargeUrl(imageByIndex))"
+            >
+              查看大图
+            </el-button>
+            <el-button
+              round
+              type="warning"
+              size="small"
+              :disabled="imageByIndex.originalSize === 0"
+              @click="openLink(imgOriginalUrl(imageByIndex))"
+            >
+              查看原图
+            </el-button>
+          </div>
+        </div>
+      </template>
     </div>
     <div class="image-card-skeleton" v-else>
       <el-skeleton>
@@ -218,6 +253,12 @@ const isCanNext = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.button-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
 }
 .input-box {
   .textarea {

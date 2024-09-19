@@ -11,3 +11,6 @@ export const imgLargeUrl = (imgData: Image) => {
     return imgSamllUrl(imgData)
   }
 }
+export const imgOriginalUrl = (imgData: Image) => {
+  return `${imageConfig.originalBaseUrl}${imgData.originalPath}`
+}

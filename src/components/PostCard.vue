@@ -11,9 +11,9 @@ import {
 } from '@element-plus/icons-vue'
 import type { PostData } from '@/types'
 import { formatTime, sakiMessage } from '@/utils'
-import { useImageStore, usePostStore } from '@/stores'
+import { usePostStore } from '@/stores'
 import { ref } from 'vue'
-import { postDeleteApi, postUpdateApi } from '@/api'
+import { postUpdateApi } from '@/api'
 import type PostDeleteDialog from './PostDeleteDialog.vue'
 
 const props = withDefaults(
@@ -26,7 +26,6 @@ const props = withDefaults(
   }
 )
 
-const imageStore = useImageStore()
 const postStore = usePostStore()
 const editPost = () => {
   postStore.toUpdateSendPage(props.data)

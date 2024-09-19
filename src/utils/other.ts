@@ -8,3 +8,8 @@ export const sakiGoBack = (router: ReturnType<typeof useRouter>) => {
     router.push({ name: 'home' })
   }
 }
+
+// 打开链接
+export const openLink = (url: string) => {
+  window.open(url, '_blank')
+}

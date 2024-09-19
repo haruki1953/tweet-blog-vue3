@@ -67,7 +67,6 @@ const deletePost = async () => {
       v-model="dialogVisible"
       :width="dialogWidth"
       :lock-scroll="false"
-      :z-index="10000"
     >
       <div class="row center-box">
         <div class="lable">确认要永久删除此推文吗？</div>
