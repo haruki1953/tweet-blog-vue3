@@ -59,13 +59,14 @@ const profileHeight = computed(() => {
 .col2-left-sm {
   margin-top: 20px;
 }
+
 .col2-left {
   position: sticky;
   top: 60px;
   .el-scrollbar {
     :deep() {
       .el-scrollbar__view {
-        overflow-x: hidden;
+        // overflow-x: visible;
         // margin: 20px 10px 20px 0;
         margin: 20px 10px;
       }

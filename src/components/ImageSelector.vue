@@ -2,11 +2,11 @@
 import { useImageStore } from '@/stores'
 import { computed, onMounted, ref } from 'vue'
 import { imgSamllUrl } from '@/utils'
-import type { Image } from '@/types'
+import type { ImageStoreData } from '@/types'
 import { CircleCheckFilled } from '@element-plus/icons-vue'
 import { useElementSize } from '@vueuse/core'
 
-const model = defineModel<Image[]>({ required: true })
+const model = defineModel<ImageStoreData[]>({ required: true })
 
 const props = withDefaults(
   defineProps<{
@@ -22,7 +22,7 @@ const props = withDefaults(
 
 const imageStore = useImageStore()
 
-const isSelected = (img: Image) => {
+const isSelected = (img: ImageStoreData) => {
   const findImg = model.value.find((i) => i.id === img.id)
   if (findImg) {
     return true
@@ -31,7 +31,7 @@ const isSelected = (img: Image) => {
   }
 }
 
-const selectImage = (img: Image) => {
+const selectImage = (img: ImageStoreData) => {
   if (isSelected(img)) {
     model.value = model.value.filter((selectedImg) => selectedImg.id !== img.id)
   } else {

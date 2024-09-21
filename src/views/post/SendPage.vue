@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import { ChatLineSquare, EditPen, Edit } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import type { Image, InfoBySendType, PostSendJsonType } from '@/types'
+import type {
+  Image,
+  ImageStoreData,
+  InfoBySendType,
+  PostSendJsonType
+} from '@/types'
 import { useImageStore, usePostStore, useSettingStore } from '@/stores'
 import { postConfig } from '@/config'
 import { postSendApi, postUpdateApi } from '@/api'
-import { formatTime, sakiGoBack, sakiMessage } from '@/utils'
+import {
+  formatTime,
+  imageToImageStoreData,
+  sakiGoBack,
+  sakiMessage
+} from '@/utils'
 import { useRouter } from 'vue-router'
 import InfoEditDialog from './components/InfoEditDialog.vue'
 import type ImageEditDialog from '@/components/ImageEditDialog.vue'
@@ -15,13 +25,13 @@ import { onMounted } from 'vue'
 
 const formModel = ref<PostSendJsonType>({})
 
-const imagesData = ref<Image[]>([])
+const imagesData = ref<ImageStoreData[]>([])
 
 const imageStore = useImageStore()
 
 const addImage = (image: Image) => {
   // push to imagesData, and limit length
-  imagesData.value.push(image)
+  imagesData.value.push(imageToImageStoreData(image))
   if (imagesData.value.length > postConfig.postMaxImages) {
     imagesData.value = imagesData.value.slice(-postConfig.postMaxImages)
   }
@@ -184,7 +194,8 @@ const initFormModelForUpdate = () => {
     isDeleted
   }
   // deep copy, to prevent it change the post in home page
-  imagesData.value = [...images]
+  imagesData.value = images.map((i) => imageToImageStoreData(i))
+  // imagesData.value = [...images]
 }
 // formModel: {
 //     content?: string | undefined;

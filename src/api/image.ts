@@ -3,7 +3,9 @@ import type {
   ImageGetByCursorRes,
   ImageUploadRes,
   ImageUpdateJsonType,
-  ImageUpdateRes
+  ImageUpdateRes,
+  ImageDeleteRes,
+  ImageDeleteOriginalRes
 } from '@/types'
 import { http } from '@/utils'
 import type { UploadRawFile } from 'element-plus'
@@ -27,4 +29,14 @@ export const imageGetByCursorApi = (
 
 export const imageUpdateApi = (json: ImageUpdateJsonType): ImageUpdateRes => {
   return http.patch('/image', json)
+}
+
+export const imageDeleteApi = (imageId: number): ImageDeleteRes => {
+  return http.delete(`/image/id/${imageId}`)
+}
+
+export const imageDeleteOriginalApi = (
+  imageId: number
+): ImageDeleteOriginalRes => {
+  return http.delete(`/image/original/id/${imageId}`)
 }

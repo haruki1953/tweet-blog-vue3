@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { imageUpdateApi } from '@/api'
-import { useImageStore, useSettingStore } from '@/stores'
-import type { Image, ImageUpdateJsonType } from '@/types'
-import { sakiMessage } from '@/utils'
+import { imageDeleteApi, imageDeleteOriginalApi, imageUpdateApi } from '@/api'
+import { useImageStore } from '@/stores'
+import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
+import { imageToImageStoreData, sakiMessage } from '@/utils'
 import { computed, watch } from 'vue'
 import { ref } from 'vue'
 import { openLink, imgLargeUrl, imgSamllUrl, imgOriginalUrl } from '@/utils'
 
-const selectedImages = defineModel<Image[]>({ required: true })
+const selectedImages = defineModel<ImageStoreData[]>({ required: true })
 withDefaults(
   defineProps<{
     notPreview?: boolean
@@ -66,16 +66,23 @@ const cancelSelectedImg = () => {
   selectedImages.value.splice(imgIndex.value, 1)
 }
 
-const settingStore = useSettingStore()
+const isMultiple = computed(() => {
+  if (selectedImages.value.length > 1) {
+    return true
+  } else {
+    return false
+  }
+})
+
 const imageStore = useImageStore()
 
+// 修改图片信息
 const isSending = ref(false)
 const updateImage = async () => {
   if (!isIndexAble.value) {
     return
   }
   isSending.value = true
-  settingStore.setLoading(true)
   try {
     const imgId = imageByIndex.value.id
     const res = await imageUpdateApi({
@@ -84,7 +91,8 @@ const updateImage = async () => {
     })
     const resImgIndex = selectedImages.value.findIndex((i) => i.id === imgId)
     if (resImgIndex >= 0) {
-      selectedImages.value[resImgIndex] = res.data.data
+      selectedImages.value[resImgIndex] = imageToImageStoreData(res.data.data)
+      // selectedImages.value[resImgIndex] = res.data.data
     }
     sakiMessage({
       type: 'success',
@@ -92,36 +100,72 @@ const updateImage = async () => {
     })
     await imageStore.reGetImages()
   } finally {
-    settingStore.setLoading(false)
     isSending.value = false
   }
 }
 
-const isMultiple = computed(() => {
-  if (selectedImages.value.length > 1) {
+// 删除图片相关
+const disableDeleteImage = computed(() => {
+  if (imageByIndex.value._count.posts > 0) {
     return true
-  } else {
-    return false
   }
+  return false
 })
-const isCanPrevious = computed(() => {
-  if (imgIndex.value > 0) {
+const disableDeleteOriginal = computed(() => {
+  if (imageByIndex.value.originalSize === 0) {
     return true
-  } else {
-    return false
   }
+  return false
 })
-const isCanNext = computed(() => {
-  if (imgIndex.value < selectedImages.value.length - 1) {
-    return true
-  } else {
-    return false
+const isImageDeleting = ref(false)
+const deleteImage = async () => {
+  if (!isIndexAble.value) {
+    return
   }
-})
+  isImageDeleting.value = true
+  try {
+    const imgId = imageByIndex.value.id
+    await imageDeleteApi(imgId)
+    const resImgIndex = selectedImages.value.findIndex((i) => i.id === imgId)
+    if (resImgIndex >= 0) {
+      selectedImages.value.splice(resImgIndex, 1)
+    }
+    sakiMessage({
+      type: 'success',
+      message: '删除成功'
+    })
+    await imageStore.reGetImages()
+  } finally {
+    isImageDeleting.value = false
+  }
+}
+const isOriginalDeleting = ref(false)
+const deleteOriginal = async () => {
+  if (!isIndexAble.value) {
+    return
+  }
+  isOriginalDeleting.value = true
+  try {
+    const imgId = imageByIndex.value.id
+    await imageDeleteOriginalApi(imgId)
+    const resImgIndex = selectedImages.value.findIndex((i) => i.id === imgId)
+    if (resImgIndex >= 0) {
+      selectedImages.value[resImgIndex].originalSize = 0
+    }
+    sakiMessage({
+      type: 'success',
+      message: '删除成功'
+    })
+    await imageStore.reGetImages()
+  } finally {
+    isOriginalDeleting.value = false
+  }
+}
 </script>
 <template>
   <div class="image-edit-card">
     <div v-if="selectedImages.length > 0">
+      <!-- 图片预览 -->
       <div class="image-box">
         <ImageGroup
           :data="selectedImages"
@@ -144,6 +188,7 @@ const isCanNext = computed(() => {
           </el-button>
         </div>
       </div>
+      <!-- 修改alt -->
       <div class="row">
         <div class="lable center-box">修改alt</div>
         <div class="input-box">
@@ -181,6 +226,7 @@ const isCanNext = computed(() => {
         </div>
       </div>
       <template v-if="!imageSelect">
+        <!-- 各版本图片 -->
         <div class="row">
           <div class="lable center-box">各版本图片</div>
           <div class="button-box">
@@ -210,6 +256,32 @@ const isCanNext = computed(() => {
               @click="openLink(imgOriginalUrl(imageByIndex))"
             >
               查看原图
+            </el-button>
+          </div>
+        </div>
+        <!-- 删除图片 -->
+        <div class="row">
+          <div class="lable center-box">删除图片</div>
+          <div class="button-box">
+            <el-button
+              round
+              type="danger"
+              size="small"
+              :disabled="disableDeleteImage"
+              :loading="isImageDeleting"
+              @click="deleteImage"
+            >
+              删除图片
+            </el-button>
+            <el-button
+              round
+              type="warning"
+              size="small"
+              :disabled="disableDeleteOriginal"
+              :loading="isOriginalDeleting"
+              @click="deleteOriginal"
+            >
+              删除原图
             </el-button>
           </div>
         </div>

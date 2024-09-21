@@ -2,9 +2,9 @@
 import { computed, watch } from 'vue'
 import { ref } from 'vue'
 import { useWindowSize } from '@vueuse/core'
-import type { Image } from '@/types'
+import type { ImageStoreData } from '@/types'
 
-const selectedImages = defineModel<Image[]>({ required: true })
+const selectedImages = defineModel<ImageStoreData[]>({ required: true })
 const props = withDefaults(
   defineProps<{
     autoOpen?: boolean

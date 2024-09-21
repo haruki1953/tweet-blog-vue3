@@ -15,3 +15,6 @@ export type ImageUpdateJsonType = {
   twitterLargeImageLink?: string | null | undefined
 }
 export type ImageUpdateRes = ResData<Image>
+
+export type ImageDeleteRes = ResData<Image>
+export type ImageDeleteOriginalRes = ResData<Image>

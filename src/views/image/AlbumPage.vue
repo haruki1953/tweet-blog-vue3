@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Image } from '@/types'
+import type { ImageStoreData } from '@/types'
 import { ref } from 'vue'
 import AlbumInfo from './components/AlbumInfo.vue'
 import { useElementSize } from '@vueuse/core'
 
-const imagesData = ref<Image[]>([])
+const imagesData = ref<ImageStoreData[]>([])
 
 const boxRef = ref<HTMLElement | null>(null)
 const boxSize = useElementSize(boxRef)
@@ -46,8 +46,10 @@ const boxSize = useElementSize(boxRef)
 
 <style lang="scss" scoped>
 .image-edit-card-container {
+  margin-top: 5px;
   position: relative;
   overflow: hidden;
+  transition: height 0.3s;
   .image-edit-card-box {
     position: absolute;
     width: 100%;
