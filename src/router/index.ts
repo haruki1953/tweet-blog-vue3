@@ -53,7 +53,7 @@ const router = createRouter({
   // 路由滚动行为定制
   scrollBehavior: async (to, from, savedPosition) => {
     // console.log(to, from)
-    // console.log(to.path, from.path)
+    console.log(to.path, from.path)
 
     // 刷新时会有savedPosition，但自己想默认
     if (to.path === from.path) {

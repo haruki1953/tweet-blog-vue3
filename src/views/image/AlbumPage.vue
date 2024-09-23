@@ -1,13 +1,47 @@
 <script setup lang="ts">
 import type { ImageStoreData } from '@/types'
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import AlbumInfo from './components/AlbumInfo.vue'
 import { useElementSize } from '@vueuse/core'
+import { useRoute, useRouter } from 'vue-router'
+import type ImageSelector from '@/components/ImageSelector.vue'
 
 const imagesData = ref<ImageStoreData[]>([])
 
 const boxRef = ref<HTMLElement | null>(null)
 const boxSize = useElementSize(boxRef)
+
+const route = useRoute()
+const router = useRouter()
+const refImageSelecter = ref<InstanceType<typeof ImageSelector> | null>(null)
+
+// set query, when imagesData(selectedImage) change
+watch(
+  () => imagesData.value.map((i) => i.id).toString(),
+  () => {
+    if (imagesData.value.length > 0) {
+      router.replace({
+        name: route.name,
+        query: { img: imagesData.value[0].id }
+      })
+    } else {
+      router.replace({ name: route.name })
+    }
+  }
+)
+
+// onMounted, select image by query
+onMounted(() => {
+  const routeImgId = Number(route.query.img)
+  if (!isNaN(routeImgId)) {
+    const findImg = refImageSelecter.value?.selectImgById(routeImgId)
+    if (!findImg) {
+      router.replace({ name: route.name })
+    }
+  } else {
+    router.replace({ name: route.name })
+  }
+})
 </script>
 <template>
   <div>
@@ -24,7 +58,7 @@ const boxSize = useElementSize(boxRef)
         <AlbumInfo></AlbumInfo>
         <div
           class="image-edit-card-container"
-          :style="{ height: `${boxSize.height.value + 20}px` }"
+          :style="{ height: `${boxSize.height.value}px` }"
         >
           <Transition name="fade-down">
             <div
@@ -38,7 +72,11 @@ const boxSize = useElementSize(boxRef)
         </div>
       </template>
       <template #colRight>
-        <ImageSelector v-model="imagesData" infiniteScroll></ImageSelector>
+        <ImageSelector
+          v-model="imagesData"
+          infiniteScroll
+          ref="refImageSelecter"
+        ></ImageSelector>
       </template>
     </Col2Layout>
   </div>
@@ -48,8 +86,8 @@ const boxSize = useElementSize(boxRef)
 .image-edit-card-container {
   margin-top: 5px;
   position: relative;
-  overflow: hidden;
-  transition: height 0.3s;
+  // overflow: hidden;
+  // transition: height 0.3s;
   .image-edit-card-box {
     position: absolute;
     width: 100%;

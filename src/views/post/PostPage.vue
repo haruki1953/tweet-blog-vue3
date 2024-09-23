@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { usePostStore, useSettingStore } from '@/stores'
+import { usePostStore } from '@/stores'
 import type { PosPoolItem, PostData } from '@/types'
 import { ref, watch } from 'vue'
-import { onMounted } from 'vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { House } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const postStore = usePostStore()
-const settingStore = useSettingStore()
 
 const routePostId = computed(() => {
   const userId = Number(route.params.id)
@@ -172,8 +169,6 @@ const replyPost = () => {
 <style lang="scss" scoped>
 .top-bar {
   margin-bottom: 20px;
-}
-.main-post-group-box {
 }
 .replie-button-box {
   margin: 20px 0;

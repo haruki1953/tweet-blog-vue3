@@ -2,10 +2,11 @@
 import { imageDeleteApi, imageDeleteOriginalApi, imageUpdateApi } from '@/api'
 import { useImageStore } from '@/stores'
 import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
-import { imageToImageStoreData, sakiMessage } from '@/utils'
+import { formatDate, imageToImageStoreData, sakiMessage } from '@/utils'
 import { computed, watch } from 'vue'
 import { ref } from 'vue'
 import { openLink, imgLargeUrl, imgSamllUrl, imgOriginalUrl } from '@/utils'
+import { ChatSquare } from '@element-plus/icons-vue'
 
 const selectedImages = defineModel<ImageStoreData[]>({ required: true })
 withDefaults(
@@ -285,6 +286,28 @@ const deleteOriginal = async () => {
             </el-button>
           </div>
         </div>
+        <!-- 帖子 -->
+        <div class="row" v-if="imageByIndex.posts.length > 0">
+          <div class="lable center-box">推文</div>
+          <div class="post-link-list">
+            <div
+              class="post-link-item"
+              v-for="item in imageByIndex.posts"
+              :key="item.id"
+              @click="$router.push({ name: 'post', params: { id: item.id } })"
+            >
+              <div class="content">
+                <el-icon :size="15">
+                  <ChatSquare />
+                </el-icon>
+                <div class="text">
+                  {{ item.content }}
+                </div>
+              </div>
+              <div class="date">{{ formatDate(item.createdAt) }}</div>
+            </div>
+          </div>
+        </div>
       </template>
     </div>
     <div class="image-card-skeleton" v-else>
@@ -373,6 +396,49 @@ const deleteOriginal = async () => {
       svg {
         transition: all 0.2s;
       }
+    }
+  }
+}
+
+.post-link-list {
+  .post-link-item {
+    height: 30px;
+    margin-bottom: 5px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-background-soft);
+    border-radius: 10px;
+    transition:
+      background-color 0.5s,
+      color 0.2s,
+      transform 0.2s;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.04, 1.04);
+      background-color: var(--color-background-mute);
+    }
+    .content {
+      width: 60%;
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      // color: var(--color-text-soft);
+      .el-icon {
+        margin-right: 5px;
+      }
+      .text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    .date {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      // color: var(--color-text-soft);
     }
   }
 }

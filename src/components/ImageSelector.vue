@@ -52,7 +52,8 @@ const imageSpan = computed(() => {
     return 8
   }
   if (boxSize.width.value > 500) {
-    return 6
+    return 8
+    // return 6
   } else {
     return 8
   }
@@ -70,19 +71,17 @@ onMounted(() => {
   }
 })
 
-// 测试新增动画
-// onMounted(async () => {
-//   let i = 0
-//   while (i < imageStore.limitedList.length) {
-//     await new Promise((resolve) => setTimeout(resolve, 2000))
-//     addToList.value.unshift(imageStore.limitedList[i])
-//     i += 1
-//   }
-// })
-// const addToList = ref<typeof imageStore.limitedList>([])
-// const imageListForShow = computed(() => {
-//   return [...addToList.value, ...imageStore.limitedList]
-// })
+const selectImgById = (id: number) => {
+  const findImg = imageStore.imageList.find((i) => i.id === id)
+  if (findImg) {
+    // model.value = [findImg]
+    selectImage(findImg)
+  }
+  return findImg
+}
+defineExpose({
+  selectImgById
+})
 </script>
 <template>
   <div
