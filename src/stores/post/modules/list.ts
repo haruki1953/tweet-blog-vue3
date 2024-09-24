@@ -6,12 +6,12 @@ import { postGetByCursorDataHandle, sakiMessage } from '@/utils'
 import { computed, ref, type Ref } from 'vue'
 import { useListManageModule } from './list-manage'
 
-export const useListModule = (setupData: {
+export const useListModule = (dependencies: {
   //
   postList: Ref<PostData[][]>
 }) => {
   // data
-  const { postList } = setupData
+  const { postList } = dependencies
 
   // cursor for pagination query
   const cursor = ref(0)

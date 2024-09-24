@@ -1,12 +1,12 @@
 import type { PostData } from '@/types'
 import type { Ref } from 'vue'
 
-export const useListManageModule = (setupData: {
+export const useListManageModule = (dependencies: {
   //
   postList: Ref<PostData[][]>
 }) => {
   // data
-  const { postList } = setupData
+  const { postList } = dependencies
 
   // update post in postList
   const updatePostListIsDeleted = (id: number, isDeleted: boolean) => {
