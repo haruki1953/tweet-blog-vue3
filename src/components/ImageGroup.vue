@@ -13,11 +13,13 @@ const props = withDefaults(
     backgroundColor?: '' | 'soft'
     notPreview?: boolean
     mini?: boolean
+    aspectRatio169?: boolean
   }>(),
   {
     backgroundColor: '',
     notPreview: false,
-    mini: false
+    mini: false,
+    aspectRatio169: false
   }
 )
 
@@ -40,7 +42,9 @@ const img1Load = async () => {
   const minHeight = width / minRatio
   const normalHeight = width / normalRatio
 
-  if (props.mini) {
+  if (props.aspectRatio169) {
+    imgEl.style.setProperty('aspect-ratio', '16 / 9')
+  } else if (props.mini) {
     if (height > normalHeight) {
       imgEl.style.setProperty('aspect-ratio', '16 / 9')
     } else if (height < minHeight) {

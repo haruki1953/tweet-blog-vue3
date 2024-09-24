@@ -60,7 +60,7 @@ onMounted(() => {
           class="image-edit-card-container"
           :style="{ height: `${boxSize.height.value}px` }"
         >
-          <Transition name="fade-down">
+          <Transition name="fade-down" mode="out-in">
             <div
               class="image-edit-card-box"
               ref="boxRef"

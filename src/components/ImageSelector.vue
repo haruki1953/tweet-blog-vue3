@@ -107,15 +107,13 @@ defineExpose({
           :key="image.id"
           class="img-box"
         >
-          <el-image
-            fit="cover"
-            :src="imgSamllUrl(image)"
-            @click="selectImage(image)"
-          ></el-image>
-          <div class="img-mask">
-            <el-icon size="50" v-show="isSelected(image)">
-              <CircleCheckFilled />
-            </el-icon>
+          <el-image fit="cover" :src="imgSamllUrl(image)"></el-image>
+          <div class="img-mask" @click="selectImage(image)">
+            <Transition name="fade-pop">
+              <el-icon size="50" v-show="isSelected(image)">
+                <CircleCheckFilled />
+              </el-icon>
+            </Transition>
           </div>
         </el-col>
       </TransitionGroup>
@@ -138,6 +136,10 @@ defineExpose({
 .img-box {
   position: relative;
   margin-bottom: 6px;
+  transition: all 0.2s;
+  &:hover {
+    transform: scale(0.95, 0.95);
+  }
   .img-mask {
     position: absolute;
     top: 0;
@@ -148,11 +150,12 @@ defineExpose({
     justify-content: center;
     align-items: center;
     user-select: none;
-    pointer-events: none; /* 允许点击穿透 */
+    cursor: pointer;
     .el-icon {
       color: var(--el-color-success);
     }
   }
+  // 有了上面的遮罩，图片就不会被拖动
   .el-image {
     display: block;
     width: 100%;
@@ -160,8 +163,6 @@ defineExpose({
     --border-radius-val: 5px;
     aspect-ratio: var(--aspect-ratio-val);
     border-radius: var(--border-radius-val);
-    user-select: none;
-    cursor: pointer;
     :deep() {
       .el-image__inner.is-loading {
         width: 100%;

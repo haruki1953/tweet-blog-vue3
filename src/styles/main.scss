@@ -1,5 +1,5 @@
 @use './base.css';
-
+@use './transition.scss';
 
 @function color-lighten($color, $step) {
   @return mix(white, $color, $step * 10%);
@@ -55,61 +55,9 @@ $dark-steps: 1, 2, 3, 4, 5, 6, 7, 8, 9;
 
 html {
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .el-dialog.el-dialog {
   border-radius: 20px;
-}
-
-/* fade-down */
-.fade-down-leave-active,
-.fade-down-enter-active {
-  transition: all 0.3s;
-}
-
-.fade-down-enter-from {
-  transform: translateY(-30px);
-  opacity: 0;
-}
-
-.fade-down-leave-to {
-  transform: translateY(30px);
-  opacity: 0;
-}
-
-/* fade-slide */
-.fade-slide-leave-active,
-.fade-slide-enter-active {
-  transition: all 0.3s;
-}
-
-.fade-slide-enter-from {
-  transform: translateX(-30px);
-  opacity: 0;
-}
-
-.fade-slide-leave-to {
-  transform: translateX(30px);
-  opacity: 0;
-}
-
-
-.fade-slide-list-move,
-.fade-slide-list-leave-active,
-.fade-slide-list-enter-active {
-  transition: all 0.3s;
-}
-
-.fade-slide-list-leave-active {
-  position: absolute;
-}
-
-.fade-slide-list-enter-from {
-  transform: translateX(-30px);
-  opacity: 0;
-}
-
-.fade-slide-list-leave-to {
-  transform: translateX(30px);
-  opacity: 0;
 }

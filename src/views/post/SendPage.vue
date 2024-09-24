@@ -308,11 +308,16 @@ onMounted(() => {
         </div>
         <Transition name="fade-slide">
           <div class="image-box" v-if="imagesData.length > 0">
-            <ImageGroup
-              :data="imagesData"
-              backgroundColor="soft"
-              mini
-            ></ImageGroup>
+            <div class="image-group-transition-container">
+              <Transition name="fade-slide" mode="out-in">
+                <ImageGroup
+                  :data="imagesData"
+                  backgroundColor="soft"
+                  aspectRatio169
+                  :key="imagesData.map((i) => i.id).toString()"
+                ></ImageGroup>
+              </Transition>
+            </div>
             <div class="image-edit-button">
               <el-button
                 type="primary"
@@ -416,6 +421,14 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: right;
+  }
+}
+.image-group-transition-container {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  .image-group {
+    position: absolute;
+    width: 100%;
   }
 }
 
