@@ -1,9 +1,11 @@
 export const axiosConfig = {
-  baseUrl: 'http://localhost:3000/',
+  baseUrl: 'http://192.168.2.110:3000/',
+  // baseUrl: 'http://localhost:3000/',
   timeout: 20000
 }
 
-const imageBaseUrl = 'http://localhost:5500/image/'
+const imageBaseUrl = 'http://192.168.2.110:5500/image/'
+// const imageBaseUrl = 'http://localhost:5500/image/'
 export const imageConfig = {
   baseUrl: imageBaseUrl,
   smallBaseUrl: `${imageBaseUrl}small/`,

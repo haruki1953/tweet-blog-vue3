@@ -20,11 +20,13 @@ const profileHeight = computed(() => {
   <div class="col2-page">
     <el-row :gutter="10">
       <el-col :md="10" :sm="24" class="hidden-sm-and-down" v-if="!reverse">
-        <div class="col2-left">
-          <el-scrollbar :height="profileHeight">
-            <slot name="colLeft"></slot>
-          </el-scrollbar>
-        </div>
+        <el-affix :offset="61">
+          <div class="col2-left">
+            <el-scrollbar :height="profileHeight">
+              <slot name="colLeft"></slot>
+            </el-scrollbar>
+          </div>
+        </el-affix>
       </el-col>
       <el-col :md="14" :sm="24">
         <div class="col2-left-sm hidden-md-and-up">
@@ -35,11 +37,13 @@ const profileHeight = computed(() => {
         </div>
       </el-col>
       <el-col :md="10" :sm="24" class="hidden-sm-and-down" v-if="reverse">
-        <div class="col2-left reverse">
-          <el-scrollbar :height="profileHeight">
-            <slot name="colLeft"></slot>
-          </el-scrollbar>
-        </div>
+        <el-affix :offset="61">
+          <div class="col2-left reverse">
+            <el-scrollbar :height="profileHeight">
+              <slot name="colLeft"></slot>
+            </el-scrollbar>
+          </div>
+        </el-affix>
       </el-col>
     </el-row>
   </div>
@@ -61,8 +65,8 @@ const profileHeight = computed(() => {
 }
 
 .col2-left {
-  position: sticky;
-  top: 60px;
+  // position: sticky;
+  // top: 60px;
   .el-scrollbar {
     :deep() {
       .el-scrollbar__view {
