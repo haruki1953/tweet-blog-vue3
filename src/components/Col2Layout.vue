@@ -2,12 +2,14 @@
 import { useWindowSize } from '@vueuse/core'
 import { computed } from 'vue'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     reverse?: boolean
+    span?: number
   }>(),
   {
-    reverse: false
+    reverse: false,
+    span: 14
   }
 )
 
@@ -15,11 +17,15 @@ const windowSize = useWindowSize()
 const profileHeight = computed(() => {
   return windowSize.height.value - 61
 })
+
+const show2Col = computed(() => windowSize.width.value >= 992)
+const largeColSpan = computed(() => (show2Col.value ? props.span : 24))
+const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
 </script>
 <template>
   <div class="col2-page">
     <el-row :gutter="10">
-      <el-col :md="10" :sm="24" class="hidden-sm-and-down" v-if="!reverse">
+      <el-col :span="smallColSpan" v-if="!reverse && show2Col">
         <el-affix :offset="61">
           <div class="col2-left">
             <el-scrollbar :height="profileHeight">
@@ -28,15 +34,15 @@ const profileHeight = computed(() => {
           </div>
         </el-affix>
       </el-col>
-      <el-col :md="14" :sm="24">
-        <div class="col2-left-sm hidden-md-and-up">
+      <el-col :span="largeColSpan">
+        <div class="col2-left-sm" v-if="!show2Col">
           <slot name="colLeftSm"></slot>
         </div>
         <div class="col2-right">
           <slot name="colRight"></slot>
         </div>
       </el-col>
-      <el-col :md="10" :sm="24" class="hidden-sm-and-down" v-if="reverse">
+      <el-col :span="smallColSpan" v-if="reverse && show2Col">
         <el-affix :offset="61">
           <div class="col2-left reverse">
             <el-scrollbar :height="profileHeight">
@@ -65,26 +71,13 @@ const profileHeight = computed(() => {
 }
 
 .col2-left {
-  // position: sticky;
-  // top: 60px;
   .el-scrollbar {
     :deep() {
       .el-scrollbar__view {
-        // overflow-x: visible;
-        // margin: 20px 10px 20px 0;
         margin: 20px 10px;
       }
     }
   }
-  // &.reverse {
-  //   .el-scrollbar {
-  //     :deep() {
-  //       .el-scrollbar__view {
-  //         margin: 20px 0 20px 10px;
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 .col2-right {

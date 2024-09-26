@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import type { InfoBySendType, PostSendJsonType } from '@/types'
 import { Connection, Link } from '@element-plus/icons-vue'
+import { generateRandomClassName, useDialogOptimization } from '@/utils'
 
 const model = defineModel<PostSendJsonType>({ required: true })
 
@@ -53,6 +54,15 @@ const placeholderByType = computed(() => {
     return undefined
   }
 })
+
+// 自定义遮罩类名，随机生成
+const overlayClass = generateRandomClassName()
+
+// 对话框优化
+useDialogOptimization({
+  dialogVisible,
+  overlayClass
+})
 </script>
 <template>
   <div class="info-edit-dialog">
@@ -61,6 +71,7 @@ const placeholderByType = computed(() => {
       :width="dialogWidth"
       :lock-scroll="false"
       @close="handleModelData"
+      :modal-class="overlayClass"
     >
       <div class="form-box">
         <div class="row center-box">

@@ -34,8 +34,12 @@ export const useImageViewerOptimization = () => {
     window.addEventListener('popstate', handleBackNavigation)
 
     // 在模态框显示时禁用滚动
-    viewerWrapperMask?.addEventListener('wheel', preventScroll)
-    viewerWrapperMask?.addEventListener('touchmove', preventScroll)
+    viewerWrapperMask?.addEventListener('wheel', preventScroll, {
+      passive: false
+    })
+    viewerWrapperMask?.addEventListener('touchmove', preventScroll, {
+      passive: false
+    })
 
     // 遮罩添加触摸事件监听器
     viewerWrapperMask?.addEventListener('touchstart', touchMaskStartHandler)
@@ -72,15 +76,12 @@ export const useImageViewerOptimization = () => {
   }
   // 返回事件操作
   const handleBackNavigation = () => {
-    console.log('返回事件操作', viewerCloseBtn)
     viewerCloseBtn?.click()
   }
   // 阻止滚动事件
   const preventScroll = (event: Event) => {
-    // 这个是禁用网页的滚动
+    // 禁用网页的滚动
     event.preventDefault()
-    // 这个会禁用自己的滚动缩放，保留比较好
-    // event.stopPropagation()
   }
 
   // 触屏缩放移动实现（转为鼠标事件）

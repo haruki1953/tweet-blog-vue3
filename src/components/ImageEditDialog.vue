@@ -3,6 +3,7 @@ import { computed, watch } from 'vue'
 import { ref } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import type { ImageStoreData } from '@/types'
+import { generateRandomClassName, useDialogOptimization } from '@/utils'
 
 const selectedImages = defineModel<ImageStoreData[]>({ required: true })
 const props = withDefaults(
@@ -66,6 +67,15 @@ const handleClose = () => {
     selectedImages.value = []
   }
 }
+
+// 自定义遮罩类名，随机生成
+const overlayClass = generateRandomClassName()
+
+// 对话框优化
+useDialogOptimization({
+  dialogVisible,
+  overlayClass
+})
 </script>
 <template>
   <div class="image-edit-dialog">
@@ -74,6 +84,7 @@ const handleClose = () => {
       :width="dialogWidth"
       :lock-scroll="false"
       @close="handleClose"
+      :modal-class="overlayClass"
     >
       <ImageEditCard
         v-model="selectedImages"

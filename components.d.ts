@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    2: typeof import('./src/components/ImageGroup copy 2.vue')['default']
     BgmEmpty: typeof import('./src/components/BgmEmpty.vue')['default']
     Col1Layout: typeof import('./src/components/Col1Layout.vue')['default']
     Col2Layout: typeof import('./src/components/Col2Layout.vue')['default']
