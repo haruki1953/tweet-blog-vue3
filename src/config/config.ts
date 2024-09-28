@@ -22,8 +22,8 @@ export const postConfig = {
   postMaxImages: 4,
   postNumInOnceRequest: 20,
   limitShow: {
-    startAmounts: 6,
-    limitAmounts: 6
+    startAmounts: 4,
+    limitAmounts: 4
   }
 }
 

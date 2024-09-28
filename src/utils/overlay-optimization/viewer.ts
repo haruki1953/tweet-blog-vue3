@@ -1,6 +1,9 @@
-import { nextTick } from 'vue'
+import { nextTick, onUnmounted, ref } from 'vue'
+import { getScrollbarWidth } from '../other'
 
 export const useImageViewerOptimization = () => {
+  const isViewing = ref(false)
+
   // 解决图片预览不能通过手机返回键退出的问题
   // 关闭按钮
   let viewerCloseBtn: HTMLElement | null = null
@@ -13,12 +16,19 @@ export const useImageViewerOptimization = () => {
 
   // 预览打开时
   const enableOnViewerShow = async () => {
+    isViewing.value = true
+    // 禁用滚动，同时防止抖动
+    document.documentElement.style.overflowY = 'hidden'
+    const scrollbarWidth = getScrollbarWidth()
+    document.documentElement.style.marginRight = `${scrollbarWidth}px`
+    const menuBar = document.querySelector('.menu-bar .el-menu') as HTMLElement
+    menuBar.style.paddingRight = `${scrollbarWidth}px`
+
     await nextTick()
     // 获取返回按钮
     viewerCloseBtn = document.querySelector(
       '.el-image-viewer__btn.el-image-viewer__close'
     ) as HTMLElement | null
-    console.log('获取返回按钮', viewerCloseBtn)
     // 获取遮罩
     viewerWrapperMask = document.querySelector(
       '.el-image-viewer__wrapper'
@@ -33,32 +43,33 @@ export const useImageViewerOptimization = () => {
     // 监听返回事件
     window.addEventListener('popstate', handleBackNavigation)
 
-    // 在模态框显示时禁用滚动
-    viewerWrapperMask?.addEventListener('wheel', preventScroll, {
-      passive: false
-    })
-    viewerWrapperMask?.addEventListener('touchmove', preventScroll, {
-      passive: false
-    })
-
     // 遮罩添加触摸事件监听器
     viewerWrapperMask?.addEventListener('touchstart', touchMaskStartHandler)
-    viewerWrapperMask?.addEventListener('touchmove', touchMaskMoveHandler)
+    viewerWrapperMask?.addEventListener('touchmove', touchMaskMoveHandler, {
+      passive: true
+    })
     viewerWrapperMask?.addEventListener('touchend', touchMaskEndHandler)
 
     // 为所有图片绑定触摸事件
     viewerImageList.forEach((image) => {
       image.addEventListener('touchstart', touchImageStartHandler)
-      image.addEventListener('touchmove', touchImageMoveHandler)
+      image.addEventListener('touchmove', touchImageMoveHandler, {
+        passive: true
+      })
       image.addEventListener('touchend', touchImageEndHandler)
     })
   }
 
   // 预览关闭时清理监听器与之前添加的历史状态
   const disableOnViewerClose = () => {
+    isViewing.value = false
+    // 恢复滚动，同时防止抖动
+    document.documentElement.style.overflowY = 'scroll'
+    document.documentElement.style.marginRight = `0`
+    const menuBar = document.querySelector('.menu-bar .el-menu') as HTMLElement
+    menuBar.style.paddingRight = `0`
+
     window.removeEventListener('popstate', handleBackNavigation)
-    viewerWrapperMask?.removeEventListener('wheel', preventScroll)
-    viewerWrapperMask?.removeEventListener('touchmove', preventScroll)
     viewerWrapperMask?.removeEventListener('touchstart', touchMaskStartHandler)
     viewerWrapperMask?.removeEventListener('touchmove', touchMaskMoveHandler)
     viewerWrapperMask?.removeEventListener('touchend', touchMaskEndHandler)
@@ -74,18 +85,21 @@ export const useImageViewerOptimization = () => {
       window.history.back() // 或者使用其他逻辑恢复到之前的状态
     }
   }
+  onUnmounted(() => {
+    // 防止在预览打开时跳转至其他页面，导致滚动锁死
+    if (isViewing.value) {
+      disableOnViewerClose()
+    }
+  })
+
   // 返回事件操作
   const handleBackNavigation = () => {
     viewerCloseBtn?.click()
   }
-  // 阻止滚动事件
-  const preventScroll = (event: Event) => {
-    // 禁用网页的滚动
-    event.preventDefault()
-  }
 
   // 触屏缩放移动实现（转为鼠标事件）
-  // el-image的图片预览，是遮罩负责缩放，其中的图片负责接收鼠标点击移动事件
+  // el-image的图片预览无法通过触屏来控制
+  // el-image是遮罩负责滚轮缩放，其中的图片负责接收鼠标点击移动事件
   // 缩放灵敏度，增大迟钝，减小灵敏（当触摸距离变化超过此值时进行缩放）
   const sensitivity = 25
   // 最后触摸距离（双指距离）

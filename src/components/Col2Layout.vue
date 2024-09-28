@@ -26,7 +26,7 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
   <div class="col2-page">
     <el-row :gutter="10">
       <el-col :span="smallColSpan" v-if="!reverse && show2Col">
-        <el-affix :offset="61">
+        <el-affix :offset="61" :z-index="1">
           <div class="col2-left">
             <el-scrollbar :height="profileHeight">
               <slot name="colLeft"></slot>
@@ -43,7 +43,7 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
         </div>
       </el-col>
       <el-col :span="smallColSpan" v-if="reverse && show2Col">
-        <el-affix :offset="61">
+        <el-affix :offset="61" :z-index="1">
           <div class="col2-left reverse">
             <el-scrollbar :height="profileHeight">
               <slot name="colLeft"></slot>

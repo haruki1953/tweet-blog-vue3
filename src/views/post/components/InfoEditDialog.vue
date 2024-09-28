@@ -146,11 +146,6 @@ useDialogOptimization({
         &:hover {
           box-shadow: none;
         }
-        .el-input__inner {
-          // color: var(--color-text);
-          // font-weight: bold;
-          // text-align: center;
-        }
       }
     }
   }

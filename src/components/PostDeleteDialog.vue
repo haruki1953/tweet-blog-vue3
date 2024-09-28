@@ -5,7 +5,11 @@ import { useWindowSize } from '@vueuse/core'
 import type { PostData } from '@/types'
 import { postDeleteApi } from '@/api'
 import { useImageStore, usePostStore } from '@/stores'
-import { sakiMessage } from '@/utils'
+import {
+  generateRandomClassName,
+  sakiMessage,
+  useDialogOptimization
+} from '@/utils'
 
 const modelIsDeleteEverlasting = defineModel<boolean>('isDeleteEverlasting', {
   required: true
@@ -60,6 +64,15 @@ const deletePost = async () => {
     modelIsDeleteEverlasting.value = false
   }
 }
+
+// 自定义遮罩类名，随机生成
+const overlayClass = generateRandomClassName()
+
+// 对话框优化
+useDialogOptimization({
+  dialogVisible,
+  overlayClass
+})
 </script>
 <template>
   <div class="post-delete-dialog">
@@ -67,6 +80,7 @@ const deletePost = async () => {
       v-model="dialogVisible"
       :width="dialogWidth"
       :lock-scroll="false"
+      :modal-class="overlayClass"
     >
       <div class="row center-box">
         <div class="lable">确认要永久删除此推文吗？</div>

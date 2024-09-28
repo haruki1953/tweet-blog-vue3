@@ -60,14 +60,21 @@ const goBack = () => {
     align-items: center;
     cursor: pointer;
     user-select: none;
-    .el-icon,
-    span {
+    &:hover .el-icon {
+      transform: rotate(360deg);
+    }
+    .el-icon {
       color: var(--color-text);
       font-weight: bold;
-      transition: all 0.2s;
+      transition:
+        color 0.2s,
+        transform 0.5s;
     }
     span {
       margin-left: 5px;
+      color: var(--color-text);
+      font-weight: bold;
+      transition: color 0.2s;
     }
   }
   .button {

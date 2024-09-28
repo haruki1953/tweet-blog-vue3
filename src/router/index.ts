@@ -62,7 +62,8 @@ const router = createRouter({
     // 保留有位置信息时滚动到原先位置
     if (savedPosition) {
       // 延迟一点会使滚动更准确
-      await new Promise((resolve) => setTimeout(resolve, 1))
+      await nextTick()
+      await new Promise((resolve) => setTimeout(resolve, 10))
       return savedPosition
     }
     // 跳转至首页或其他包含无限滚动的页面时，重置显示限制

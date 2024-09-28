@@ -74,7 +74,7 @@ const deletePostEverlast = async () => {
 <template>
   <div class="post-card">
     <PostDeleteDialog
-      v-if="!mini"
+      v-if="!mini && data.isDeleted"
       ref="refPostDeleteDialog"
       :data="data"
       v-model:isDeleteEverlasting="isDeleteEverlasting"

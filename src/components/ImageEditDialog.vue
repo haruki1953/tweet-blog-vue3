@@ -16,7 +16,7 @@ const props = withDefaults(
   {
     autoOpen: false,
     cancelOnClose: false,
-    notPreview: false,
+    notPreview: true,
     imageSelect: false
   }
 )
@@ -62,8 +62,9 @@ watch(
   }
 )
 
-const handleClose = () => {
+const handleClose = async () => {
   if (props.cancelOnClose) {
+    await new Promise((resolve) => setTimeout(resolve, 100))
     selectedImages.value = []
   }
 }
