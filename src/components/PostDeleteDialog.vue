@@ -92,7 +92,7 @@ useDialogOptimization({
           />
         </div>
       </div>
-      <PostCard :data="data" mini></PostCard>
+      <PostGroup :data="[data]" mini notPreview></PostGroup>
       <div class="button-box">
         <el-button round type="danger" size="small" @click="deletePost">
           删 除

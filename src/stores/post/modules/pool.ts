@@ -2,11 +2,14 @@ import { postGetByIdApi } from '@/api'
 import { useSettingStore } from '@/stores'
 import type { PosPoolItem } from '@/types'
 import { postGetByIdDataHandle } from '@/utils'
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 
-export const usePoolModule = () => {
+export const usePoolModule = (dependencies: {
+  postPool: Ref<PosPoolItem[]>
+}) => {
+  const { postPool } = dependencies
+
   // data
-  const postPool = ref<PosPoolItem[]>([])
   const getPostPoolItem = (id: number): PosPoolItem | undefined => {
     return postPool.value.find((i) => i.id === id)
   }
@@ -56,21 +59,20 @@ export const usePoolModule = () => {
   }
   const tryLimitPostPoolSize = () => {
     // limit postPool size
-    if (postPool.value.length > 150) {
+    if (postPool.value.length > 50) {
       // Sort the postPool by updateAt date in ascending order
       postPool.value.sort(
         (a, b) =>
           new Date(a.updateAt).getTime() - new Date(b.updateAt).getTime()
       )
-      // Remove the oldest 50 items
-      postPool.value.splice(0, 50)
+      // Remove the oldest items
+      postPool.value.splice(0, 30)
     }
   }
 
   return {
     isPostRequested,
     resetPostRequested,
-    postPool,
     getPostPoolItem,
     getPostById
   }

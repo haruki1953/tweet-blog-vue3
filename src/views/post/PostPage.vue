@@ -89,6 +89,25 @@ watch(
   { immediate: true }
 )
 
+// when postStore.resetPostRequested(), to loadPostPoolItemData() again
+watch(
+  () => {
+    if (postPoolItem.value == undefined) {
+      return
+    }
+    return postStore.isPostRequested(postPoolItem.value.id)
+  },
+  () => {
+    if (postPoolItem.value == undefined) {
+      return
+    }
+    if (postStore.isPostRequested(postPoolItem.value.id)) {
+      return
+    }
+    loadPostPoolItemData()
+  }
+)
+
 const replyPost = () => {
   if (!postPoolItem.value) {
     return
@@ -125,7 +144,7 @@ const replyPost = () => {
       </div>
       <!-- 没有回帖 -->
     </Col1Layout>
-    <Col2Layout v-else>
+    <Col2Layout v-else :span="12">
       <template #colLeftSm>
         <TopBar title="查看推文"></TopBar>
         <div class="main-post-group-box" v-if="mainPostGroup">

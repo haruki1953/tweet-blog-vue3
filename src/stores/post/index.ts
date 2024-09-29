@@ -1,14 +1,19 @@
-import type { PostData } from '@/types'
+import type { PosPoolItem, PostData } from '@/types'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { useControlModule, useListModule, usePoolModule } from './modules'
+import {
+  useControlModule,
+  useListModule,
+  useManageModule,
+  usePoolModule
+} from './modules'
 
 export const usePostStore = defineStore(
   'tweet-post',
   () => {
-    // 其实postList完全可以打包进listModule
-    // 这里通过参数传递，是为了演示实现多Module共享数据
+    // 多Module共享数据
     const postList = ref<PostData[][]>([])
+    const postPool = ref<PosPoolItem[]>([])
 
     // listModule
     const listModule = useListModule({
@@ -16,16 +21,26 @@ export const usePostStore = defineStore(
     })
 
     // poolModule, for PostPage
-    const poolModule = usePoolModule()
+    const poolModule = usePoolModule({
+      postPool
+    })
+
+    // manageModule, for manage data
+    const manageModule = useManageModule({
+      postList,
+      postPool
+    })
 
     // controlModule
     const controlModule = useControlModule()
 
     return {
       postList,
+      postPool,
       ...listModule,
       ...poolModule,
-      ...controlModule
+      ...controlModule,
+      ...manageModule
     }
   },
   {

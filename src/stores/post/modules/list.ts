@@ -4,7 +4,7 @@ import { useSettingStore } from '@/stores'
 import type { PostData, PostGetByCursorQueryType, PostsGetMode } from '@/types'
 import { postGetByCursorDataHandle, sakiMessage } from '@/utils'
 import { computed, ref, type Ref } from 'vue'
-import { useListManageModule } from './list-manage'
+// import { useListManageModule } from './list-manage'
 
 export const useListModule = (dependencies: {
   //
@@ -36,10 +36,10 @@ export const useListModule = (dependencies: {
     return loadingLimitedMark.value || settingStore.isLoadingPost
   })
 
-  // use modules
-  const listManageModule = useListManageModule({
-    postList
-  })
+  // // use modules
+  // const listManageModule = useListManageModule({
+  //   postList
+  // })
 
   // use something
   const settingStore = useSettingStore()
@@ -161,7 +161,7 @@ export const useListModule = (dependencies: {
     postsGetMode,
     searchGetPosts,
     nowSearchKey,
-    deleteGetPosts,
-    ...listManageModule
+    deleteGetPosts
+    // ...listManageModule
   }
 }

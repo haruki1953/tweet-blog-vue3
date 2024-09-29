@@ -239,6 +239,8 @@ watch(
     border-bottom-color 0.5s;
   background-color: var(--color-background);
   border-bottom-color: var(--color-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 30;
   &.menu-on-top {
     background-color: transparent;

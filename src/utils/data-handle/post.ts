@@ -12,7 +12,7 @@ export const postGetByCursorDataHandle = (
 ): PostData[][] => {
   // first handel data to `PostData[][]`
 
-  // 将有关系的帖子合并在一起
+  // 1 将有关系的帖子合并在一起
   // 转为id二维数组
   const idTempGrid: number[][] = data.map((post) => {
     const idList: number[] = []
@@ -31,7 +31,6 @@ export const postGetByCursorDataHandle = (
         let idPost: PostData | undefined
         data.some((post) => {
           if (post.id === id) {
-            // 再
             idPost = post
             return true
           }
@@ -47,9 +46,14 @@ export const postGetByCursorDataHandle = (
       .filter((post) => post) as PostData[]
   })
 
-  // 调整顺序，遍历postRelationGrid
-  const postGroupList = postRelationGrid.map((postList) => {
+  // 2 按组整理数据，遍历postRelationGrid
+  const postGroupInfoList: {
+    latestPost: PostData
+    postGroup: PostData[]
+  }[] = []
+  postRelationGrid.forEach((postList) => {
     const postGroup: PostData[] = []
+    let latestPost: PostData
     // 1 找到主帖 parentPost === null
     const mainPost = postList.find((post) => post.parentPost === null)
     if (!mainPost) {
@@ -57,6 +61,7 @@ export const postGetByCursorDataHandle = (
       return postList
     }
     postGroup.push(mainPost)
+    latestPost = mainPost
 
     // 2 递归处理回复与回复的回复
     const recursionToHandleReplies = (parentId: number) => {
@@ -64,11 +69,23 @@ export const postGetByCursorDataHandle = (
       const replies = postList.filter(
         (post) => post.parentPost?.id === parentId
       )
+      if (replies.length === 0) {
+        return
+      }
       // 排序，以日期 升序排序（最新的帖子在下）
       replies.sort(
         (a, b) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       )
+      // 判断最新的回复是不是当前最新的帖子
+      const latestReplie = replies[replies.length - 1]
+      if (
+        new Date(latestReplie.createdAt).getTime() >
+        new Date(latestPost.createdAt).getTime()
+      ) {
+        latestPost = latestReplie
+      }
+
       // 递归查找回复的回复
       replies.forEach((repost) => {
         postGroup.push(repost)
@@ -76,12 +93,21 @@ export const postGetByCursorDataHandle = (
       })
     }
     recursionToHandleReplies(mainPost.id)
-    return postGroup
+
+    postGroupInfoList.push({
+      postGroup,
+      latestPost
+    })
   })
 
   // 3 将postGroupList中的postGroup排序，
-  // 以帖子数组中日期最新的帖子的日期 降序排序（最新的帖子组在上）
-  // 好像即使不排序，处理后的数据顺序也是对的，那就先不管了
+  // 以帖子数组中日期最新的帖子（最后一个）的日期 降序排序（最新的帖子组在上）
+  postGroupInfoList.sort(
+    (a, b) =>
+      new Date(b.latestPost.createdAt).getTime() -
+      new Date(a.latestPost.createdAt).getTime()
+  )
+  const postGroupList = postGroupInfoList.map((i) => i.postGroup)
 
   // console.log(idTempGrid)
   // console.log(idRelationGrid)

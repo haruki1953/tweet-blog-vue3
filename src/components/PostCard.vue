@@ -20,9 +20,11 @@ const props = withDefaults(
   defineProps<{
     data: PostData
     mini?: boolean
+    notPreview?: boolean
   }>(),
   {
-    mini: false
+    mini: false,
+    notPreview: false
   }
 )
 
@@ -96,66 +98,85 @@ const deletePostEverlast = async () => {
       <div class="content">{{ data.content }}</div>
     </div>
     <div class="image-box" v-if="data.images.length > 0">
-      <ImageGroup :data="data.images" :mini="mini"></ImageGroup>
+      <ImageGroup
+        :data="data.images"
+        :mini="mini"
+        :notPreview="notPreview"
+      ></ImageGroup>
     </div>
     <template v-if="mini"></template>
     <template v-else>
-      <div class="button-box" v-if="data.isDeleted">
-        <div class="button-center">
-          <el-button
-            type="success"
-            :icon="RefreshLeft"
-            round
-            size="small"
-            :loading="isRestoring"
-            @click="restorePost"
-          >
-            还原推文
-          </el-button>
-          <el-button
-            type="danger"
-            :icon="Remove"
-            round
-            size="small"
-            :loading="isDeleteEverlasting"
-            @click="deletePostEverlast"
-          >
-            永久删除
-          </el-button>
-        </div>
-      </div>
-      <div class="button-box" v-else>
-        <div class="replies-lable">
-          <div class="count" v-if="data._count.replies > 0">
-            {{ data._count.replies }}
+      <div class="trans-button-container">
+        <Transition name="fade-down">
+          <div class="trans-button-box" v-if="data.isDeleted">
+            <div class="button-box">
+              <div class="button-center">
+                <el-button
+                  type="success"
+                  :icon="RefreshLeft"
+                  round
+                  size="small"
+                  :loading="isRestoring"
+                  @click="restorePost"
+                >
+                  还原推文
+                </el-button>
+                <el-button
+                  type="danger"
+                  :icon="Remove"
+                  round
+                  size="small"
+                  :loading="isDeleteEverlasting"
+                  @click="deletePostEverlast"
+                >
+                  永久删除
+                </el-button>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="button-layout">
-          <el-button
-            type="primary"
-            :icon="ChatSquare"
-            circle
-            size="small"
-            @click="$router.push({ name: 'post', params: { id: data.id } })"
-          />
-          <el-button
-            type="info"
-            :icon="EditPen"
-            circle
-            size="small"
-            @click="editPost"
-          />
-          <el-button type="warning" :icon="Star" circle size="small" />
-          <el-button
-            type="danger"
-            :icon="Delete"
-            circle
-            size="small"
-            :loading="isDeleting"
-            @click="deletePost"
-          />
-          <el-button type="success" :icon="Connection" circle size="small" />
-        </div>
+          <div class="trans-button-box" v-else>
+            <div class="button-box">
+              <div class="replies-lable">
+                <div class="count" v-if="data._count.replies > 0">
+                  {{ data._count.replies }}
+                </div>
+              </div>
+              <div class="button-layout">
+                <el-button
+                  type="primary"
+                  :icon="ChatSquare"
+                  circle
+                  size="small"
+                  @click="
+                    $router.push({ name: 'post', params: { id: data.id } })
+                  "
+                />
+                <el-button
+                  type="info"
+                  :icon="EditPen"
+                  circle
+                  size="small"
+                  @click="editPost"
+                />
+                <el-button type="warning" :icon="Star" circle size="small" />
+                <el-button
+                  type="danger"
+                  :icon="Delete"
+                  circle
+                  size="small"
+                  :loading="isDeleting"
+                  @click="deletePost"
+                />
+                <el-button
+                  type="success"
+                  :icon="Connection"
+                  circle
+                  size="small"
+                />
+              </div>
+            </div>
+          </div>
+        </Transition>
       </div>
     </template>
   </div>
@@ -198,18 +219,30 @@ const deletePostEverlast = async () => {
     justify-content: center;
     padding: 4px 0 8px 0;
     .content {
+      max-width: 100%;
       color: var(--color-text);
       white-space: pre-line;
+      // 解决在全英文无空格时，文字无法换行的问题
+      word-wrap: break-word;
       transition: all 0.2s;
     }
   }
   .image-box {
     margin: 0;
   }
+  .trans-button-container {
+    margin-top: 12px;
+    position: relative;
+    height: 24px;
+  }
+  .trans-button-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
   .button-box {
     max-width: 300px;
     margin: 0 auto;
-    margin-top: 12px;
     position: relative;
     .replies-lable {
       width: 30px;
