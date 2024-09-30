@@ -2,11 +2,13 @@ import { imageGetByCursorApi } from '@/api'
 import { imageConfig } from '@/config'
 import { useSettingStore } from '@/stores'
 import type { ImageStoreData } from '@/types'
-import { computed, ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 
-export const useListModule = () => {
+export const useListModule = (dependencies: {
+  imageList: Ref<ImageStoreData[]>
+}) => {
   // data
-  const imageList = ref<ImageStoreData[]>([])
+  const { imageList } = dependencies
 
   const cursor = ref(0)
   const haveMoreMark = ref(false)
@@ -86,7 +88,6 @@ export const useListModule = () => {
   })
 
   return {
-    imageList,
     getImages,
     reGetImages,
     limitedList,

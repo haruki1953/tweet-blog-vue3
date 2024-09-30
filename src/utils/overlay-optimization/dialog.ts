@@ -1,5 +1,4 @@
-import { nextTick, onUnmounted, watch, type Ref } from 'vue'
-import { getScrollbarWidth } from '../other'
+import { onUnmounted, watch, type Ref } from 'vue'
 import {
   optimizationScrollOnOverlayClose,
   optimizationScrollOnOverlayShow

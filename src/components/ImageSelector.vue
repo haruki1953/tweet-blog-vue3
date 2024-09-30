@@ -68,6 +68,7 @@ const infiniteScrollFunc = () => {
 onMounted(() => {
   if (imageStore.isNeedReget) {
     imageStore.reGetImages()
+    imageStore.setNeedReget(false)
   }
 })
 

@@ -1,15 +1,17 @@
 import { useSettingStore } from '@/stores'
-import type { useListModule } from './list'
 import { computed, ref } from 'vue'
 import { sakiMessage } from '@/utils'
 import type { UploadFile } from 'element-plus'
 import { imageRule } from '@/config'
 import { imageUploadApi } from '@/api'
+import type { useManageModule } from './manage'
 
 export const useUploadModule = (dependencies: {
-  reGetImages: ReturnType<typeof useListModule>['reGetImages']
+  manageAfterUploadImage: ReturnType<
+    typeof useManageModule
+  >['manageAfterUploadImage']
 }) => {
-  const { reGetImages } = dependencies
+  const { manageAfterUploadImage } = dependencies
 
   // data
   const uploadingImageCount = ref(0)
@@ -71,10 +73,10 @@ export const useUploadModule = (dependencies: {
       throw e
     })
     setUploaded()
-    reGetImages()
-
-    // return imagesData
+    // reGetImages()
     const resImage = res.data.data
+    manageAfterUploadImage(resImage)
+
     return resImage
   }
 

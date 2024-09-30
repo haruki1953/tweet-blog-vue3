@@ -239,8 +239,9 @@ watch(
     border-bottom-color 0.5s;
   background-color: var(--color-background);
   border-bottom-color: var(--color-border);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  // 毛玻璃感觉没必要，为了尽可能不影响性能，取消了
+  // backdrop-filter: blur(10px);
+  // -webkit-backdrop-filter: blur(10px);
   z-index: 30;
   &.menu-on-top {
     background-color: transparent;

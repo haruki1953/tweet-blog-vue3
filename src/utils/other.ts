@@ -44,3 +44,10 @@ export const getScrollbarWidth = () => {
 
   return scrollbarWidth
 }
+
+export const arraysEqual = (arr1: number[], arr2: number[]): boolean => {
+  if (arr1.length !== arr2.length) return false
+  const sortedArr1 = [...arr1].sort((a, b) => a - b)
+  const sortedArr2 = [...arr2].sort((a, b) => a - b)
+  return sortedArr1.every((value, index) => value === sortedArr2[index])
+}

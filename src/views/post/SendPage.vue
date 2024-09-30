@@ -68,14 +68,20 @@ const sendPost = async () => {
   isSending.value = true
   settingStore.setLoading(true)
   try {
+    const images = imagesData.value.map((i) => i.id)
     await postSendApi({
       ...formModel.value,
-      images: imagesData.value.map((i) => i.id)
+      images
     })
     sakiMessage({
       type: 'success',
       message: '发送成功'
     })
+    // 发送后，据情况设置是否需重新加载图片
+    if (images.length > 0) {
+      imageStore.setNeedReget()
+    }
+    // 重载帖子
     await postStore.reGetPosts()
     router.push({ name: 'home' })
   } finally {
@@ -91,15 +97,20 @@ const sendReply = async () => {
   isSending.value = true
   settingStore.setLoading(true)
   try {
+    const images = imagesData.value.map((i) => i.id)
     await postSendApi({
       ...formModel.value,
-      images: imagesData.value.map((i) => i.id),
+      images,
       parentPostId: infoBySendType.value.data.id
     })
     sakiMessage({
       type: 'success',
       message: '回复成功'
     })
+    // 发送后，据情况设置是否需重新加载图片
+    if (images.length > 0) {
+      imageStore.setNeedReget()
+    }
     await postStore.reGetPosts()
     postStore.resetPostRequested()
     sakiGoBack(router)
@@ -116,15 +127,19 @@ const sendUpdate = async () => {
   isSending.value = true
   settingStore.setLoading(true)
   try {
+    const images = imagesData.value.map((i) => i.id)
     const res = await postUpdateApi({
       ...formModel.value,
       id: infoBySendType.value.data.id,
-      images: imagesData.value.map((i) => i.id)
+      images
     })
     sakiMessage({
       type: 'success',
       message: '修改成功'
     })
+    // 对于更新，多数情况都要重载图片
+    imageStore.setNeedReget()
+    // 重载帖子
     await postStore.reGetPosts()
     postStore.resetPostRequested()
     router.replace({

@@ -2,13 +2,19 @@
 import { imageDeleteApi, imageDeleteOriginalApi, imageUpdateApi } from '@/api'
 import { useImageStore } from '@/stores'
 import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
-import { formatDate, imageToImageStoreData, sakiMessage } from '@/utils'
+import {
+  formatDate,
+  manageRefDataImageAfterDeleteImage,
+  manageRefDataImageAfterUpdateImage,
+  sakiMessage
+} from '@/utils'
 import { computed, watch } from 'vue'
 import { ref } from 'vue'
 import { openLink, imgLargeUrl, imgSamllUrl, imgOriginalUrl } from '@/utils'
 import { ChatSquare } from '@element-plus/icons-vue'
 
 const selectedImages = defineModel<ImageStoreData[]>({ required: true })
+
 withDefaults(
   defineProps<{
     notPreview?: boolean
@@ -90,16 +96,16 @@ const updateImage = async () => {
       ...formModel.value,
       id: imgId
     })
-    const resImgIndex = selectedImages.value.findIndex((i) => i.id === imgId)
-    if (resImgIndex >= 0) {
-      selectedImages.value[resImgIndex] = imageToImageStoreData(res.data.data)
-      // selectedImages.value[resImgIndex] = res.data.data
-    }
+    const resImage = res.data.data
+    // 修改图片后，利用返回的图片，管理store中的数据
+    imageStore.manageAfterUpdateImage(resImage)
+    // 还要修改selectedImages
+    manageRefDataImageAfterUpdateImage({ imageList: selectedImages }, resImage)
+
     sakiMessage({
       type: 'success',
       message: '修改成功'
     })
-    await imageStore.reGetImages()
   } finally {
     isSending.value = false
   }
@@ -126,16 +132,22 @@ const deleteImage = async () => {
   isImageDeleting.value = true
   try {
     const imgId = imageByIndex.value.id
-    await imageDeleteApi(imgId)
-    const resImgIndex = selectedImages.value.findIndex((i) => i.id === imgId)
-    if (resImgIndex >= 0) {
-      selectedImages.value.splice(resImgIndex, 1)
-    }
+    const res = await imageDeleteApi(imgId)
+    // const resImgIndex = selectedImages.value.findIndex((i) => i.id === imgId)
+    // if (resImgIndex >= 0) {
+    //   selectedImages.value.splice(resImgIndex, 1)
+    // }
+    const resImage = res.data.data
+    // 删除图片后，利用返回的图片，管理store中的数据
+    imageStore.manageAfterDeleteImage(resImage)
+    // 还要修改selectedImages
+    manageRefDataImageAfterDeleteImage({ imageList: selectedImages }, resImage)
+
     sakiMessage({
       type: 'success',
       message: '删除成功'
     })
-    await imageStore.reGetImages()
+    // await imageStore.reGetImages()
   } finally {
     isImageDeleting.value = false
   }
@@ -148,16 +160,18 @@ const deleteOriginal = async () => {
   isOriginalDeleting.value = true
   try {
     const imgId = imageByIndex.value.id
-    await imageDeleteOriginalApi(imgId)
-    const resImgIndex = selectedImages.value.findIndex((i) => i.id === imgId)
-    if (resImgIndex >= 0) {
-      selectedImages.value[resImgIndex].originalSize = 0
-    }
+    const res = await imageDeleteOriginalApi(imgId)
+    const resImage = res.data.data
+    // 删除原图其实也差不多是修改图片信息
+    // 修改图片后，利用返回的图片，管理store中的数据
+    imageStore.manageAfterUpdateImage(resImage)
+    // 还要修改selectedImages
+    manageRefDataImageAfterUpdateImage({ imageList: selectedImages }, resImage)
+
     sakiMessage({
       type: 'success',
       message: '删除成功'
     })
-    await imageStore.reGetImages()
   } finally {
     isOriginalDeleting.value = false
   }
