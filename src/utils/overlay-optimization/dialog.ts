@@ -1,5 +1,9 @@
 import { nextTick, onUnmounted, watch, type Ref } from 'vue'
 import { getScrollbarWidth } from '../other'
+import {
+  optimizationScrollOnOverlayClose,
+  optimizationScrollOnOverlayShow
+} from './base'
 
 export const useDialogOptimization = (dependencies: {
   dialogVisible: Ref<boolean>
@@ -18,11 +22,7 @@ export const useDialogOptimization = (dependencies: {
   // 对话框打开时
   const enableOnDialogShow = async () => {
     // 禁用滚动，同时防止抖动
-    document.documentElement.style.overflowY = 'hidden'
-    const scrollbarWidth = getScrollbarWidth()
-    document.documentElement.style.marginRight = `${scrollbarWidth}px`
-    const menuBar = document.querySelector('.menu-bar .el-menu') as HTMLElement
-    menuBar.style.paddingRight = `${scrollbarWidth}px`
+    optimizationScrollOnOverlayShow()
 
     // 这行代码会在历史记录中插入一个状态，以防止返回到上一页面。
     window.history.pushState({ isDialogShow: true }, '', window.location.href)
@@ -33,10 +33,7 @@ export const useDialogOptimization = (dependencies: {
   // 对话框关闭时，清理监听器与之前添加的历史状态
   const disableOnDialogClose = async () => {
     // 恢复滚动，同时防止抖动
-    document.documentElement.style.overflowY = 'scroll'
-    document.documentElement.style.marginRight = `0`
-    const menuBar = document.querySelector('.menu-bar .el-menu') as HTMLElement
-    menuBar.style.paddingRight = `0`
+    optimizationScrollOnOverlayClose()
 
     // 取消返回监听
     window.removeEventListener('popstate', handleBackNavigation)

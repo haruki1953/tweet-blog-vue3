@@ -1,5 +1,8 @@
 import { nextTick, onUnmounted, ref } from 'vue'
-import { getScrollbarWidth } from '../other'
+import {
+  optimizationScrollOnOverlayClose,
+  optimizationScrollOnOverlayShow
+} from './base'
 
 export const useImageViewerOptimization = () => {
   const isViewing = ref(false)
@@ -18,11 +21,7 @@ export const useImageViewerOptimization = () => {
   const enableOnViewerShow = async () => {
     isViewing.value = true
     // 禁用滚动，同时防止抖动
-    document.documentElement.style.overflowY = 'hidden'
-    const scrollbarWidth = getScrollbarWidth()
-    document.documentElement.style.marginRight = `${scrollbarWidth}px`
-    const menuBar = document.querySelector('.menu-bar .el-menu') as HTMLElement
-    menuBar.style.paddingRight = `${scrollbarWidth}px`
+    optimizationScrollOnOverlayShow()
 
     await nextTick()
     // 获取返回按钮
@@ -64,10 +63,7 @@ export const useImageViewerOptimization = () => {
   const disableOnViewerClose = () => {
     isViewing.value = false
     // 恢复滚动，同时防止抖动
-    document.documentElement.style.overflowY = 'scroll'
-    document.documentElement.style.marginRight = `0`
-    const menuBar = document.querySelector('.menu-bar .el-menu') as HTMLElement
-    menuBar.style.paddingRight = `0`
+    optimizationScrollOnOverlayClose()
 
     window.removeEventListener('popstate', handleBackNavigation)
     viewerWrapperMask?.removeEventListener('touchstart', touchMaskStartHandler)

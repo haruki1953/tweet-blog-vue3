@@ -12,7 +12,9 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <el-backtop />
+  <div class="back-top-btn-box">
+    <el-backtop />
+  </div>
   <!-- 导航栏 -->
   <MenuBar
     :menu="[
