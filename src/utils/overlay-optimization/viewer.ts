@@ -1,10 +1,65 @@
-import { nextTick, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onUnmounted, ref, type ComputedRef } from 'vue'
 import {
   optimizationScrollOnOverlayClose,
   optimizationScrollOnOverlayShow
 } from './base'
+import type { Image } from '@/types'
+import { imgLargeUrl, imgSamllUrl } from '../data-handle'
+import axios from 'axios'
+import { axiosConfig } from '@/config'
 
-export const useImageViewerOptimization = () => {
+const imageLoadedInfos = ref<
+  {
+    imageId: number
+    isLoaded: boolean
+  }[]
+>([])
+
+export const useImageViewerOptimization = (dependencies: {
+  images: ComputedRef<Image[]>
+}) => {
+  const { images } = dependencies
+
+  // 片预览优化，先显示小图，大图加载完毕再显示
+  const previewSrcList = computed(() => {
+    return images.value.map((img) => {
+      const findImageLoadedInfo = imageLoadedInfos.value.find(
+        (info) => info.imageId === img.id
+      )
+      if (findImageLoadedInfo?.isLoaded) {
+        return imgLargeUrl(img)
+      } else {
+        return imgSamllUrl(img)
+      }
+    })
+  })
+  // 在预览打开时加载大图
+  const loadImageOnViewerShow = async () => {
+    const promiseList = images.value.map(async (img) => {
+      const findImageLoadedInfo = imageLoadedInfos.value.find(
+        (info) => info.imageId === img.id
+      )
+      // 未加载（findImageLoadedInfo===undefined）
+      // 加载中（isLoaded===false）
+      // 已加载（isLoaded===true）
+      // 已加载或加载中直接返回
+      if (findImageLoadedInfo) {
+        return
+      }
+      // 未加载，进行加载
+      const newLength = imageLoadedInfos.value.push({
+        imageId: img.id,
+        isLoaded: false
+      })
+      const loadingImageIndex = newLength - 1
+      await axios
+        .get(imgLargeUrl(img), { timeout: axiosConfig.timeout })
+        .catch(() => {})
+      imageLoadedInfos.value[loadingImageIndex].isLoaded = true
+    })
+    await Promise.all(promiseList)
+  }
+
   const isViewing = ref(false)
 
   // 解决图片预览不能通过手机返回键退出的问题
@@ -23,6 +78,10 @@ export const useImageViewerOptimization = () => {
     // 禁用滚动，同时防止抖动
     optimizationScrollOnOverlayShow()
 
+    // 加载大图
+    loadImageOnViewerShow()
+
+    // 控制返回，以及触屏控制
     await nextTick()
     // 获取返回按钮
     viewerCloseBtn = document.querySelector(
@@ -182,6 +241,7 @@ export const useImageViewerOptimization = () => {
 
   return {
     enableOnViewerShow,
-    disableOnViewerClose
+    disableOnViewerClose,
+    previewSrcList
   }
 }

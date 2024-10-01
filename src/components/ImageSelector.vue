@@ -164,6 +164,7 @@ defineExpose({
     --border-radius-val: 5px;
     aspect-ratio: var(--aspect-ratio-val);
     border-radius: var(--border-radius-val);
+    user-select: none;
     :deep() {
       .el-image__inner.is-loading {
         width: 100%;

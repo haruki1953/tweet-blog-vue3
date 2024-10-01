@@ -65,12 +65,6 @@ const imgSmallList = computed(() => {
   })
 })
 
-const imgLargeList = computed(() => {
-  return props.data.map((i) => {
-    return imgLargeUrl(i)
-  })
-})
-
 const isIndex = (num: number) => {
   if (num === imgIndex.value) {
     return true
@@ -83,7 +77,7 @@ const previewSrcList = computed(() => {
   if (props.notPreview) {
     return undefined
   } else {
-    return imgLargeList.value
+    return imageViewerOptimization.previewSrcList.value
   }
 })
 
@@ -95,7 +89,9 @@ const onImgClick = (num: number) => {
 }
 
 // 图片预览优化
-const imageViewerOptimization = useImageViewerOptimization()
+const imageViewerOptimization = useImageViewerOptimization({
+  images: computed(() => props.data)
+})
 const onViewerShow = imageViewerOptimization.enableOnViewerShow
 const onViewerClose = imageViewerOptimization.disableOnViewerClose
 </script>
