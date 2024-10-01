@@ -13,8 +13,8 @@ export const imageConfig = {
   originalBaseUrl: `${imageBaseUrl}original/`,
   imageNumInOnceRequest: 20,
   limitShow: {
-    startAmounts: 12,
-    limitAmounts: 12
+    startAmounts: 15,
+    limitAmounts: 15
   }
 }
 

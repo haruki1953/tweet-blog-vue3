@@ -70,7 +70,9 @@ export const useImageViewerOptimization = (dependencies: {
   // 预览遮罩，在其之上滑动控制缩放
   let viewerWrapperMask: HTMLElement | null = null
   // 预览图片，在其之上滑动控制位移
-  let viewerImageList: HTMLElement[] = []
+  // let viewerImageList: HTMLElement[] = []
+  // 图片的父元素
+  let viewerImageCanvas: HTMLElement | null = null
 
   // 预览打开时
   const enableOnViewerShow = async () => {
@@ -92,9 +94,12 @@ export const useImageViewerOptimization = (dependencies: {
       '.el-image-viewer__wrapper'
     ) as HTMLElement | null
     // 获取图片
-    viewerImageList = Array.from(
-      document.querySelectorAll('.el-image-viewer__img')
-    )
+    // viewerImageList = Array.from(
+    //   document.querySelectorAll('.el-image-viewer__img')
+    // )
+    viewerImageCanvas = document.querySelector(
+      '.el-image-viewer__canvas'
+    ) as HTMLElement | null
 
     // 这行代码会在历史记录中插入一个状态，以防止返回到上一页面。
     window.history.pushState({ isPreview: true }, '', window.location.href)
@@ -109,13 +114,19 @@ export const useImageViewerOptimization = (dependencies: {
     viewerWrapperMask?.addEventListener('touchend', touchMaskEndHandler)
 
     // 为所有图片绑定触摸事件
-    viewerImageList.forEach((image) => {
-      image.addEventListener('touchstart', touchImageStartHandler)
-      image.addEventListener('touchmove', touchImageMoveHandler, {
-        passive: true
-      })
-      image.addEventListener('touchend', touchImageEndHandler)
+    // viewerImageList.forEach((image) => {
+    //   image.addEventListener('touchstart', touchImageStartHandler)
+    //   image.addEventListener('touchmove', touchImageMoveHandler, {
+    //     passive: true
+    //   })
+    //   image.addEventListener('touchend', touchImageEndHandler)
+    // })
+    // 事件委派
+    viewerImageCanvas?.addEventListener('touchstart', touchImageStartHandler)
+    viewerImageCanvas?.addEventListener('touchmove', touchImageMoveHandler, {
+      passive: true
     })
+    viewerImageCanvas?.addEventListener('touchend', touchImageEndHandler)
   }
 
   // 预览关闭时清理监听器与之前添加的历史状态
@@ -128,11 +139,14 @@ export const useImageViewerOptimization = (dependencies: {
     viewerWrapperMask?.removeEventListener('touchstart', touchMaskStartHandler)
     viewerWrapperMask?.removeEventListener('touchmove', touchMaskMoveHandler)
     viewerWrapperMask?.removeEventListener('touchend', touchMaskEndHandler)
-    viewerImageList.forEach((image) => {
-      image.removeEventListener('touchstart', touchImageStartHandler)
-      image.removeEventListener('touchmove', touchImageMoveHandler)
-      image.removeEventListener('touchend', touchImageEndHandler)
-    })
+    // viewerImageList.forEach((image) => {
+    //   image.removeEventListener('touchstart', touchImageStartHandler)
+    //   image.removeEventListener('touchmove', touchImageMoveHandler)
+    //   image.removeEventListener('touchend', touchImageEndHandler)
+    // })
+    viewerImageCanvas?.removeEventListener('touchstart', touchImageStartHandler)
+    viewerImageCanvas?.removeEventListener('touchmove', touchImageMoveHandler)
+    viewerImageCanvas?.removeEventListener('touchend', touchImageEndHandler)
     // 检查历史状态
     const currentState = window.history.state
     if (currentState && currentState.isPreview) {
@@ -164,6 +178,12 @@ export const useImageViewerOptimization = (dependencies: {
 
   // 查找当前可见的图片
   const getVisibleImage = (): HTMLElement | undefined => {
+    if (!viewerImageCanvas) {
+      return undefined
+    }
+    const viewerImageList = Array.from(viewerImageCanvas.children).filter(
+      (child): child is HTMLImageElement => child.tagName === 'IMG'
+    )
     return viewerImageList.find((image) => image.style.display !== 'none')
   }
 
@@ -202,41 +222,44 @@ export const useImageViewerOptimization = (dependencies: {
   // 处理图片的触摸事件
   const touchImageStartHandler = (event: TouchEvent) => {
     if (event.touches.length === 1) {
-      const visibleImage = getVisibleImage()
-      if (visibleImage) {
-        const mouseDownEvent = new MouseEvent('mousedown', {
-          bubbles: true,
-          cancelable: true,
-          clientX: event.touches[0].clientX,
-          clientY: event.touches[0].clientY
-        })
-        visibleImage.dispatchEvent(mouseDownEvent)
+      const targetTag = event.target as HTMLElement | null
+      if (targetTag?.tagName !== 'IMG') {
+        return
       }
+      const mouseDownEvent = new MouseEvent('mousedown', {
+        bubbles: true,
+        cancelable: true,
+        clientX: event.touches[0].clientX,
+        clientY: event.touches[0].clientY
+      })
+      targetTag.dispatchEvent(mouseDownEvent)
     }
   }
   const touchImageMoveHandler = (event: TouchEvent) => {
     if (event.touches.length === 1) {
-      const visibleImage = getVisibleImage()
-      if (visibleImage) {
-        const mouseMoveEvent = new MouseEvent('mousemove', {
-          bubbles: true,
-          cancelable: true,
-          clientX: event.touches[0].clientX,
-          clientY: event.touches[0].clientY
-        })
-        visibleImage.dispatchEvent(mouseMoveEvent)
+      const targetTag = event.target as HTMLElement | null
+      if (targetTag?.tagName !== 'IMG') {
+        return
       }
+      const mouseMoveEvent = new MouseEvent('mousemove', {
+        bubbles: true,
+        cancelable: true,
+        clientX: event.touches[0].clientX,
+        clientY: event.touches[0].clientY
+      })
+      targetTag.dispatchEvent(mouseMoveEvent)
     }
   }
-  const touchImageEndHandler = () => {
-    const visibleImage = getVisibleImage()
-    if (visibleImage) {
-      const mouseUpEvent = new MouseEvent('mouseup', {
-        bubbles: true,
-        cancelable: true
-      })
-      visibleImage.dispatchEvent(mouseUpEvent)
+  const touchImageEndHandler = (event: TouchEvent) => {
+    const targetTag = event.target as HTMLElement | null
+    if (!targetTag) {
+      return
     }
+    const mouseUpEvent = new MouseEvent('mouseup', {
+      bubbles: true,
+      cancelable: true
+    })
+    targetTag.dispatchEvent(mouseUpEvent)
   }
 
   return {
