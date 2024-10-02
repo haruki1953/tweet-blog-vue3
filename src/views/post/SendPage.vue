@@ -22,6 +22,7 @@ import type ImageEditDialog from '@/components/ImageEditDialog.vue'
 import { useNow } from '@vueuse/core'
 import { computed } from 'vue'
 import { onMounted } from 'vue'
+import CharProgress from './components/CharProgress.vue'
 
 const formModel = ref<PostSendJsonType>({})
 
@@ -313,13 +314,19 @@ onMounted(() => {
           <el-input
             v-model="formModel.content"
             :placeholder="infoBySendType.textareaPlaceholder"
-            :rows="10"
+            :autosize="{ minRows: 8, maxRows: 20 }"
             type="textarea"
-            size="large"
+            resize="none"
             class="content-textarea"
-            :maxlength="140"
-            show-word-limit
           />
+          <div class="char-progress-box">
+            <Transition name="fade-pop">
+              <CharProgress
+                v-if="formModel.content"
+                v-model="formModel.content"
+              ></CharProgress>
+            </Transition>
+          </div>
         </div>
         <Transition name="fade-slide">
           <div class="image-box" v-if="imagesData.length > 0">
@@ -401,8 +408,14 @@ onMounted(() => {
 
 .content-box {
   margin-bottom: 15px;
+  position: relative;
+  .char-progress-box {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
   .content-textarea {
-    padding: 10px;
+    padding: 10px 10px 50px 10px;
     border-radius: 20px;
     background-color: var(--color-background-soft);
     transition: all 0.5s;

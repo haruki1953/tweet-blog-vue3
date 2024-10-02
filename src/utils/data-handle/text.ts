@@ -50,3 +50,36 @@ export const textToPostContentPart = (text: string): PostContentPart[] => {
 
   return parts // 返回解析后的部分数组
 }
+
+export const textCalcCharNumber = (str: string): number => {
+  let length = 0
+
+  for (const char of str) {
+    // 判断是否为宽字符（包括中文、日文、韩文以及其他全角字符）
+    if (/[\u3000-\u303F\uFF00-\uFFEF\u4E00-\u9FFF\uAC00-\uD7AF]/.test(char)) {
+      length += 2 // 宽字符长度计为2
+    } else {
+      length += 1 // 其他字符长度计为1
+    }
+  }
+
+  return length
+}
+
+export const textCalcPostContentCharNumber = (
+  postContent: PostContentPart[]
+) => {
+  let length = 0
+  postContent.forEach((p) => {
+    if (p.type === 'link') {
+      length += postConfig.linkCharacterCountRepresentationInPost
+    } else {
+      length += textCalcCharNumber(p.content)
+    }
+  })
+  return length
+}
+
+export const textToPostContentPartCalcCharNumber = (text: string) => {
+  return textCalcPostContentCharNumber(textToPostContentPart(text))
+}

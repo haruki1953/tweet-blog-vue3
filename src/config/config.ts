@@ -7,25 +7,41 @@ export const axiosConfig = {
 const imageBaseUrl = 'http://192.168.2.110:5500/image/'
 // const imageBaseUrl = 'http://localhost:5500/image/'
 export const imageConfig = {
+  // 图片基础路径
   baseUrl: imageBaseUrl,
+  // 各版本图片路径
   smallBaseUrl: `${imageBaseUrl}small/`,
   largeBaseUrl: `${imageBaseUrl}large/`,
   originalBaseUrl: `${imageBaseUrl}original/`,
+  // 一次请求中图片的一般数量
   imageNumInOnceRequest: 20,
+  // 无限滚动中的数量限制
   limitShow: {
+    // 最初的数量
     startAmounts: 15,
+    // 每次增加的数量
     limitAmounts: 15
   }
 }
 
 export const postConfig = {
+  // 帖子最多可包含的图片数
   postMaxImages: 4,
+  // 一次请求中帖子的一般数量
   postNumInOnceRequest: 20,
+  // 无限滚动中的数量限制
   limitShow: {
     startAmounts: 4,
     limitAmounts: 4
   },
-  linkContentMaxLength: 30
+  // 链接在显示时的长度限制
+  linkContentMaxLength: 30,
+  // 在推特发送推文输入链接是，好像不管链接长度，所代表的字数都会是23
+  linkCharacterCountRepresentationInPost: 23,
+  // 发推时的最大字数（只是提示，不会约束）
+  maxPostCharactersOnSend: 280,
+  // 开始警告的剩余字数
+  remainingCharsToWarning: 20
 }
 
 export const webName = '小祥の博客'
