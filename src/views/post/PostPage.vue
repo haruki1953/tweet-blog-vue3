@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { usePostStore } from '@/stores'
 import type { PosPoolItem, PostData } from '@/types'
+import { onMounted } from 'vue'
 import { ref, watch } from 'vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
@@ -80,14 +81,15 @@ const isShowSkeleton = computed(() => {
   return false
 })
 
-watch(
-  routePostId,
-  () => {
-    loadPostPoolItemData()
-    checkShouldShowSkeletonOnMounted()
-  },
-  { immediate: true }
-)
+onMounted(() => {
+  loadPostPoolItemData()
+  checkShouldShowSkeletonOnMounted()
+})
+
+watch(routePostId, () => {
+  loadPostPoolItemData()
+  checkShouldShowSkeletonOnMounted()
+})
 
 // when postStore.resetPostRequested(), to loadPostPoolItemData() again
 watch(

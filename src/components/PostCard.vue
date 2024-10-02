@@ -95,7 +95,9 @@ const deletePostEverlast = async () => {
       <div class="time">{{ formatTime(data.createdAt) }}</div>
     </div>
     <div class="content-box">
-      <div class="content">{{ data.content }}</div>
+      <div class="content">
+        <TextWithLink :data="data.content"></TextWithLink>
+      </div>
     </div>
     <div class="image-box" v-if="data.images.length > 0">
       <ImageGroup

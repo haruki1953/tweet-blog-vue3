@@ -27,6 +27,7 @@ declare module 'vue' {
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElLink: typeof import('element-plus/es')['ElLink']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElRow: typeof import('element-plus/es')['ElRow']
@@ -49,6 +50,8 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SakiEmpty: typeof import('./src/components/SakiEmpty.vue')['default']
     TestBox: typeof import('./src/components/TestBox.vue')['default']
+    TextIncludeLink: typeof import('./src/components/TextIncludeLink.vue')['default']
+    TextWithLink: typeof import('./src/components/TextWithLink.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
   }
   export interface ComponentCustomProperties {

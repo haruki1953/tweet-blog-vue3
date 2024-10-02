@@ -24,7 +24,8 @@ export const postConfig = {
   limitShow: {
     startAmounts: 4,
     limitAmounts: 4
-  }
+  },
+  linkContentMaxLength: 30
 }
 
 export const webName = '小祥の博客'
