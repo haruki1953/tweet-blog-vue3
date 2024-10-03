@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import MenuBar from './components/MenuBar.vue'
 import { dataConfirmLoginService, dataFirstLoadService } from '@/services'
 import { HomeFilled, PictureFilled } from '@element-plus/icons-vue'
+import ImageAltDialog from './components/ImageAltDialog.vue'
 
 onMounted(async () => {
   // check login
@@ -15,6 +16,7 @@ onMounted(async () => {
   <div class="back-top-btn-box">
     <el-backtop />
   </div>
+  <ImageAltDialog></ImageAltDialog>
   <!-- 导航栏 -->
   <MenuBar
     :menu="[

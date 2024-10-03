@@ -12,6 +12,7 @@ import { computed, watch } from 'vue'
 import { ref } from 'vue'
 import { openLink, imgLargeUrl, imgSamllUrl, imgOriginalUrl } from '@/utils'
 import { ChatSquare } from '@element-plus/icons-vue'
+import { imageConfig } from '@/config'
 
 const selectedImages = defineModel<ImageStoreData[]>({ required: true })
 
@@ -186,6 +187,7 @@ const deleteOriginal = async () => {
           :data="selectedImages"
           v-model:index="imgIndex"
           :notPreview="notPreview"
+          notAlt
         ></ImageGroup>
         <div class="image-select-box row" v-if="imageSelect">
           <div class="lable">
@@ -210,11 +212,12 @@ const deleteOriginal = async () => {
           <el-input
             v-model="formModel.alt"
             placeholder="添加描述"
-            :rows="2"
+            :autosize="{ minRows: 2, maxRows: 20 }"
+            resize="none"
             type="textarea"
             size="large"
             class="textarea"
-            :maxlength="500"
+            :maxlength="imageConfig.maxAltCharactersOnSend"
             show-word-limit
             suffix-icon="Calendar"
           />
@@ -371,7 +374,7 @@ const deleteOriginal = async () => {
 }
 .input-box {
   .textarea {
-    padding: 10px;
+    padding: 10px 10px 15px 10px;
     border-radius: 20px;
     background-color: var(--color-background-soft);
     transition: all 0.5s;
@@ -390,8 +393,8 @@ const deleteOriginal = async () => {
         background-color: var(--color-background-soft);
         color: var(--color-text-soft);
         transition: all 0.5s;
-        right: 20px;
-        bottom: 15px;
+        right: 15px;
+        // bottom: 15px;
         user-select: none;
       }
     }

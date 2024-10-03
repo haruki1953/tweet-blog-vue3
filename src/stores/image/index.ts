@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { useListModule, useManageModule, useUploadModule } from './modules'
+import {
+  useAltDialogModule,
+  useListModule,
+  useManageModule,
+  useUploadModule
+} from './modules'
 import type { ImageStoreData } from '@/types'
 
 export const useImageStore = defineStore(
@@ -26,6 +31,7 @@ export const useImageStore = defineStore(
     const uploadModule = useUploadModule({
       manageAfterUploadImage: manageModule.manageAfterUploadImage
     })
+    const altDialogModule = useAltDialogModule()
 
     return {
       imageList,
@@ -33,7 +39,8 @@ export const useImageStore = defineStore(
       setNeedReget,
       ...listModule,
       ...uploadModule,
-      ...manageModule
+      ...manageModule,
+      ...altDialogModule
     }
   },
   {

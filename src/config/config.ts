@@ -21,7 +21,9 @@ export const imageConfig = {
     startAmounts: 15,
     // 每次增加的数量
     limitAmounts: 15
-  }
+  },
+  // 修改alt时的最大字数
+  maxAltCharactersOnSend: 1000
 }
 
 export const postConfig = {

@@ -92,7 +92,7 @@ useDialogOptimization({
           />
         </div>
       </div>
-      <PostGroup :data="[data]" mini notPreview></PostGroup>
+      <PostGroup :data="[data]" mini notPreview notAlt></PostGroup>
       <div class="button-box">
         <el-button round type="danger" size="small" @click="deletePost">
           删 除

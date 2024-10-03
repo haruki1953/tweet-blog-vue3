@@ -6,10 +6,12 @@ withDefaults(
     data: PostData[]
     mini?: boolean
     notPreview?: boolean
+    notAlt?: boolean
   }>(),
   {
     mini: false,
-    notPreview: false
+    notPreview: false,
+    notAlt: false
   }
 )
 </script>
@@ -19,7 +21,12 @@ withDefaults(
   </div>
   <div class="post-group" :class="{ 'card-mini': mini }" v-else>
     <template v-for="(post, index) in data" :key="post.id">
-      <PostCard :data="post" :mini="mini" :notPreview="notPreview"></PostCard>
+      <PostCard
+        :data="post"
+        :mini="mini"
+        :notPreview="notPreview"
+        :notAlt="notAlt"
+      ></PostCard>
       <el-divider v-if="index < data.length - 1" border-style="dotted" />
     </template>
   </div>

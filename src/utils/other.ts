@@ -15,8 +15,8 @@ export const openLink = (url: string) => {
 }
 
 // 生成随机密钥
-export const generateRandomKey = (length?: number) => {
-  const array = new Uint8Array(length || 32)
+export const generateRandomKey = (length: number = 16) => {
+  const array = new Uint8Array(length)
   window.crypto.getRandomValues(array)
   return btoa(String.fromCharCode(...array))
 }

@@ -21,10 +21,12 @@ const props = withDefaults(
     data: PostData
     mini?: boolean
     notPreview?: boolean
+    notAlt?: boolean
   }>(),
   {
     mini: false,
-    notPreview: false
+    notPreview: false,
+    notAlt: false
   }
 )
 
@@ -83,12 +85,12 @@ const deletePostEverlast = async () => {
     ></PostDeleteDialog>
     <div class="info-bar">
       <div class="info">
-        <div class="repost" v-if="data.parentPost != null">
+        <div class="repost" v-if="data.parentPostId != null">
           <el-icon :size="15">
             <ChatLineSquare />
           </el-icon>
           <div class="repost-text">
-            {{ data.parentPost.content }}
+            {{ data.parentPost?.content || '' }}
           </div>
         </div>
       </div>
@@ -104,6 +106,7 @@ const deletePostEverlast = async () => {
         :data="data.images"
         :mini="mini"
         :notPreview="notPreview"
+        :notAlt="notAlt"
       ></ImageGroup>
     </div>
     <template v-if="mini"></template>
@@ -223,7 +226,7 @@ const deletePostEverlast = async () => {
     .content {
       max-width: 100%;
       color: var(--color-text);
-      white-space: pre-line;
+      white-space: pre-wrap;
       // 解决在全英文无空格时，文字无法换行的问题
       word-wrap: break-word;
       transition: all 0.2s;
