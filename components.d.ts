@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    BgmEmpty: typeof import('./src/components/BgmEmpty.vue')['default']
     Col1Layout: typeof import('./src/components/Col1Layout.vue')['default']
     Col2Layout: typeof import('./src/components/Col2Layout.vue')['default']
     copy: typeof import('./src/components/ImageGroup copy.vue')['default']
@@ -38,6 +37,7 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    IconMenuBox: typeof import('./src/components/IconMenuBox.vue')['default']
     ImageEditCard: typeof import('./src/components/ImageEditCard.vue')['default']
     ImageEditDialog: typeof import('./src/components/ImageEditDialog.vue')['default']
     ImageGroup: typeof import('./src/components/ImageGroup.vue')['default']

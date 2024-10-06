@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import userAvatar from '@/assets/haruki.jpg'
 import { computed, onMounted, ref } from 'vue'
-import { Search, House, Delete, Finished } from '@element-plus/icons-vue'
+import {
+  Search,
+  Delete,
+  Finished,
+  ChatLineSquare,
+  Star
+} from '@element-plus/icons-vue'
 import { usePostStore, useSettingStore } from '@/stores'
-import type { PostsGetMode } from '@/types'
+import type { IconMenuItem, PostsGetMode } from '@/types'
 import PostDeleteAllDialog from './PostDeleteAllDialog.vue'
 
 // withDefaults(
@@ -123,6 +129,38 @@ const setModeToDelete = () => {
   postsGetModeMark.value = 'delete'
   showDelete()
 }
+
+type ButtonMenuItem = Omit<IconMenuItem, 'index'> & { index: PostsGetMode }
+
+const buttonMenu: ButtonMenuItem[] = [
+  {
+    index: 'normal',
+    title: '全部推文',
+    icon: ChatLineSquare,
+    actionColor: 'success',
+    onClick: setModeToNormal
+  },
+  {
+    index: 'search',
+    title: '搜索推文',
+    icon: Search,
+    actionColor: 'info',
+    onClick: setModeToSearch
+  },
+  {
+    index: 'favorite',
+    title: '收藏夹',
+    icon: Star,
+    actionColor: 'warning'
+  },
+  {
+    index: 'delete',
+    title: '回收站',
+    icon: Delete,
+    actionColor: 'danger',
+    onClick: setModeToDelete
+  }
+]
 </script>
 <template>
   <div class="profile-card">
@@ -151,6 +189,16 @@ const setModeToDelete = () => {
         <div class="info-val">30</div>
         <div class="info-text">图片</div>
       </div>
+    </div>
+
+    <div class="button-menu-box">
+      <IconMenuBox
+        v-model:model-value="postsGetModeMark"
+        :menu="buttonMenu"
+        :boxSize="65"
+        notBackgroundColor
+        dontSetIndex
+      ></IconMenuBox>
     </div>
 
     <div class="block-part-container">
@@ -203,36 +251,6 @@ const setModeToDelete = () => {
           </el-button>
         </div>
       </Transition>
-    </div>
-
-    <div class="small-button-bar" key="small-button-bar">
-      <el-button
-        round
-        type="success"
-        size="small"
-        :icon="postsGetModeMark === 'normal' ? House : undefined"
-        @click="setModeToNormal"
-      >
-        全部推文
-      </el-button>
-      <el-button
-        round
-        type="info"
-        size="small"
-        :icon="postsGetModeMark === 'search' ? House : undefined"
-        @click="setModeToSearch"
-      >
-        搜索推文
-      </el-button>
-      <el-button
-        round
-        type="danger"
-        size="small"
-        :icon="postsGetModeMark === 'delete' ? House : undefined"
-        @click="setModeToDelete"
-      >
-        回收站
-      </el-button>
     </div>
 
     <div class="send-button-box">
@@ -300,6 +318,12 @@ const setModeToDelete = () => {
       transition: all 0.5s;
       --el-border-color: var(--color-border);
     }
+  }
+  .button-menu-box {
+    margin-top: 2px;
+    padding-bottom: 5px;
+    background-color: var(--color-background-soft);
+    transition: background-color 0.5s;
   }
   .block-part-container {
     position: relative;

@@ -17,6 +17,7 @@ defineProps<{
     index: string
     title: string
     icon: Component
+    size?: number
   }[]
 }>()
 
@@ -49,10 +50,6 @@ const menuDrawerSelect = async (index: string) => {
   await nextTick()
   await new Promise((resolve) => setTimeout(resolve, 10))
   router.push(index)
-  // await new Promise((resolve) => setTimeout(resolve, 1000))
-  // window.history.pushState(null, '', window.location.href)
-  // await new Promise((resolve) => setTimeout(resolve, 1000))
-  // showMenuBox.value = false
 }
 
 const shouldDecorationDotHidden = computed(() => {
@@ -111,7 +108,7 @@ watch(
         :key="item.index"
         :index="item.index"
       >
-        <el-icon>
+        <el-icon :size="item.size">
           <component :is="item.icon"></component>
         </el-icon>
         <span>{{ item.title }}</span>
@@ -179,7 +176,7 @@ watch(
               :key="item.index"
               :index="item.index"
             >
-              <el-icon>
+              <el-icon :size="item.size">
                 <component :is="item.icon"></component>
               </el-icon>
               <span>{{ item.title }}</span>
