@@ -81,6 +81,7 @@ useDialogOptimization({
       :width="dialogWidth"
       :lock-scroll="false"
       :modal-class="overlayClass"
+      append-to-body
     >
       <div class="row center-box">
         <div class="lable">确认要永久删除此推文吗？</div>

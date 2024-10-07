@@ -2,9 +2,10 @@
 import { useImageStore } from '@/stores'
 import type { Image } from '@/types'
 import { imgSamllUrl, useImageViewerOptimization } from '@/utils'
+import { useElementSize } from '@vueuse/core'
 import { computed } from 'vue'
-import { nextTick } from 'vue'
-import { ref, type ComponentPublicInstance } from 'vue'
+import { watch } from 'vue'
+import { ref } from 'vue'
 
 const imgIndex = defineModel<number>('index')
 
@@ -26,41 +27,45 @@ const props = withDefaults(
   }
 )
 
-const img1 = ref<ComponentPublicInstance | null>(null)
-
-const img1Load = async () => {
-  await nextTick()
-  if (!img1.value) return
-  const imgEl = img1.value.$el as HTMLElement
+const img1 = ref<HTMLElement | null>(null)
+const img1ShowMode = ref<'normal' | 'ratio169' | 'ratio41' | 'ratio45'>(
+  'normal'
+)
+const img1Size = useElementSize(img1)
+const calcImg1Ratio = async () => {
+  if (!img1Size.width.value || !img1Size.height.value) {
+    return
+  }
+  const width = img1Size.width.value
+  const height = img1Size.height.value
 
   // width / height
   const maxRatio = 4 / 5
   const minRatio = 4 / 1
   const normalRatio = 16 / 9
 
-  const width = imgEl.offsetWidth
-  const height = imgEl.offsetHeight
-
   const maxHeight = width / maxRatio
   const minHeight = width / minRatio
   const normalHeight = width / normalRatio
 
   if (props.aspectRatio169) {
-    imgEl.style.setProperty('aspect-ratio', '16 / 9')
+    img1ShowMode.value = 'ratio169'
   } else if (props.mini) {
-    if (height > normalHeight) {
-      imgEl.style.setProperty('aspect-ratio', '16 / 9')
+    if (height > normalHeight + 1) {
+      img1ShowMode.value = 'ratio169'
     } else if (height < minHeight) {
-      imgEl.style.setProperty('aspect-ratio', '4 / 1')
+      img1ShowMode.value = 'ratio41'
     }
   } else {
     if (height > maxHeight) {
-      imgEl.style.setProperty('aspect-ratio', '4 / 5')
+      img1ShowMode.value = 'ratio45'
     } else if (height < minHeight) {
-      imgEl.style.setProperty('aspect-ratio', '4 / 1')
+      img1ShowMode.value = 'ratio41'
     }
   }
 }
+
+watch(() => `${img1Size.width.value} ${img1Size.height.value}`, calcImg1Ratio)
 
 const imgSmallList = computed(() => {
   return props.data.map((i) => {
@@ -102,7 +107,6 @@ const imageStore = useImageStore()
 
 // alt点击
 const onAltClick = (num: number) => {
-  // console.log(props.data[num].alt)
   imageStore.openAltDialog(props.data[num])
 }
 </script>
@@ -114,12 +118,10 @@ const onAltClick = (num: number) => {
   >
     <el-row v-if="data.length === 1">
       <el-col :span="24">
-        <div class="image-box">
+        <div class="image-box" ref="img1">
           <el-image
             class="post-img img1-1"
             fit="cover"
-            ref="img1"
-            @load="img1Load"
             :key="imgSmallList[0]"
             :src="imgSmallList[0]"
             :alt="data[0].alt"
@@ -130,6 +132,11 @@ const onAltClick = (num: number) => {
             @close="onViewerClose"
             @show="onViewerShow"
             preview-teleported
+            :class="{
+              ratio169: img1ShowMode === 'ratio169',
+              ratio41: img1ShowMode === 'ratio41',
+              ratio45: img1ShowMode === 'ratio45'
+            }"
           ></el-image>
           <div
             class="alt-btn"
@@ -449,6 +456,15 @@ const onAltClick = (num: number) => {
 
 .img1-1 {
   aspect-ratio: unset;
+  &.ratio169 {
+    aspect-ratio: 16 / 9;
+  }
+  &.ratio41 {
+    aspect-ratio: 4 / 1;
+  }
+  &.ratio45 {
+    aspect-ratio: 4 / 5;
+  }
 }
 .img2-1 {
   --aspect-ratio-val: 8 / 9;

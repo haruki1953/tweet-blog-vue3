@@ -19,7 +19,7 @@ import {
 import { useRouter } from 'vue-router'
 import InfoEditDialog from './components/InfoEditDialog.vue'
 import type ImageEditDialog from '@/components/ImageEditDialog.vue'
-import { useNow } from '@vueuse/core'
+import { useElementSize, useNow } from '@vueuse/core'
 import { computed } from 'vue'
 import { onMounted } from 'vue'
 import CharProgress from './components/CharProgress.vue'
@@ -232,6 +232,9 @@ const resetFuncForInfoEditDialog = computed(() => {
 onMounted(() => {
   initFormModelForUpdate()
 })
+
+const refImageBox = ref<HTMLElement | null>(null)
+const imageBoxSize = useElementSize(refImageBox)
 </script>
 <template>
   <div>
@@ -328,40 +331,48 @@ onMounted(() => {
             </Transition>
           </div>
         </div>
-        <Transition name="fade-slide">
-          <div class="image-box" v-if="imagesData.length > 0">
-            <div class="image-group-transition-container">
-              <Transition name="fade-slide" mode="out-in">
-                <ImageGroup
-                  :data="imagesData"
-                  backgroundColor="soft"
-                  aspectRatio169
-                  :key="imagesData.map((i) => i.id).toString()"
-                ></ImageGroup>
-              </Transition>
+        <div class="image-box-container">
+          <Transition name="fade-slide">
+            <div
+              class="image-box"
+              v-if="imagesData.length > 0"
+              ref="refImageBox"
+            >
+              <div class="image-group-transition-container">
+                <Transition name="fade-slide" mode="out-in">
+                  <ImageGroup
+                    :data="imagesData"
+                    backgroundColor="soft"
+                    aspectRatio169
+                    :key="imagesData.map((i) => i.id).toString()"
+                  ></ImageGroup>
+                </Transition>
+              </div>
+              <div class="image-edit-button">
+                <el-button
+                  type="primary"
+                  :icon="Edit"
+                  round
+                  size="small"
+                  @click="refImageEditDialog?.open()"
+                >
+                  修改图片
+                </el-button>
+              </div>
             </div>
-            <div class="image-edit-button">
-              <el-button
-                type="primary"
-                :icon="Edit"
-                round
-                size="small"
-                @click="refImageEditDialog?.open()"
-              >
-                修改图片
-              </el-button>
-            </div>
-          </div>
-        </Transition>
-        <ImageUploader
-          :onUploaded="addImage"
-          class="hidden-md-and-up"
-        ></ImageUploader>
-        <ImageSelector
-          v-model="imagesData"
-          :max="postConfig.postMaxImages"
-          class="hidden-md-and-up"
-        ></ImageSelector>
+          </Transition>
+        </div>
+        <div
+          class="image-upload-select hidden-md-and-up"
+          :style="{ transform: `translateY(${imageBoxSize.height.value}px)` }"
+          :class="{ 'image-box-show': imagesData.length > 0 }"
+        >
+          <ImageUploader :onUploaded="addImage"></ImageUploader>
+          <ImageSelector
+            v-model="imagesData"
+            :max="postConfig.postMaxImages"
+          ></ImageSelector>
+        </div>
       </template>
     </Col2Layout>
   </div>
@@ -442,8 +453,18 @@ onMounted(() => {
   }
 }
 
+.image-box-container {
+  position: relative;
+}
 .image-box {
-  margin-bottom: 15px;
+  position: absolute;
+  width: 100%;
+  // padding-bottom: 15px;
+  &::after {
+    content: '';
+    display: block;
+    height: 15px;
+  }
   .image-edit-button {
     margin: 5px 10px 0 0;
     display: flex;
@@ -459,7 +480,16 @@ onMounted(() => {
     width: 100%;
   }
 }
-
+.image-upload-select {
+  transition: transform 0.3s;
+  &.image-box-show {
+    &::after {
+      content: '';
+      display: block;
+      height: 20px;
+    }
+  }
+}
 .image-uploader {
   margin-bottom: 15px;
 }

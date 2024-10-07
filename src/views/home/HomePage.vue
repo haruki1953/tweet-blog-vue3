@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ProfileCard from './components/ProfileCard.vue'
 import { usePostStore, useSettingStore } from '@/stores'
+import { useElementSize } from '@vueuse/core'
 import { computed, onMounted, ref, watch } from 'vue'
 
 const postStore = usePostStore()
@@ -25,14 +26,12 @@ watch(
   () => postStore.isFirstRequest,
   () => {
     checkShouldShowSkeletonOnMounted()
-  },
-  { immediate: true }
+  }
 )
 
-// onMounted(async () => {
-//   // postStore.resetLimited()
-//   checkShouldShowSkeletonOnMounted()
-// })
+onMounted(async () => {
+  checkShouldShowSkeletonOnMounted()
+})
 
 const isShowSkeleton = computed(() => {
   if (shouldShowSkeletonOnMounted.value) {
@@ -47,6 +46,9 @@ const isShowSkeleton = computed(() => {
   }
   return false
 })
+
+const refSkeleton = ref<HTMLElement | null>(null)
+const skeletonSize = useElementSize(refSkeleton)
 </script>
 <template>
   <div>
@@ -58,24 +60,38 @@ const isShowSkeleton = computed(() => {
         <ProfileCard> </ProfileCard>
       </template>
       <template #colRight>
+        <div class="post-skeleton-container">
+          <Transition name="fade-slide">
+            <div
+              class="post-skeleton"
+              key="skeleton"
+              ref="refSkeleton"
+              v-if="isShowSkeleton"
+            >
+              <PostGroup :data="[]"></PostGroup>
+            </div>
+          </Transition>
+        </div>
+
         <div
           v-infinite-scroll="postStore.loadLimited"
           :infinite-scroll-distance="200"
           :infinite-scroll-delay="0"
           :infinite-scroll-immediate="false"
+          class="post-container"
+          :style="{ transform: `translateY(${skeletonSize.height.value}px)` }"
         >
           <TransitionGroup name="fade-slide-list">
-            <PostGroup
-              key="skeleton"
-              :data="[]"
-              v-if="isShowSkeleton"
-            ></PostGroup>
-            <PostGroup
+            <!-- <div class="post-box" key="skeleton" v-if="isShowSkeleton">
+              <PostGroup :data="[]"></PostGroup>
+            </div> -->
+            <div
+              class="post-box"
               v-for="postGroup in postStore.limitedList"
               :key="postGroup.map((p) => p.id).toString()"
-              :data="postGroup"
             >
-            </PostGroup>
+              <PostGroup :data="postGroup"> </PostGroup>
+            </div>
           </TransitionGroup>
           <div class="load-button-box" v-if="postStore.isHaveMoreLimited">
             <el-button
@@ -95,6 +111,20 @@ const isShowSkeleton = computed(() => {
 </template>
 
 <style lang="scss" scoped>
+.post-skeleton-container {
+  position: relative;
+  .post-skeleton {
+    width: 100%;
+    position: absolute;
+  }
+}
+.post-container {
+  position: relative;
+  transition: transform 0.3s;
+  .post-box {
+    width: 100%;
+  }
+}
 .load-button-box {
   display: flex;
   justify-content: center;
