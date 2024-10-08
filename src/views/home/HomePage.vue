@@ -93,7 +93,10 @@ const skeletonSize = useElementSize(refSkeleton)
               <PostGroup :data="postGroup"> </PostGroup>
             </div>
           </TransitionGroup>
-          <div class="load-button-box" v-if="postStore.isHaveMoreLimited">
+          <div
+            class="load-button-box"
+            v-if="postStore.isHaveMoreLimited && postStore.postList.length"
+          >
             <el-button
               type="primary"
               round

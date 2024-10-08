@@ -5,7 +5,8 @@ import {
   useControlModule,
   useListModule,
   useManageModule,
-  usePoolModule
+  usePoolModule,
+  useReadModule
 } from './modules'
 
 export const usePostStore = defineStore(
@@ -34,13 +35,19 @@ export const usePostStore = defineStore(
     // controlModule
     const controlModule = useControlModule()
 
+    // readModule
+    const readModule = useReadModule({
+      postList
+    })
+
     return {
-      postList,
-      postPool,
       ...listModule,
       ...poolModule,
       ...controlModule,
-      ...manageModule
+      ...manageModule,
+      ...readModule,
+      postList,
+      postPool
     }
   },
   {

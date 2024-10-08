@@ -12,7 +12,7 @@ import {
 import type { PostData } from '@/types'
 import { formatTime, sakiMessage } from '@/utils'
 import { usePostStore } from '@/stores'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { postUpdateApi } from '@/api'
 import type PostDeleteDialog from './PostDeleteDialog.vue'
 
@@ -74,15 +74,46 @@ const isDeleteEverlasting = ref(false)
 const deletePostEverlast = async () => {
   refPostDeleteDialog.value?.open()
 }
+
+const isRead = computed(() => {
+  if (props.mini) {
+    return true
+  }
+  if (props.data.isDeleted) {
+    return true
+  }
+  return postStore.readIsPostRead(props.data)
+})
+const setRead = () => {
+  if (props.mini) {
+    return
+  }
+  if (props.data.isDeleted) {
+    return
+  }
+  postStore.readSetPostRead(props.data)
+}
 </script>
 <template>
-  <div class="post-card">
+  <div
+    class="post-card"
+    @mouseleave="setRead"
+    @mouseup="setRead"
+    @touchend="setRead"
+  >
     <PostDeleteDialog
       v-if="!mini && data.isDeleted"
       ref="refPostDeleteDialog"
       :data="data"
       v-model:isDeleteEverlasting="isDeleteEverlasting"
     ></PostDeleteDialog>
+    <div class="badge-box">
+      <Transition name="fade-pop">
+        <div class="new-badge" v-show="!isRead">
+          <el-badge value="new" type="primary"></el-badge>
+        </div>
+      </Transition>
+    </div>
     <div class="info-bar">
       <div class="info">
         <div class="repost" v-if="data.parentPostId != null">
@@ -96,6 +127,7 @@ const deletePostEverlast = async () => {
       </div>
       <div class="time">{{ formatTime(data.createdAt) }}</div>
     </div>
+
     <div class="content-box">
       <div class="content">
         <TextWithLink :data="data.content"></TextWithLink>
@@ -189,6 +221,27 @@ const deletePostEverlast = async () => {
 
 <style lang="scss" scoped>
 .post-card {
+  .badge-box {
+    position: relative;
+    .new-badge {
+      position: absolute;
+      top: -24px;
+      right: 0;
+      .el-badge {
+        :deep() {
+          .el-badge__content {
+            display: flex;
+            padding-bottom: 2px;
+            font-weight: bold;
+            color: var(--color-background);
+            border: none;
+            transition: color 0.2s;
+            user-select: none;
+          }
+        }
+      }
+    }
+  }
   .info-bar {
     height: 12px;
     display: flex;

@@ -161,6 +161,16 @@ const buttonMenu: ButtonMenuItem[] = [
     onClick: setModeToDelete
   }
 ]
+
+const newPostText = computed(() => {
+  if (postStore.readNewPostCount > 10) {
+    return `【新推文 10+】`
+  } else if (postStore.readNewPostCount > 0) {
+    return `【新推文 ${postStore.readNewPostCount}】`
+  } else {
+    return ''
+  }
+})
 </script>
 <template>
   <div class="profile-card">
@@ -245,8 +255,19 @@ const buttonMenu: ButtonMenuItem[] = [
           </div>
         </div>
         <div v-else class="block-part-box normal-mode-box">
-          <div class="info-lable">全部推文【新推文 10+】</div>
-          <el-button round type="success" :icon="Finished" size="small">
+          <div class="info-lable">
+            全部推文
+            <span v-if="newPostText" class="blinking-2s">
+              {{ newPostText }}
+            </span>
+          </div>
+          <el-button
+            round
+            type="success"
+            :icon="Finished"
+            size="small"
+            @click="postStore.readSetAllRead()"
+          >
             全部已读
           </el-button>
         </div>
