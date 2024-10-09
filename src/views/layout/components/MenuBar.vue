@@ -5,7 +5,7 @@ import { logoImage } from '@/config'
 import { MoonNight, Sunrise, MoreFilled } from '@element-plus/icons-vue'
 import DecorationDot from './DecorationDot.vue'
 import { webName } from '@/config'
-import { useSettingStore } from '@/stores'
+import { useStatesStore } from '@/stores'
 import { computed } from 'vue'
 import { watch } from 'vue'
 import { generateRandomClassName, useDrawerOptimization } from '@/utils'
@@ -21,7 +21,7 @@ defineProps<{
   }[]
 }>()
 
-const settingStore = useSettingStore()
+const statesStore = useStatesStore()
 
 const isDark = useDark({ disableTransition: false })
 const toggleDark = useToggle(isDark)
@@ -53,7 +53,7 @@ const menuDrawerSelect = async (index: string) => {
 }
 
 const shouldDecorationDotHidden = computed(() => {
-  const isShould = !arrivedState.top && !settingStore.isLoadingData
+  const isShould = !arrivedState.top && !statesStore.isLoadingData
   return isShould
 })
 const limitedSDDH = ref(false)
@@ -65,7 +65,7 @@ watch(
     if (isUpdateing.value) return
     isUpdateing.value = true
     limitedSDDH.value = shouldDecorationDotHidden.value
-    if (settingStore.isLoadingData) {
+    if (statesStore.isLoadingData) {
       await new Promise((resolve) => setTimeout(resolve, 1500))
     } else {
       await new Promise((resolve) => setTimeout(resolve, 300))

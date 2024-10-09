@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import ProfileCard from './components/ProfileCard.vue'
-import { usePostStore, useSettingStore } from '@/stores'
+import { usePostStore, useStatesStore } from '@/stores'
 import { useElementSize } from '@vueuse/core'
 import { computed, onMounted, ref, watch } from 'vue'
 
 const postStore = usePostStore()
-const settingStore = useSettingStore()
+const statesStore = useStatesStore()
 
 const shouldShowSkeletonOnMounted = ref(false)
 let isChecking = false
@@ -38,7 +38,7 @@ const isShowSkeleton = computed(() => {
     // 骨架屏至少显示一段时间
     return true
   }
-  if (settingStore.isLoadingPost && postStore.isFirstRequest) {
+  if (statesStore.isLoadingPost && postStore.isFirstRequest) {
     return true
   }
   if (postStore.limitedList.length === 0) {

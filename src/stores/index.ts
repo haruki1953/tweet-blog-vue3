@@ -5,7 +5,7 @@ const pinia = createPinia()
 pinia.use(persist)
 
 export default pinia
-export * from './setting'
+export * from './states'
 export * from './layout'
 export * from './auth'
 export * from './post'

@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { useSettingStore } from '@/stores'
+import { useStatesStore } from '@/stores'
 
-const settingStore = useSettingStore()
+const statesStore = useStatesStore()
 </script>
 <template>
-  <div
-    class="decoration-box"
-    :class="{ 'dot-ani': settingStore.isLoadingData }"
-  >
+  <div class="decoration-box" :class="{ 'dot-ani': statesStore.isLoadingData }">
     <div class="dot-box sakiko"></div>
     <div class="dot-box umiri"></div>
     <div class="dot-box uika"></div>

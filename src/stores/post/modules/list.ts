@@ -1,6 +1,6 @@
 import { postGetByCursorApi } from '@/api'
 import { postConfig } from '@/config'
-import { useSettingStore } from '@/stores'
+import { useStatesStore } from '@/stores'
 import type { PostData, PostGetByCursorQueryType, PostsGetMode } from '@/types'
 import { postGetByCursorDataHandle, sakiMessage } from '@/utils'
 import { computed, ref, type Ref } from 'vue'
@@ -73,28 +73,28 @@ export const useListModule = (dependencies: {
   })
   const loadingLimitedMark = ref(false)
   const isLoadingLimited = computed(() => {
-    return loadingLimitedMark.value || settingStore.isLoadingPost
+    return loadingLimitedMark.value || statesStore.isLoadingPost
   })
 
   // use modules
   const favoriteModule = useListFavoriteModule()
 
   // use something
-  const settingStore = useSettingStore()
+  const statesStore = useStatesStore()
 
   // GET post to postList
   const getPosts = async () => {
     if (!isHaveMore.value) {
       return false
     }
-    settingStore.setPostLoading(true)
+    statesStore.setPostLoading(true)
     let res
     try {
       res = await postGetByCursorApi(cursor.value, postGetByCursorQuery.value)
     } catch (error) {
       return false
     } finally {
-      settingStore.setPostLoading(false)
+      statesStore.setPostLoading(false)
     }
 
     const resPosts = res.data.data

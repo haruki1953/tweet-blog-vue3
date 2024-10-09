@@ -1,6 +1,6 @@
 import { imageGetByCursorApi } from '@/api'
 import { imageConfig } from '@/config'
-import { useSettingStore } from '@/stores'
+import { useStatesStore } from '@/stores'
 import type { ImageStoreData } from '@/types'
 import { computed, ref, type Ref } from 'vue'
 
@@ -24,21 +24,21 @@ export const useListModule = (dependencies: {
   })
 
   // useSomething
-  const settingStore = useSettingStore()
+  const statesStore = useStatesStore()
 
   // GET image
   const getImages = async () => {
     if (!haveMoreMark.value) {
       return
     }
-    settingStore.setImageLoading(true)
+    statesStore.setImageLoading(true)
     let res
     try {
       res = await imageGetByCursorApi(cursor.value)
     } catch (error) {
       return false
     } finally {
-      settingStore.setImageLoading(false)
+      statesStore.setImageLoading(false)
     }
 
     const resImages = res.data.data
@@ -67,7 +67,7 @@ export const useListModule = (dependencies: {
   // scroll to load more
   const loadingLimitedMark = ref(false)
   const isLoadingLimited = computed(() => {
-    return loadingLimitedMark.value || settingStore.isLoadingImage
+    return loadingLimitedMark.value || statesStore.isLoadingImage
   })
   const loadLimited = async () => {
     if (isLoadingLimited.value) {

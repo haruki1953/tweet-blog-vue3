@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-export const useSettingStore = defineStore(
+export const useStatesStore = defineStore(
   'tweet-setting',
   () => {
     const loadingMark = ref(false)

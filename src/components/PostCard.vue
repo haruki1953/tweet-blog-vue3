@@ -6,7 +6,6 @@ import {
   Delete,
   EditPen,
   Star,
-  StarFilled,
   RefreshLeft,
   Remove,
   CollectionTag

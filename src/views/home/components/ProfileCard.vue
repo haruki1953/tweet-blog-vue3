@@ -8,7 +8,7 @@ import {
   ChatLineSquare,
   Star
 } from '@element-plus/icons-vue'
-import { useLayoutStore, usePostStore, useSettingStore } from '@/stores'
+import { useLayoutStore, usePostStore, useStatesStore } from '@/stores'
 import type { IconMenuItem, PostsGetMode } from '@/types'
 import PostDeleteAllDialog from './PostDeleteAllDialog.vue'
 import { sakiMessage } from '@/utils'
@@ -23,7 +23,7 @@ import { sakiMessage } from '@/utils'
 // )
 
 const postStore = usePostStore()
-const settingStore = useSettingStore()
+const statesStore = useStatesStore()
 const layoutStore = useLayoutStore()
 
 const sendPost = () => {
@@ -33,7 +33,7 @@ const sendPost = () => {
 const searchVal = ref('')
 
 const isLoading = computed(() => {
-  return settingStore.isLoadingPost
+  return statesStore.isLoadingPost
 })
 
 // 处理搜索

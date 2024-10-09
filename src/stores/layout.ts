@@ -1,6 +1,6 @@
 import { useWindowSize } from '@vueuse/core'
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 export const useLayoutStore = defineStore(
   'tweet-layout',

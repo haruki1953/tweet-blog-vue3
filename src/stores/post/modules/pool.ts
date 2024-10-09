@@ -1,5 +1,5 @@
 import { postGetByIdApi } from '@/api'
-import { useSettingStore } from '@/stores'
+import { useStatesStore } from '@/stores'
 import type { PosPoolItem } from '@/types'
 import { postGetByIdDataHandle } from '@/utils'
 import { ref, type Ref } from 'vue'
@@ -28,18 +28,18 @@ export const usePoolModule = (dependencies: {
   }
 
   // useSomething
-  const settingStore = useSettingStore()
+  const statesStore = useStatesStore()
 
   // GET post to postPool
   const getPostById = async (id: number) => {
-    settingStore.setPostIdLoading(id)
+    statesStore.setPostIdLoading(id)
     let res
     try {
       res = await postGetByIdApi(id)
     } catch (error) {
       return
     } finally {
-      settingStore.setPostIdLoaded(id)
+      statesStore.setPostIdLoaded(id)
     }
 
     const resPostGetByIdData = res.data.data

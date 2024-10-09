@@ -1,4 +1,4 @@
-import { useSettingStore } from '@/stores'
+import { useStatesStore } from '@/stores'
 import { computed, ref } from 'vue'
 import { sakiMessage } from '@/utils'
 import type { UploadFile } from 'element-plus'
@@ -20,11 +20,11 @@ export const useUploadModule = (dependencies: {
   })
 
   // useSomething
-  const settingStore = useSettingStore()
+  const statesStore = useStatesStore()
 
   const setUploading = () => {
     uploadingImageCount.value += 1
-    settingStore.setLoading(true)
+    statesStore.setLoading(true)
     sakiMessage({
       type: 'info',
       message: '图片上传中'
@@ -34,7 +34,7 @@ export const useUploadModule = (dependencies: {
     uploadingImageCount.value -= 1
     if (uploadingImageCount.value <= 0) {
       uploadingImageCount.value = 0
-      settingStore.setLoading(false)
+      statesStore.setLoading(false)
     }
     if (isSuccess) {
       sakiMessage({

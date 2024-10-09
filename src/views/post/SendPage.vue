@@ -7,7 +7,7 @@ import type {
   InfoBySendType,
   PostSendJsonType
 } from '@/types'
-import { useImageStore, usePostStore, useSettingStore } from '@/stores'
+import { useImageStore, usePostStore, useStatesStore } from '@/stores'
 import { postConfig } from '@/config'
 import { postSendApi, postUpdateApi } from '@/api'
 import {
@@ -38,7 +38,7 @@ const addImage = (image: Image) => {
   }
 }
 
-const settingStore = useSettingStore()
+const statesStore = useStatesStore()
 const postStore = usePostStore()
 const router = useRouter()
 
@@ -67,7 +67,7 @@ const couldNotSend = computed(() => {
 const isSending = ref(false)
 const sendPost = async () => {
   isSending.value = true
-  settingStore.setLoading(true)
+  statesStore.setLoading(true)
   try {
     const images = imagesData.value.map((i) => i.id)
     await postSendApi({
@@ -86,7 +86,7 @@ const sendPost = async () => {
     await postStore.reGetPosts()
     router.push({ name: 'home' })
   } finally {
-    settingStore.setLoading(false)
+    statesStore.setLoading(false)
     isSending.value = false
   }
 }
@@ -96,7 +96,7 @@ const sendReply = async () => {
     return
   }
   isSending.value = true
-  settingStore.setLoading(true)
+  statesStore.setLoading(true)
   try {
     const images = imagesData.value.map((i) => i.id)
     await postSendApi({
@@ -116,7 +116,7 @@ const sendReply = async () => {
     postStore.resetPostRequested()
     sakiGoBack(router)
   } finally {
-    settingStore.setLoading(false)
+    statesStore.setLoading(false)
     isSending.value = false
   }
 }
@@ -126,7 +126,7 @@ const sendUpdate = async () => {
     return
   }
   isSending.value = true
-  settingStore.setLoading(true)
+  statesStore.setLoading(true)
   try {
     const images = imagesData.value.map((i) => i.id)
     const res = await postUpdateApi({
@@ -148,7 +148,7 @@ const sendUpdate = async () => {
       params: { id: res.data.data.id }
     })
   } finally {
-    settingStore.setLoading(false)
+    statesStore.setLoading(false)
     isSending.value = false
   }
 }
