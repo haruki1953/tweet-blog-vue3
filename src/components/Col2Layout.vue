@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core'
+import { useLayoutStore } from '@/stores'
 import { computed } from 'vue'
 
 const props = withDefaults(
@@ -13,12 +13,12 @@ const props = withDefaults(
   }
 )
 
-const windowSize = useWindowSize()
-const profileHeight = computed(() => {
-  return windowSize.height.value - 61
+const layoutStore = useLayoutStore()
+const leftHeight = computed(() => {
+  return layoutStore.col2LeftHeight
 })
 
-const show2Col = computed(() => windowSize.width.value >= 992)
+const show2Col = computed(() => layoutStore.col2IsShow2Col)
 const largeColSpan = computed(() => (show2Col.value ? props.span : 24))
 const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
 </script>
@@ -28,7 +28,7 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
       <el-col :span="smallColSpan" v-if="!reverse && show2Col">
         <el-affix :offset="61" :z-index="1">
           <div class="col2-left">
-            <el-scrollbar :height="profileHeight">
+            <el-scrollbar :height="leftHeight">
               <slot name="colLeft"></slot>
             </el-scrollbar>
           </div>
@@ -45,7 +45,7 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
       <el-col :span="smallColSpan" v-if="reverse && show2Col">
         <el-affix :offset="61" :z-index="1">
           <div class="col2-left reverse">
-            <el-scrollbar :height="profileHeight">
+            <el-scrollbar :height="leftHeight">
               <slot name="colLeft"></slot>
             </el-scrollbar>
           </div>

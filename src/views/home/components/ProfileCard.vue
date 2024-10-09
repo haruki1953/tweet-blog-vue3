@@ -8,9 +8,10 @@ import {
   ChatLineSquare,
   Star
 } from '@element-plus/icons-vue'
-import { usePostStore, useSettingStore } from '@/stores'
+import { useLayoutStore, usePostStore, useSettingStore } from '@/stores'
 import type { IconMenuItem, PostsGetMode } from '@/types'
 import PostDeleteAllDialog from './PostDeleteAllDialog.vue'
+import { sakiMessage } from '@/utils'
 
 // withDefaults(
 //   defineProps<{
@@ -23,6 +24,7 @@ import PostDeleteAllDialog from './PostDeleteAllDialog.vue'
 
 const postStore = usePostStore()
 const settingStore = useSettingStore()
+const layoutStore = useLayoutStore()
 
 const sendPost = () => {
   postStore.toPostSendPage()
@@ -69,6 +71,14 @@ const showDelete = async () => {
   scrollToTop()
 }
 
+const showFavorite = () => {
+  if (isLoading.value) {
+    return
+  }
+  scrollToTop()
+  postStore.favoriteGetPosts()
+}
+
 // 清空回收站
 const refPostDeleteAllDialog = ref<InstanceType<
   typeof PostDeleteAllDialog
@@ -82,6 +92,15 @@ const onDeleteAlled = () => {
   showAll()
 }
 
+// 清空收藏夹
+const clearFavorite = () => {
+  postStore.favoriteDelAllPost()
+  sakiMessage({
+    type: 'success',
+    message: '收藏夹已清空'
+  })
+}
+
 onMounted(() => {
   // 当切换至首页时，保留模式
   searchVal.value = postStore.nowSearchKey ?? ''
@@ -92,18 +111,17 @@ const shouldDisableSearchButton = computed(() => {
   if (postStore.postsGetMode === 'normal' && searchVal.value === '') {
     return true
   }
-  // if (postStore.nowSearchKey === searchVal.value) {
-  //   return true
-  // }
   return false
 })
 
 const postsGetModeMark = ref<PostsGetMode>('normal')
 
 const scrollToTop = () => {
-  window.scrollTo({
-    top: 0
-  })
+  if (layoutStore.col2IsShow2Col) {
+    window.scrollTo({
+      top: 0
+    })
+  }
 }
 
 const setModeToNormal = () => {
@@ -129,6 +147,13 @@ const setModeToDelete = () => {
   postsGetModeMark.value = 'delete'
   showDelete()
 }
+const setModeToFavorite = () => {
+  if (isLoading.value) {
+    return
+  }
+  postsGetModeMark.value = 'favorite'
+  showFavorite()
+}
 
 type ButtonMenuItem = Omit<IconMenuItem, 'index'> & { index: PostsGetMode }
 
@@ -151,7 +176,8 @@ const buttonMenu: ButtonMenuItem[] = [
     index: 'favorite',
     title: '收藏夹',
     icon: Star,
-    actionColor: 'warning'
+    actionColor: 'warning',
+    onClick: setModeToFavorite
   },
   {
     index: 'delete',
@@ -251,6 +277,24 @@ const newPostText = computed(() => {
               @click="deleteAll"
             >
               清空回收站
+            </el-button>
+          </div>
+        </div>
+        <div
+          class="block-part-box favorite-mode-box"
+          v-else-if="postsGetModeMark === 'favorite'"
+          key="favorite-mode-box"
+        >
+          <div class="info-lable">收藏夹</div>
+          <div class="button-row">
+            <el-button
+              round
+              type="warning"
+              :icon="Delete"
+              size="small"
+              @click="clearFavorite"
+            >
+              清空收藏夹
             </el-button>
           </div>
         </div>
@@ -360,6 +404,7 @@ const newPostText = computed(() => {
     transition: all 0.5s;
   }
   .normal-mode-box,
+  .favorite-mode-box,
   .delete-mode-box {
     display: flex;
     align-items: center;

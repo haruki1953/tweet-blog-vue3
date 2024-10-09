@@ -49,6 +49,8 @@ const isShowSkeleton = computed(() => {
 
 const refSkeleton = ref<HTMLElement | null>(null)
 const skeletonSize = useElementSize(refSkeleton)
+
+const postMode = computed(() => postStore.postsGetMode)
 </script>
 <template>
   <div>
@@ -90,12 +92,12 @@ const skeletonSize = useElementSize(refSkeleton)
               v-for="postGroup in postStore.limitedList"
               :key="postGroup.map((p) => p.id).toString()"
             >
-              <PostGroup :data="postGroup"> </PostGroup>
+              <PostGroup :data="postGroup" :postMode="postMode"> </PostGroup>
             </div>
           </TransitionGroup>
           <div
             class="load-button-box"
-            v-if="postStore.isHaveMoreLimited && postStore.postList.length"
+            v-if="postStore.isHaveMoreLimited && postStore.limitedList.length"
           >
             <el-button
               type="primary"

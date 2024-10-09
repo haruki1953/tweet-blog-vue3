@@ -6,6 +6,7 @@ pinia.use(persist)
 
 export default pinia
 export * from './setting'
+export * from './layout'
 export * from './auth'
 export * from './post'
 export * from './image'

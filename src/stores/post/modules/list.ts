@@ -4,6 +4,7 @@ import { useSettingStore } from '@/stores'
 import type { PostData, PostGetByCursorQueryType, PostsGetMode } from '@/types'
 import { postGetByCursorDataHandle, sakiMessage } from '@/utils'
 import { computed, ref, type Ref } from 'vue'
+import { useListFavoriteModule } from './list-favorite'
 // import { useListManageModule } from './list-manage'
 
 export const useListModule = (dependencies: {
@@ -22,24 +23,61 @@ export const useListModule = (dependencies: {
   const isHaveMore = computed(() => {
     return haveMoreMark.value
   })
+
+  const isHaveMoreLimited = computed(() => {
+    if (postsGetMode.value === 'favorite') {
+      return limitedList.value.length < favoriteModule.favoriteList.value.length
+    } else {
+      return (
+        isHaveMore.value || limitedList.value.length > postList.value.length
+      )
+    }
+  })
+
   // postGetByCursorQuery for postGetByCursorApi
   const postGetByCursorQuery = ref<PostGetByCursorQueryType>({})
+  // control favorite mode
+  const isFavoriteMode = ref(false)
+  // post get mode
+  const postsGetMode = computed((): PostsGetMode => {
+    if (isFavoriteMode.value) {
+      return 'favorite'
+    }
+    if (postGetByCursorQuery.value.content != null) {
+      return 'search'
+    }
+    if (postGetByCursorQuery.value.isDelete != null) {
+      return 'delete'
+    }
+    return 'normal'
+  })
+  // nowSearchKey for search mode
+  const nowSearchKey = computed(() => {
+    if (postGetByCursorQuery.value.content == null) {
+      return null
+    }
+    return postGetByCursorQuery.value.content
+  })
 
   // limitedAmounts for infinite-scroll
   const startLimitedAmounts = postConfig.limitShow.startAmounts
   const limitedAmounts = ref(startLimitedAmounts)
   const limitedList = computed(() => {
-    return postList.value.slice(0, limitedAmounts.value)
+    let data
+    if (postsGetMode.value === 'favorite') {
+      data = favoriteModule.favoriteList
+    } else {
+      data = postList
+    }
+    return data.value.slice(0, limitedAmounts.value)
   })
   const loadingLimitedMark = ref(false)
   const isLoadingLimited = computed(() => {
     return loadingLimitedMark.value || settingStore.isLoadingPost
   })
 
-  // // use modules
-  // const listManageModule = useListManageModule({
-  //   postList
-  // })
+  // use modules
+  const favoriteModule = useListFavoriteModule()
 
   // use something
   const settingStore = useSettingStore()
@@ -81,6 +119,7 @@ export const useListModule = (dependencies: {
     cursor.value = 0
     haveMoreMark.value = true
     postGetByCursorQuery.value = {}
+    isFavoriteMode.value = false
     resetLimited()
   }
   const reGetPosts = async () => {
@@ -111,23 +150,15 @@ export const useListModule = (dependencies: {
       })
     }
   }
-
-  // post get mode
-  const postsGetMode = computed((): PostsGetMode => {
-    if (postGetByCursorQuery.value.content != null) {
-      return 'search'
+  const favoriteGetPosts = () => {
+    isFavoriteMode.value = true
+    if (!favoriteModule.favoriteBaseList.value.length) {
+      sakiMessage({
+        type: 'warning',
+        message: '收藏夹为空'
+      })
     }
-    if (postGetByCursorQuery.value.isDelete != null) {
-      return 'delete'
-    }
-    return 'normal'
-  })
-  const nowSearchKey = computed(() => {
-    if (postGetByCursorQuery.value.content == null) {
-      return null
-    }
-    return postGetByCursorQuery.value.content
-  })
+  }
 
   // scroll to load more
   const loadLimited = async () => {
@@ -136,19 +167,22 @@ export const useListModule = (dependencies: {
     }
     loadingLimitedMark.value = true
     limitedAmounts.value += postConfig.limitShow.limitAmounts
-    if (limitedAmounts.value > postList.value.length) {
-      await getPosts()
+    if (postsGetMode.value === 'favorite') {
+      // favorite
+    } else {
+      // normal search delete
+      if (limitedAmounts.value > postList.value.length) {
+        await getPosts()
+      }
     }
     loadingLimitedMark.value = false
   }
   const resetLimited = () => {
     limitedAmounts.value = startLimitedAmounts
   }
-  const isHaveMoreLimited = computed(() => {
-    return isHaveMore.value || postList.value.length > limitedAmounts.value
-  })
 
   return {
+    ...favoriteModule,
     getPosts,
     reGetPosts,
     limitedList,
@@ -161,7 +195,8 @@ export const useListModule = (dependencies: {
     postsGetMode,
     searchGetPosts,
     nowSearchKey,
-    deleteGetPosts
+    deleteGetPosts,
+    favoriteGetPosts
     // ...listManageModule
   }
 }

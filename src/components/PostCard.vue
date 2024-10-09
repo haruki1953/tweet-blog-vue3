@@ -6,15 +6,18 @@ import {
   Delete,
   EditPen,
   Star,
+  StarFilled,
   RefreshLeft,
-  Remove
+  Remove,
+  CollectionTag
 } from '@element-plus/icons-vue'
-import type { PostData } from '@/types'
+import type { PostData, PostsGetMode } from '@/types'
 import { formatTime, sakiMessage } from '@/utils'
 import { usePostStore } from '@/stores'
 import { computed, ref } from 'vue'
 import { postUpdateApi } from '@/api'
 import type PostDeleteDialog from './PostDeleteDialog.vue'
+import { useRouter } from 'vue-router'
 
 const props = withDefaults(
   defineProps<{
@@ -22,15 +25,23 @@ const props = withDefaults(
     mini?: boolean
     notPreview?: boolean
     notAlt?: boolean
+    postMode?: PostsGetMode
   }>(),
   {
     mini: false,
     notPreview: false,
-    notAlt: false
+    notAlt: false,
+    postMode: 'normal'
   }
 )
 
 const postStore = usePostStore()
+const router = useRouter()
+
+const lookPost = () => {
+  router.push({ name: 'post', params: { id: props.data.id } })
+}
+
 const editPost = () => {
   postStore.toUpdateSendPage(props.data)
 }
@@ -41,7 +52,7 @@ const deletePost = async () => {
   try {
     await postUpdateApi({ id: props.data.id, isDeleted: true })
     sakiMessage({
-      type: 'success',
+      type: 'info',
       message: '已移至回收站'
     })
     postStore.updatePostListIsDeleted(props.data.id, true)
@@ -93,6 +104,31 @@ const setRead = () => {
   }
   postStore.readSetPostRead(props.data)
 }
+
+const setFavorite = () => {
+  postStore.favoriteAddPost(props.data)
+  sakiMessage({
+    type: 'success',
+    message: '已收藏'
+  })
+}
+
+// setFavorite again
+const topFavorite = () => {
+  postStore.favoriteAddPost(props.data)
+}
+
+const removeFavorite = () => {
+  postStore.favoriteDelPostById(props.data.id)
+  sakiMessage({
+    type: 'info',
+    message: '已取消收藏'
+  })
+}
+
+const isFavorite = computed(() => {
+  return Boolean(postStore.favoriteGetPostById(props.data.id))
+})
 </script>
 <template>
   <div
@@ -145,7 +181,40 @@ const setRead = () => {
     <template v-else>
       <div class="trans-button-container">
         <Transition name="fade-down">
-          <div class="trans-button-box" v-if="data.isDeleted">
+          <div class="trans-button-box" v-if="postMode === 'favorite'">
+            <div class="button-box">
+              <div class="button-center">
+                <el-button
+                  type="primary"
+                  :icon="ChatSquare"
+                  round
+                  size="small"
+                  @click="lookPost"
+                >
+                  查看
+                </el-button>
+                <el-button
+                  type="warning"
+                  :icon="CollectionTag"
+                  round
+                  size="small"
+                  @click="topFavorite"
+                >
+                  置顶
+                </el-button>
+                <el-button
+                  type="danger"
+                  :icon="Remove"
+                  round
+                  size="small"
+                  @click="removeFavorite"
+                >
+                  移除
+                </el-button>
+              </div>
+            </div>
+          </div>
+          <div class="trans-button-box" v-else-if="data.isDeleted">
             <div class="button-box">
               <div class="button-center">
                 <el-button
@@ -184,9 +253,7 @@ const setRead = () => {
                   :icon="ChatSquare"
                   circle
                   size="small"
-                  @click="
-                    $router.push({ name: 'post', params: { id: data.id } })
-                  "
+                  @click="lookPost"
                 />
                 <el-button
                   type="info"
@@ -195,7 +262,22 @@ const setRead = () => {
                   size="small"
                   @click="editPost"
                 />
-                <el-button type="warning" :icon="Star" circle size="small" />
+                <el-button
+                  v-if="isFavorite"
+                  type="warning"
+                  :icon="CollectionTag"
+                  circle
+                  size="small"
+                  @click="removeFavorite"
+                />
+                <el-button
+                  v-else
+                  type="warning"
+                  :icon="Star"
+                  circle
+                  size="small"
+                  @click="setFavorite"
+                />
                 <el-button
                   type="danger"
                   :icon="Delete"

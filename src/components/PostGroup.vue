@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PostData } from '@/types'
+import type { PostData, PostsGetMode } from '@/types'
 
 withDefaults(
   defineProps<{
@@ -7,11 +7,13 @@ withDefaults(
     mini?: boolean
     notPreview?: boolean
     notAlt?: boolean
+    postMode?: PostsGetMode
   }>(),
   {
     mini: false,
     notPreview: false,
-    notAlt: false
+    notAlt: false,
+    postMode: 'normal'
   }
 )
 </script>
@@ -26,6 +28,7 @@ withDefaults(
         :mini="mini"
         :notPreview="notPreview"
         :notAlt="notAlt"
+        :postMode="postMode"
       ></PostCard>
       <el-divider v-if="index < data.length - 1" border-style="dotted" />
     </template>
