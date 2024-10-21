@@ -3,7 +3,8 @@ import type {
   PosPoolItem,
   PostData,
   PostGetByCursorData,
-  PostGetByIdData
+  PostGetByIdData,
+  Image
 } from '@/types'
 import { mergeArrays } from './base'
 
@@ -112,7 +113,14 @@ export const postGetByCursorDataHandle = (
   // console.log(idTempGrid)
   // console.log(idRelationGrid)
 
-  return postGroupList
+  // 241021 为images排序
+  const postGroupListAfterHandlePostImagesOrder = postGroupList.map((group) => {
+    return group.map((post) => {
+      return handlePostImagesOrder(post)
+    })
+  })
+
+  return postGroupListAfterHandlePostImagesOrder
 }
 
 const handlePostWithNotReplies = (post: PostData | Post): PostData => {
@@ -134,6 +142,39 @@ const handlePostWithNotParent = (post: PostData | Post): Post => {
     replies: undefined
   }
   return postData
+}
+
+// 类型守卫函数
+function isNumberArray(arr: any[]): arr is number[] {
+  return arr.every((item) => typeof item === 'number')
+}
+// 利用 imagesOrder 对 images 排序
+const handlePostImagesOrder = (post: PostData): PostData => {
+  let newImages: Image[] = []
+  try {
+    if (post.imagesOrder == null) {
+      throw new Error()
+    }
+    const imagesOrderIdList = JSON.parse(post.imagesOrder)
+    if (
+      !Array.isArray(imagesOrderIdList) ||
+      !isNumberArray(imagesOrderIdList)
+    ) {
+      throw new Error()
+    }
+    const imagesOrderList = imagesOrderIdList
+      .map((imgId) => {
+        return post.images.find((img) => img.id === imgId)
+      })
+      .filter((img): img is Image => img !== undefined)
+    newImages = imagesOrderList
+  } catch (error) {
+    newImages = post.images
+  }
+  return {
+    ...post,
+    images: newImages
+  }
 }
 
 export const postGetByIdDataHandle = (data: PostGetByIdData): PosPoolItem => {
@@ -166,13 +207,27 @@ export const postGetByIdDataHandle = (data: PostGetByIdData): PosPoolItem => {
       new Date(a[0].createdAt).getTime() - new Date(b[0].createdAt).getTime()
   )
 
+  // 241021 为images排序
+  const mainPostAfterHandlePostImagesOrder = handlePostImagesOrder(mainPost)
+  const parentPostAfterHandlePostImagesOrder = (() => {
+    if (parentPost == null) {
+      return null
+    }
+    return handlePostImagesOrder(parentPost)
+  })()
+  const repliesAfterHandlePostImagesOrder = replies.map((group) => {
+    return group.map((post) => {
+      return handlePostImagesOrder(post)
+    })
+  })
+
   const now = new Date().toISOString()
   return {
     id: mainPost.id,
     pushAt: now,
     updateAt: now,
-    mainPost,
-    parentPost,
-    replies
+    mainPost: mainPostAfterHandlePostImagesOrder,
+    parentPost: parentPostAfterHandlePostImagesOrder,
+    replies: repliesAfterHandlePostImagesOrder
   }
 }

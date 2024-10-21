@@ -19,6 +19,7 @@ export interface PostBase {
   parentPostId: number | null
   twitterId: string | null
   twitterLink: string | null
+  imagesOrder: string | null
   _count: {
     replies: number
   }
