@@ -11,7 +11,7 @@ import {
   CollectionTag
 } from '@element-plus/icons-vue'
 import type { PostData, PostsGetMode } from '@/types'
-import { formatTime, sakiMessage } from '@/utils'
+import { formatTimeAgoChs, sakiMessage } from '@/utils'
 import { usePostStore } from '@/stores'
 import { computed, ref } from 'vue'
 import { postUpdateApi } from '@/api'
@@ -160,7 +160,7 @@ const isFavorite = computed(() => {
           </div>
         </div>
       </div>
-      <div class="time">{{ formatTime(data.createdAt) }}</div>
+      <div class="time">{{ formatTimeAgoChs(data.createdAt) }}</div>
     </div>
 
     <div class="content-box">

@@ -3,7 +3,7 @@ import { imageDeleteApi, imageDeleteOriginalApi, imageUpdateApi } from '@/api'
 import { useImageStore } from '@/stores'
 import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
 import {
-  formatDate,
+  formatTimeAgoChs,
   generateRandomKey,
   manageRefDataImageAfterDeleteImage,
   manageRefDataImageAfterUpdateImage,
@@ -322,7 +322,7 @@ const deleteOriginal = async () => {
                   {{ item.content }}
                 </div>
               </div>
-              <div class="date">{{ formatDate(item.createdAt) }}</div>
+              <div class="date">{{ formatTimeAgoChs(item.createdAt) }}</div>
             </div>
           </div>
         </div>
