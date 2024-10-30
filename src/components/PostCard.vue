@@ -17,6 +17,11 @@ import { computed, ref } from 'vue'
 import { postUpdateApi } from '@/api'
 import type PostDeleteDialog from './PostDeleteDialog.vue'
 import { useRouter } from 'vue-router'
+import {
+  usePostDeleteService,
+  usePostFavoriteService,
+  usePostReadService
+} from '@/services'
 
 const props = withDefaults(
   defineProps<{
@@ -45,37 +50,10 @@ const editPost = () => {
   postStore.toUpdateSendPage(props.data)
 }
 
-const isDeleting = ref(false)
-const deletePost = async () => {
-  isDeleting.value = true
-  try {
-    await postUpdateApi({ id: props.data.id, isDeleted: true })
-    sakiMessage({
-      type: 'info',
-      message: '已移至回收站'
-    })
-    postStore.updatePostListIsDeleted(props.data.id, true)
-    postStore.resetPostRequested()
-  } finally {
-    isDeleting.value = false
-  }
-}
-
-const isRestoring = ref(false)
-const restorePost = async () => {
-  isRestoring.value = true
-  try {
-    await postUpdateApi({ id: props.data.id, isDeleted: false })
-    sakiMessage({
-      type: 'success',
-      message: '已将推文还原'
-    })
-    postStore.updatePostListIsDeleted(props.data.id, false)
-    postStore.resetPostRequested()
-  } finally {
-    isRestoring.value = false
-  }
-}
+const { isDeleting, deletePost, isRestoring, restorePost } =
+  usePostDeleteService({
+    propsdata: computed(() => props.data)
+  })
 
 const refPostDeleteDialog = ref<InstanceType<typeof PostDeleteDialog> | null>(
   null
@@ -85,49 +63,16 @@ const deletePostEverlast = async () => {
   refPostDeleteDialog.value?.open()
 }
 
-const isRead = computed(() => {
-  if (props.mini) {
-    return true
-  }
-  if (props.data.isDeleted) {
-    return true
-  }
-  return postStore.readIsPostRead(props.data)
+const propsdata = computed(() => props.data)
+const propsmini = computed(() => props.mini)
+
+const { isRead, setRead } = usePostReadService({
+  propsdata,
+  propsmini
 })
-const setRead = () => {
-  if (props.mini) {
-    return
-  }
-  if (props.data.isDeleted) {
-    return
-  }
-  postStore.readSetPostRead(props.data)
-}
 
-const setFavorite = () => {
-  postStore.favoriteAddPost(props.data)
-  sakiMessage({
-    type: 'success',
-    message: '已收藏'
-  })
-}
-
-// setFavorite again
-const topFavorite = () => {
-  postStore.favoriteAddPost(props.data)
-}
-
-const removeFavorite = () => {
-  postStore.favoriteDelPostById(props.data.id)
-  sakiMessage({
-    type: 'info',
-    message: '已取消收藏'
-  })
-}
-
-const isFavorite = computed(() => {
-  return Boolean(postStore.favoriteGetPostById(props.data.id))
-})
+const { setFavorite, topFavorite, removeFavorite, isFavorite } =
+  usePostFavoriteService({ propsdata })
 </script>
 <template>
   <div

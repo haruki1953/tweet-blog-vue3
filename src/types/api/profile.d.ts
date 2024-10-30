@@ -5,11 +5,11 @@ export type ProfileGetAllData = {
     post: number
     image: number
   }
-  store: ProfileStore
+  store: BackendProfileStore
 }
 export type ProfileGetAllRes = ResData<ProfileGetAllData>
 
-type ProfileStore = {
+export type BackendProfileStore = {
   avatar: string | null
   avatarArray: {
     path: string

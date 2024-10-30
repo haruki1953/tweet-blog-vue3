@@ -72,9 +72,19 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
 
 .col2-left {
   .el-scrollbar {
+    overflow: visible;
     :deep() {
       .el-scrollbar__view {
         margin: 20px 10px;
+      }
+      .el-scrollbar__bar.is-vertical {
+        transform: translateX(4px);
+        // width: 6px;
+        // top: 20px;
+        // height: calc(100% - 50px);
+        .el-scrollbar__thumb {
+          // height: 100px !important;
+        }
       }
     }
   }
@@ -82,5 +92,9 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
 
 .col2-right {
   margin: 20px 0;
+}
+
+.el-col {
+  background-color: transparent;
 }
 </style>

@@ -1,22 +1,29 @@
 import { postSendApi, postUpdateApi } from '@/api'
-import { useImageStore, usePostStore, useStatesStore } from '@/stores'
+import {
+  useImageStore,
+  usePostStore,
+  useProfileStore,
+  useStatesStore
+} from '@/stores'
 import type { ImageStoreData, InfoBySendType, PostSendJsonType } from '@/types'
 import { sakiGoBack, sakiMessage } from '@/utils'
-import type { ComputedRef, Ref } from 'vue'
+import { ref, type ComputedRef, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 export const usePostSendService = (dependencies: {
-  isSending: Ref<boolean>
   imagesData: Ref<ImageStoreData[]>
   formModel: Ref<PostSendJsonType>
   infoBySendType: ComputedRef<InfoBySendType>
 }) => {
-  const { isSending, imagesData, formModel, infoBySendType } = dependencies
+  const { imagesData, formModel, infoBySendType } = dependencies
 
   const statesStore = useStatesStore()
   const imageStore = useImageStore()
   const postStore = usePostStore()
   const router = useRouter()
+  const profileStore = useProfileStore()
+
+  const isSending = ref(false)
 
   const sendPost = async () => {
     isSending.value = true
@@ -36,7 +43,7 @@ export const usePostSendService = (dependencies: {
         imageStore.setNeedReget()
       }
       // 重载帖子
-      await postStore.reGetPosts()
+      await Promise.all([postStore.reGetPosts(), profileStore.loadAll()])
       router.push({ name: 'home' })
     } finally {
       statesStore.setLoading(false)
@@ -65,7 +72,7 @@ export const usePostSendService = (dependencies: {
       if (images.length > 0) {
         imageStore.setNeedReget()
       }
-      await postStore.reGetPosts()
+      await Promise.all([postStore.reGetPosts(), profileStore.loadAll()])
       postStore.resetPostRequested()
       sakiGoBack(router)
     } finally {
@@ -94,7 +101,7 @@ export const usePostSendService = (dependencies: {
       // 对于更新，多数情况都要重载图片
       imageStore.setNeedReget()
       // 重载帖子
-      await postStore.reGetPosts()
+      await Promise.all([postStore.reGetPosts(), profileStore.loadAll()])
       postStore.resetPostRequested()
       router.replace({
         name: 'post',
@@ -109,6 +116,7 @@ export const usePostSendService = (dependencies: {
   return {
     sendPost,
     sendReply,
-    sendUpdate
+    sendUpdate,
+    isSending
   }
 }

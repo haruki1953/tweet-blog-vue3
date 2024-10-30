@@ -7,16 +7,9 @@ import type {
   InfoBySendType,
   PostSendJsonType
 } from '@/types'
-import { useImageStore, usePostStore, useStatesStore } from '@/stores'
+import { useImageStore, usePostStore } from '@/stores'
 import { postConfig } from '@/config'
-import { postSendApi, postUpdateApi } from '@/api'
-import {
-  formatTime,
-  imageToImageStoreData,
-  sakiGoBack,
-  sakiMessage
-} from '@/utils'
-import { useRouter } from 'vue-router'
+import { formatTime, imageToImageStoreData } from '@/utils'
 import InfoEditDialog from './components/InfoEditDialog.vue'
 import type ImageEditDialog from '@/components/ImageEditDialog.vue'
 import { useElementSize, useNow } from '@vueuse/core'
@@ -39,9 +32,7 @@ const addImage = (image: Image) => {
   }
 }
 
-const statesStore = useStatesStore()
 const postStore = usePostStore()
-const router = useRouter()
 
 const refInfoEditDialog = ref<InstanceType<typeof InfoEditDialog> | null>(null)
 const refImageEditDialog = ref<InstanceType<typeof ImageEditDialog> | null>(
@@ -100,14 +91,11 @@ const infoBySendType = computed((): InfoBySendType => {
   return info
 })
 
-const isSending = ref(false)
-const postSendService = usePostSendService({
-  isSending,
+const { isSending, sendPost, sendReply, sendUpdate } = usePostSendService({
   imagesData,
   formModel,
   infoBySendType
 })
-const { sendPost, sendReply, sendUpdate } = postSendService
 
 const initFormModelForUpdate = () => {
   if (!(infoBySendType.value.type === 'update' && infoBySendType.value.data)) {

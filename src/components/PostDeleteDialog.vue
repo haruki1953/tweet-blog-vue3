@@ -3,13 +3,8 @@ import { computed } from 'vue'
 import { ref } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import type { PostData } from '@/types'
-import { postDeleteApi } from '@/api'
-import { useImageStore, usePostStore } from '@/stores'
-import {
-  generateRandomClassName,
-  sakiMessage,
-  useDialogOptimization
-} from '@/utils'
+import { generateRandomClassName, useDialogOptimization } from '@/utils'
+import { usePostDeleteEverlastService } from '@/services'
 
 const modelIsDeleteEverlasting = defineModel<boolean>('isDeleteEverlasting', {
   required: true
@@ -39,31 +34,14 @@ defineExpose({
   close
 })
 
-const imageStore = useImageStore()
-const postStore = usePostStore()
-
 const isDeleteRelatedImage = ref(false)
 
-const deletePost = async () => {
-  close()
-  modelIsDeleteEverlasting.value = true
-  try {
-    // TODO 帖子永久删除对话框，可选是否删除图片
-    const res = await postDeleteApi(props.data.id, {
-      delateImage: isDeleteRelatedImage.value ? 'true' : 'false'
-    })
-    sakiMessage({
-      type: 'success',
-      message: '推文已永久删除'
-    })
-    postStore.updatePostListToRemove(props.data.id)
-    if (res.data.data.deletedImages.find((i) => i != null)) {
-      imageStore.setNeedReget()
-    }
-  } finally {
-    modelIsDeleteEverlasting.value = false
-  }
-}
+const { deletePost } = usePostDeleteEverlastService({
+  propsdata: computed(() => props.data),
+  modelIsDeleteEverlasting,
+  isDeleteRelatedImage,
+  close
+})
 
 // 自定义遮罩类名，随机生成
 const overlayClass = generateRandomClassName()

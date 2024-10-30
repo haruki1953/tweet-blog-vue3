@@ -244,7 +244,7 @@ const newPostText = computed(() => {
     </div>
 
     <div class="block-part-container">
-      <Transition name="fade-slide">
+      <Transition name="fade-up">
         <div
           class="block-part-box search-input-box"
           v-if="postsGetModeMark === 'search'"
@@ -391,10 +391,12 @@ const newPostText = computed(() => {
     }
   }
   .button-menu-box {
+    position: relative;
     margin-top: 2px;
     padding-bottom: 5px;
     background-color: var(--color-background-soft);
     transition: background-color 0.5s;
+    z-index: 1;
   }
   .block-part-container {
     position: relative;

@@ -17,6 +17,6 @@ export const dataFirstLoadService = async () => {
   await Promise.all([
     postStore.reGetPosts(),
     imageStore.reGetImages(),
-    profileStore.loadProfile()
+    profileStore.loadAll()
   ])
 }
