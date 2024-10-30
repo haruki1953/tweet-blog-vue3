@@ -4,7 +4,6 @@ import { useImageStore } from '@/stores'
 import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
 import {
   formatTimeAgoChs,
-  generateRandomKey,
   manageRefDataImageAfterDeleteImage,
   manageRefDataImageAfterUpdateImage,
   sakiMessage

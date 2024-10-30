@@ -8,7 +8,12 @@ import {
   ChatLineSquare,
   Star
 } from '@element-plus/icons-vue'
-import { useLayoutStore, usePostStore, useStatesStore } from '@/stores'
+import {
+  useLayoutStore,
+  usePostStore,
+  useStatesStore,
+  useProfileStore
+} from '@/stores'
 import type { IconMenuItem, PostsGetMode } from '@/types'
 import PostDeleteAllDialog from './PostDeleteAllDialog.vue'
 import { sakiMessage } from '@/utils'
@@ -25,6 +30,7 @@ import { sakiMessage } from '@/utils'
 const postStore = usePostStore()
 const statesStore = useStatesStore()
 const layoutStore = useLayoutStore()
+const profileStore = useProfileStore()
 
 const sendPost = () => {
   postStore.toPostSendPage()
@@ -217,12 +223,12 @@ const newPostText = computed(() => {
 
     <div class="blog-info" :class="{ normal: postsGetModeMark === 'normal' }">
       <div class="info-box">
-        <div class="info-val">100</div>
+        <div class="info-val">{{ profileStore.postNumber }}</div>
         <div class="info-text">推文</div>
       </div>
       <el-divider direction="vertical" />
       <div class="info-box">
-        <div class="info-val">30</div>
+        <div class="info-val">{{ profileStore.imageNumber }}</div>
         <div class="info-text">图片</div>
       </div>
     </div>
