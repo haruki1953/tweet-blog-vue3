@@ -189,7 +189,7 @@ const deleteOriginal = async () => {
           :notPreview="notPreview"
           notAlt
         ></ImageGroup>
-        <div class="image-select-box row" v-if="imageSelect">
+        <div class="image-select-box" v-if="imageSelect">
           <div class="lable">
             <template v-if="isMultiple">
               第 {{ imgIndex + 1 }} 个图片
@@ -206,8 +206,8 @@ const deleteOriginal = async () => {
         </div>
       </div>
       <!-- 修改alt -->
-      <div class="row">
-        <div class="lable center-box">修改alt</div>
+      <div class="update-alt-box">
+        <div class="lable">修改alt</div>
         <div class="input-box">
           <el-input
             v-model="formModel.alt"
@@ -245,8 +245,8 @@ const deleteOriginal = async () => {
       </div>
       <template v-if="!imageSelect">
         <!-- 各版本图片 -->
-        <div class="row">
-          <div class="lable center-box">各版本图片</div>
+        <div class="row top">
+          <div class="lable">各版本图片</div>
           <div class="button-box">
             <el-button
               round
@@ -278,8 +278,8 @@ const deleteOriginal = async () => {
           </div>
         </div>
         <!-- 删除图片 -->
-        <div class="row">
-          <div class="lable center-box">删除图片</div>
+        <div class="row bottom">
+          <div class="lable">删除图片</div>
           <div class="button-box">
             <el-button
               round
@@ -304,8 +304,8 @@ const deleteOriginal = async () => {
           </div>
         </div>
         <!-- 帖子 -->
-        <div class="row" v-if="imageByIndex.posts.length > 0">
-          <div class="lable center-box">推文</div>
+        <div class="post-list-box" v-if="imageByIndex.posts.length > 0">
+          <div class="lable">推文</div>
           <div class="post-link-list">
             <div
               class="post-link-item"
@@ -341,19 +341,43 @@ const deleteOriginal = async () => {
 .image-box {
   margin: 10px 0;
 }
+
+.update-alt-box {
+  margin-bottom: 15px;
+}
+
+.post-list-box {
+  margin-top: 20px;
+}
+
 .row {
-  margin-bottom: 10px;
+  margin-bottom: 2px;
+  background-color: var(--color-background-soft);
+  padding: 8px;
+  transition: all 0.5s;
+  &.top {
+    border-radius: 20px 20px 0 0;
+  }
+  &.bottom {
+    border-radius: 0 0 20px 20px;
+  }
   .lable {
-    margin-bottom: 4px;
-    font-size: 12px;
-    color: var(--color-text-soft);
+    margin: 0 0 2px 8px;
   }
 }
+.lable {
+  margin: 0 0 2px 16px;
+  font-size: 12px;
+  color: var(--color-text-soft);
+}
 .image-select-box {
-  margin: 5px 10px -5px 20px;
+  margin: 5px 10px 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  .lable {
+    margin: 0;
+  }
 }
 .update-button-box {
   margin: 5px 10px 0 0;
@@ -369,12 +393,13 @@ const deleteOriginal = async () => {
 .button-box {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   align-content: center;
+  justify-content: right;
 }
 .input-box {
+  // margin: 0 5px;
   .textarea {
-    padding: 10px 10px 15px 10px;
+    padding: 8px 8px 15px 8px;
     border-radius: 20px;
     background-color: var(--color-background-soft);
     transition: all 0.5s;
@@ -384,13 +409,13 @@ const deleteOriginal = async () => {
         // font-weight: bold;
         border: none;
         box-shadow: none;
-        background-color: var(--color-background-soft);
+        background-color: transparent;
         transition:
           background-color 0.5s,
           color 0.2s;
       }
       .el-input__count {
-        background-color: var(--color-background-soft);
+        background-color: transparent;
         color: var(--color-text-soft);
         transition: all 0.5s;
         right: 15px;

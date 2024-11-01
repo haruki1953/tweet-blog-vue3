@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 import MenuBar from './components/MenuBar.vue'
 import { dataConfirmLoginService, dataFirstLoadService } from '@/services'
-import { HomeFilled, PictureFilled } from '@element-plus/icons-vue'
+import { HomeFilled, PictureFilled, Tools } from '@element-plus/icons-vue'
 import ImageAltDialog from './components/ImageAltDialog.vue'
 
 onMounted(async () => {
@@ -29,6 +29,11 @@ onMounted(async () => {
         index: '/album',
         title: '相册',
         icon: PictureFilled
+      },
+      {
+        index: '/control',
+        title: '功能',
+        icon: Tools
       }
     ]"
   ></MenuBar>
