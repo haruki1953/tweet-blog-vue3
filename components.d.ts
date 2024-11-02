@@ -9,7 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     Col1Layout: typeof import('./src/components/Col1Layout.vue')['default']
     Col2Layout: typeof import('./src/components/Col2Layout.vue')['default']
-    copy: typeof import('./src/components/ImageGroup copy.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
@@ -27,7 +26,6 @@ declare module 'vue' {
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
-    ElLink: typeof import('element-plus/es')['ElLink']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElProgress: typeof import('element-plus/es')['ElProgress']
@@ -36,7 +34,6 @@ declare module 'vue' {
     ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
     ElSkeletonItem: typeof import('element-plus/es')['ElSkeletonItem']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
-    ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     IconMenuBox: typeof import('./src/components/IconMenuBox.vue')['default']
@@ -53,7 +50,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SakiEmpty: typeof import('./src/components/SakiEmpty.vue')['default']
     TestBox: typeof import('./src/components/TestBox.vue')['default']
-    TextIncludeLink: typeof import('./src/components/TextIncludeLink.vue')['default']
     TextWithLink: typeof import('./src/components/TextWithLink.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
   }

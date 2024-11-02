@@ -14,6 +14,7 @@ import SystemPage from '@/views/control/views/SystemPage.vue'
 import ProfilePage from '@/views/control/views/ProfilePage.vue'
 import ImageConfig from '@/views/control/views/ImageConfig.vue'
 import ForwardConfig from '@/views/control/views/ForwardConfig.vue'
+import TweetImport from '@/views/control/views/TweetImport.vue'
 import LogPage from '@/views/control/views/LogPage.vue'
 import { useImageStore, usePostStore } from '@/stores'
 
@@ -87,6 +88,12 @@ const router = createRouter({
               path: '/forward-config',
               component: ForwardConfig,
               meta: { title: `转发设置` }
+            },
+            {
+              name: 'tweet-import',
+              path: '/tweet-import',
+              component: TweetImport,
+              meta: { title: `推文导入` }
             },
             {
               name: 'log',

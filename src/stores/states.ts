@@ -8,12 +8,15 @@ export const useStatesStore = defineStore(
     const loadingPostMark = ref(false)
     const loadingImageMark = ref(false)
     const loadingPostIds = ref<number[]>([])
+    // dataFirstLoadService
+    const loadingFirstDataMark = ref(false)
 
     const isLoadingData = computed(() => {
       if (
         loadingMark.value ||
         loadingPostMark.value ||
         loadingImageMark.value ||
+        loadingFirstDataMark.value ||
         loadingPostIds.value.length > 0
       ) {
         return true
@@ -50,6 +53,10 @@ export const useStatesStore = defineStore(
         return true
       }
     }
+    // dataFirstLoadService
+    const setFirstDataLoading = (isLoading: boolean) => {
+      loadingFirstDataMark.value = isLoading
+    }
 
     return {
       isLoadingData,
@@ -60,7 +67,8 @@ export const useStatesStore = defineStore(
       setImageLoading,
       setPostIdLoading,
       setPostIdLoaded,
-      isLoadingPostId
+      isLoadingPostId,
+      setFirstDataLoading
     }
   },
   {

@@ -7,6 +7,7 @@ import type { ElForm } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores'
 import { adminLoginApi } from '@/api'
+import { sakiMessage } from '@/utils'
 
 useDark({ disableTransition: false })
 
@@ -33,7 +34,10 @@ const login = async () => {
     authStore.setToken(res.data.data)
     // push to home
     await router.push({ name: 'home' })
-    ElMessage.success('登录成功')
+    sakiMessage({
+      type: 'success',
+      message: '登录成功'
+    })
   } finally {
     // reset submit states mark
     isSubmitting.value = false
@@ -44,18 +48,13 @@ const login = async () => {
   <div class="login-page">
     <div class="login-box">
       <div class="title">{{ webName }}</div>
-      <el-form
-        :model="formModel"
-        :rules="rules"
-        ref="form"
-        size="large"
-        autocomplete="off"
-      >
+      <el-form :model="formModel" :rules="rules" ref="form" size="large">
         <el-form-item prop="username">
           <el-input
             v-model="formModel.username"
             :prefix-icon="User"
             placeholder="请输入用户名"
+            name="username"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -64,6 +63,7 @@ const login = async () => {
             :prefix-icon="Lock"
             type="password"
             placeholder="请输入密码"
+            name="password"
           ></el-input>
         </el-form-item>
       </el-form>

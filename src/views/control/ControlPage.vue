@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { IconMenuItem } from '@/types'
 import {
-  Lock,
   User,
+  Postcard,
   Picture,
   Connection,
+  Sell,
   Tickets
 } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
@@ -15,7 +16,7 @@ const menu: IconMenuItem[] = [
   {
     index: '/control',
     title: `系统设置`,
-    icon: Lock,
+    icon: User,
     actionColor: 'primary',
     onClick() {
       router.push('/control')
@@ -24,7 +25,7 @@ const menu: IconMenuItem[] = [
   {
     index: '/profile',
     title: `个人信息`,
-    icon: User,
+    icon: Postcard,
     actionColor: 'primary',
     onClick() {
       router.push('/profile')
@@ -46,6 +47,15 @@ const menu: IconMenuItem[] = [
     actionColor: 'primary',
     onClick() {
       router.push('/forward-config')
+    }
+  },
+  {
+    index: '/tweet-import',
+    title: `推文导入`,
+    icon: Sell,
+    actionColor: 'primary',
+    onClick() {
+      router.push('/tweet-import')
     }
   },
   {

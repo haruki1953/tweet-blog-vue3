@@ -1,4 +1,10 @@
-import { useAuthStore, useImageStore, usePostStore } from '@/stores'
+import {
+  useAuthStore,
+  useImageStore,
+  usePostStore,
+  useStatesStore
+} from '@/stores'
+import { useAdminStore } from '@/stores/admin'
 import { useProfileStore } from '@/stores/profile'
 import { useRouter } from 'vue-router'
 
@@ -14,9 +20,15 @@ export const dataFirstLoadService = async () => {
   const postStore = usePostStore()
   const imageStore = useImageStore()
   const profileStore = useProfileStore()
+  const adminStore = useAdminStore()
+
+  const statesStore = useStatesStore()
+  statesStore.setFirstDataLoading(true)
   await Promise.all([
     postStore.reGetPosts(),
     imageStore.reGetImages(),
-    profileStore.loadAll()
+    profileStore.loadAll(),
+    adminStore.loadInfo()
   ])
+  statesStore.setFirstDataLoading(false)
 }
