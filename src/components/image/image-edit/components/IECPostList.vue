@@ -3,7 +3,7 @@ import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
 import { formatTimeAgoChs } from '@/utils'
 import { computed } from 'vue'
 import { ChatSquare } from '@element-plus/icons-vue'
-import { useImageEditCardController } from '../store'
+import { useImageEditCardController } from '../controller'
 
 const props = withDefaults(
   defineProps<{

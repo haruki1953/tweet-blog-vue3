@@ -81,10 +81,17 @@ $ref-padding-top: 60px;
     padding: $ref-padding-top $ref-padding-16 0 $ref-padding-16;
   }
 }
-// 1920px将会以6列显示，所以将padding改小
+// 1920px将会以6列显示，所以将padding改小（bangumi-list-vue3）
 // @media (min-width: 1920px) {
 //   .container {
 //     padding: $ref-padding-top 100px 20px 100px;
 //   }
 // }
+
+// 小屏时侧边距再小一点
+@media (max-width: 500px) {
+  .container {
+    padding: $ref-padding-top 10px 0 10px;
+  }
+}
 </style>

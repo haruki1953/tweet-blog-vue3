@@ -2,7 +2,7 @@
 import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
 import { computed, watch } from 'vue'
 import { ref } from 'vue'
-import { useImageEditCardController } from './store'
+import { useImageEditCardController } from './controller'
 
 const props = withDefaults(
   defineProps<{
@@ -23,13 +23,15 @@ const formModel = ref<Omit<ImageUpdateJsonType, 'id'>>({})
 
 const imgIndex = ref(0)
 
-const { handleIndex, initFormModel } = useImageEditCardController({
-  propsnotPreview,
-  propsimageSelect,
-  selectedImages,
-  formModel,
-  imgIndex
-})
+const { handleIndex, initFormModel, imageByIndex } = useImageEditCardController(
+  {
+    propsnotPreview,
+    propsimageSelect,
+    selectedImages,
+    formModel,
+    imgIndex
+  }
+)
 
 watch(
   () => ({
@@ -83,14 +85,30 @@ const isMultiple = computed(() => {
         </div>
       </div>
       <!-- 图片控制盒子 -->
-      <IECControlBox
-        :notPreview="notPreview"
-        :imageSelect="imageSelect"
-        v-model:selectedImages="selectedImages"
-        v-model:formModel="formModel"
-        v-model:imgIndex="imgIndex"
-      ></IECControlBox>
+      <div class="image-control-box">
+        <IECControlBox
+          :notPreview="notPreview"
+          :imageSelect="imageSelect"
+          v-model:selectedImages="selectedImages"
+          v-model:formModel="formModel"
+          v-model:imgIndex="imgIndex"
+        ></IECControlBox>
+      </div>
+      <!-- 帖子 -->
+      <div
+        class="post-list-box"
+        v-if="!imageSelect && imageByIndex.posts.length > 0"
+      >
+        <IECPostList
+          :notPreview="notPreview"
+          :imageSelect="imageSelect"
+          v-model:selectedImages="selectedImages"
+          v-model:formModel="formModel"
+          v-model:imgIndex="imgIndex"
+        ></IECPostList>
+      </div>
     </div>
+    <!-- 骨架屏 -->
     <div class="image-card-skeleton" v-else>
       <el-skeleton>
         <template #template>
@@ -135,5 +153,13 @@ const isMultiple = computed(() => {
       }
     }
   }
+}
+
+.image-control-box {
+  margin-top: 15px;
+}
+
+.post-list-box {
+  margin-top: 10px;
 }
 </style>
