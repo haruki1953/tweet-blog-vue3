@@ -46,7 +46,7 @@ export const postConfig = {
   remainingCharsToWarning: 20
 }
 
-export const webName = '小祥の博客'
+export const webName = 'haruki🐻'
 
 // logo图标
 import logoImage from '@/assets/logo.png'
