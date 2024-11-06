@@ -4,7 +4,7 @@ import { onMounted, ref, watch } from 'vue'
 import AlbumInfo from './components/AlbumInfo.vue'
 import { useElementSize } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
-import type ImageSelector from '@/components/ImageSelector.vue'
+import type ImageSelector from '@/components/image/ImageSelector.vue'
 
 const imagesData = ref<ImageStoreData[]>([])
 
@@ -66,7 +66,7 @@ onMounted(() => {
               ref="boxRef"
               :key="imagesData.map((i) => i.id).toString()"
             >
-              <ImageEditCard v-model="imagesData"></ImageEditCard>
+              <ImageEditCard v-model="imagesData" notPreview></ImageEditCard>
             </div>
           </Transition>
         </div>

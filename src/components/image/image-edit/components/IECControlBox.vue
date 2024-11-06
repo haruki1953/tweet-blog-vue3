@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
 import { computed } from 'vue'
-import { openLink, imgLargeUrl, imgSamllUrl, imgOriginalUrl } from '@/utils'
+import {
+  openLink,
+  imgLargeUrl,
+  imgSamllUrl,
+  imgOriginalUrl,
+  formatFileSize
+} from '@/utils'
 import { imageConfig } from '@/config'
 import { useImageEditCardController } from '../controller'
 import { useImageEditService } from '@/services'
@@ -96,69 +102,78 @@ const {
           </div>
         </div>
       </div>
-      <template v-if="!imageSelect">
-        <div class="control-divider"></div>
-        <!-- 各版本图片 -->
-        <div class="control-row">
-          <div class="control-lable">各版本图片</div>
-          <div class="button-box">
-            <el-button
-              round
-              type="info"
-              size="small"
-              :disabled="imageByIndex.smallSize === 0"
-              @click="openLink(imgSamllUrl(imageByIndex))"
-            >
-              查看小图
-            </el-button>
-            <el-button
-              round
-              type="success"
-              size="small"
-              :disabled="imageByIndex.largeSize === 0"
-              @click="openLink(imgLargeUrl(imageByIndex))"
-            >
-              查看大图
-            </el-button>
-            <el-button
-              round
-              type="warning"
-              size="small"
-              :disabled="imageByIndex.originalSize === 0"
-              @click="openLink(imgOriginalUrl(imageByIndex))"
-            >
-              查看原图
-            </el-button>
-          </div>
+      <!-- <template v-if="!imageSelect"> -->
+      <div class="control-divider"></div>
+      <!-- 各版本图片 -->
+      <div class="control-row">
+        <div class="control-lable">各版本图片</div>
+        <div class="button-box">
+          <el-button
+            round
+            type="info"
+            size="small"
+            :disabled="imageByIndex.smallSize === 0"
+            :tag="imageByIndex.smallSize === 0 ? 'button' : 'a'"
+            :href="imgSamllUrl(imageByIndex)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            小图 {{ formatFileSize(imageByIndex.smallSize) }}
+          </el-button>
+          <el-button
+            round
+            type="success"
+            size="small"
+            :disabled="imageByIndex.largeSize === 0"
+            :tag="imageByIndex.largeSize === 0 ? 'button' : 'a'"
+            :href="imgLargeUrl(imageByIndex)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            大图 {{ formatFileSize(imageByIndex.largeSize) }}
+          </el-button>
+          <el-button
+            round
+            type="warning"
+            size="small"
+            :disabled="imageByIndex.originalSize === 0"
+            :tag="imageByIndex.originalSize === 0 ? 'button' : 'a'"
+            :href="imgOriginalUrl(imageByIndex)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            原图 {{ formatFileSize(imageByIndex.originalSize) }}
+          </el-button>
         </div>
-        <div class="control-divider"></div>
-        <!-- 删除图片 -->
-        <div class="control-row">
-          <div class="control-lable">删除图片</div>
-          <div class="button-box">
-            <el-button
-              round
-              type="danger"
-              size="small"
-              :disabled="disableDeleteImage"
-              :loading="isImageDeleting"
-              @click="deleteImage"
-            >
-              删除图片
-            </el-button>
-            <el-button
-              round
-              type="warning"
-              size="small"
-              :disabled="disableDeleteOriginal"
-              :loading="isOriginalDeleting"
-              @click="deleteOriginal"
-            >
-              删除原图
-            </el-button>
-          </div>
+      </div>
+      <div class="control-divider"></div>
+      <!-- 删除图片 -->
+      <div class="control-row">
+        <div class="control-lable">删除图片</div>
+        <div class="button-box">
+          <el-button
+            round
+            type="danger"
+            size="small"
+            :disabled="disableDeleteImage"
+            :loading="isImageDeleting"
+            @click="deleteImage"
+          >
+            删除图片
+          </el-button>
+          <el-button
+            round
+            type="warning"
+            size="small"
+            :disabled="disableDeleteOriginal"
+            :loading="isOriginalDeleting"
+            @click="deleteOriginal"
+          >
+            删除原图
+          </el-button>
         </div>
-      </template>
+      </div>
+      <!-- </template> -->
     </div>
   </div>
 </template>
@@ -201,6 +216,7 @@ const {
   position: relative;
   .el-button {
     margin-bottom: 2px;
+    text-decoration: none; /* 去除下划线 */
   }
 }
 .control-box {

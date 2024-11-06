@@ -10,12 +10,14 @@ import SendPage from '@/views/post/SendPage.vue'
 import PostPage from '@/views/post/PostPage.vue'
 import AlbumPage from '@/views/image/AlbumPage.vue'
 import ControlPage from '@/views/control/ControlPage.vue'
-import SystemPage from '@/views/control/views/SystemPage.vue'
+
+import SystemPage from '@/views/control/views/system-page/SystemPage.vue'
 import ProfilePage from '@/views/control/views/ProfilePage.vue'
 import ImageConfig from '@/views/control/views/ImageConfig.vue'
 import ForwardConfig from '@/views/control/views/ForwardConfig.vue'
 import TweetImport from '@/views/control/views/TweetImport.vue'
 import LogPage from '@/views/control/views/LogPage.vue'
+
 import { useImageStore, usePostStore } from '@/stores'
 
 const router = createRouter({

@@ -51,3 +51,12 @@ export const arraysEqual = (arr1: number[], arr2: number[]): boolean => {
   const sortedArr2 = [...arr2].sort((a, b) => a - b)
   return sortedArr1.every((value, index) => value === sortedArr2[index])
 }
+
+export const formatFileSize = (bytes: number) => {
+  if (bytes === 0) return '无'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  const size = bytes / Math.pow(k, i)
+  return (i < 2 ? size.toFixed(0) : size.toFixed(1)) + sizes[i]
+}

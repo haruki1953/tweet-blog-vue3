@@ -76,7 +76,8 @@ export const dateRound = (date: Date): Date => {
   }
 }
 
-const messages = {
+// 将日期表示为过去的时间
+const formatTimeAgoChsMessages = {
   justNow: '刚刚',
   past: (n: string | number) => `${n}前`,
   future: (n: string | number) => `${n}后`,
@@ -94,8 +95,53 @@ const messages = {
   second: (n: number) => `${n}秒`,
   invalid: '无效时间'
 }
-
 export const formatTimeAgoChs = (dateString: string): string => {
   const date = new Date(dateString)
-  return formatTimeAgo(date, { messages, max: 'day' })
+  return formatTimeAgo(date, { messages: formatTimeAgoChsMessages, max: 'day' })
+}
+
+/**
+ * 将秒数转换为易读的时间长度字符串，如 "1年3个月" 或 "2小时15分钟"。
+ * @param seconds - 输入的时间长度（以秒为单位）。
+ * @param unitLength - 可选参数，控制返回字符串中的时间单位数量。
+ * 例如，传入 2 则返回 "1年3个月" 或 "2小时15分钟"。
+ * 如果为 0 或未传入，则显示所有单位。
+ */
+const formatDurationUnits = [
+  { label: '年', seconds: 365 * 24 * 60 * 60 },
+  { label: '个月', seconds: 30 * 24 * 60 * 60 },
+  { label: '天', seconds: 24 * 60 * 60 },
+  { label: '小时', seconds: 60 * 60 },
+  { label: '分钟', seconds: 60 },
+  { label: '秒', seconds: 1 }
+]
+export const formatDuration = (
+  seconds: number,
+  unitLength: number = 0
+): string => {
+  const units = formatDurationUnits
+
+  const result: string[] = []
+  let remainingSeconds = seconds
+  let addedUnits = 0
+
+  for (const { label, seconds: unitSeconds } of units) {
+    const value = Math.floor(remainingSeconds / unitSeconds)
+    remainingSeconds %= unitSeconds
+
+    if (value > 0) {
+      result.push(`${value}${label}`)
+      addedUnits++
+    }
+
+    // 如果达到了限制的单位长度并且没有后续单位，处理四舍五入
+    if (unitLength && addedUnits === unitLength) {
+      if (remainingSeconds >= unitSeconds / 2) {
+        result[result.length - 1] = `${value + 1}${label}`
+      }
+      break
+    }
+  }
+
+  return result.length > 0 ? result.join('') : '0秒'
 }

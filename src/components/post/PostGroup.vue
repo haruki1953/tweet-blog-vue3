@@ -48,6 +48,12 @@ withDefaults(
       margin-top: 18px;
     }
   }
+  &:hover {
+    // box-shadow: var(--el-box-shadow);
+    box-shadow: var(--el-box-shadow-light);
+    // box-shadow: var(--el-box-shadow-lighter);
+    // box-shadow: var(--el-box-shadow-dark);
+  }
 }
 .post-group-skeleton {
   .el-skeleton {

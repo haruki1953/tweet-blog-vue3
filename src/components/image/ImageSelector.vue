@@ -137,9 +137,11 @@ defineExpose({
 .img-box {
   position: relative;
   margin-bottom: 6px;
-  transition: all 0.2s;
   &:hover {
-    transform: scale(0.95, 0.95);
+    .el-image,
+    .img-mask {
+      transform: scale(0.95, 0.95);
+    }
   }
   .img-mask {
     position: absolute;
@@ -152,6 +154,7 @@ defineExpose({
     align-items: center;
     user-select: none;
     cursor: pointer;
+    transition: transform 0.2s;
     .el-icon {
       color: var(--el-color-success);
     }
@@ -164,7 +167,11 @@ defineExpose({
     --border-radius-val: 5px;
     aspect-ratio: var(--aspect-ratio-val);
     border-radius: var(--border-radius-val);
+    border: 1px solid var(--color-background-mute);
     user-select: none;
+    transition:
+      transform 0.2s,
+      border 0.5s;
     :deep() {
       .el-image__inner.is-loading {
         width: 100%;

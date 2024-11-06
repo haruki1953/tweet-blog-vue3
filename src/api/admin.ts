@@ -1,4 +1,4 @@
-import type { AdminGetInfoRes, ResData } from '@/types'
+import type { AdminGetInfoRes, AdminUpdateInfoJsonType, ResData } from '@/types'
 import { http } from '@/utils'
 
 type AdminLoginJsonType = {
@@ -21,4 +21,8 @@ export const adminUpdateAuthApi = ({
 
 export const adminGetInfoApi = (): AdminGetInfoRes => {
   return http.get('/admin/info')
+}
+
+export const adminUpdateInfoApi = (json: AdminUpdateInfoJsonType) => {
+  return http.put('/admin/info', json)
 }

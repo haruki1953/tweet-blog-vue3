@@ -7,3 +7,9 @@ export type AdminGetInfoData = {
   loginLockSeconds: number
 }
 export type AdminGetInfoRes = ResData<AdminGetInfoData>
+
+export type AdminUpdateInfoJsonType = {
+  jwtAdminExpSeconds: number
+  loginMaxFailCount: number
+  loginLockSeconds: number
+}

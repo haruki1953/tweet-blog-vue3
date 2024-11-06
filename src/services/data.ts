@@ -2,10 +2,10 @@ import {
   useAuthStore,
   useImageStore,
   usePostStore,
-  useStatesStore
+  useStatesStore,
+  useAdminStore,
+  useProfileStore
 } from '@/stores'
-import { useAdminStore } from '@/stores/admin'
-import { useProfileStore } from '@/stores/profile'
 import { useRouter } from 'vue-router'
 
 export const dataConfirmLoginService = () => {
