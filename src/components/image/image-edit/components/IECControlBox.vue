@@ -83,21 +83,21 @@ const {
           <div class="button-box">
             <el-button
               round
-              type="info"
-              size="small"
-              @click="initFormModel"
-              :disabled="isSending"
-            >
-              重置
-            </el-button>
-            <el-button
-              round
               type="primary"
               size="small"
               @click="updateImage"
               :loading="isSending"
             >
-              修改
+              保存
+            </el-button>
+            <el-button
+              round
+              type="info"
+              size="small"
+              @click="initFormModel"
+              :disabled="isSending"
+            >
+              取消
             </el-button>
           </div>
         </div>

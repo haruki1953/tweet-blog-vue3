@@ -124,7 +124,7 @@ watch(
           @click.stop="toggleDark()"
         />
       </div>
-      <div class="menu-item link-group lg">
+      <div class="menu-item link-group-box lg">
         <LinkGroup></LinkGroup>
       </div>
 
@@ -267,7 +267,7 @@ watch(
     border-left: 2px solid var(--color-border); /* 左边框 */
     border-right: 2px solid var(--color-border); /* 右边框 */
   }
-  .link-group {
+  .link-group-box {
     margin: 0 20px 0 10px;
   }
   .decoration-item {

@@ -12,7 +12,8 @@ import AlbumPage from '@/views/image/AlbumPage.vue'
 import ControlPage from '@/views/control/ControlPage.vue'
 
 import SystemPage from '@/views/control/views/system-page/SystemPage.vue'
-import ProfilePage from '@/views/control/views/ProfilePage.vue'
+import ProfilePage from '@/views/control/views/profile-page/ProfilePage.vue'
+
 import ImageConfig from '@/views/control/views/ImageConfig.vue'
 import ForwardConfig from '@/views/control/views/ForwardConfig.vue'
 import TweetImport from '@/views/control/views/TweetImport.vue'

@@ -12,6 +12,8 @@ import AuthUpdate from './components/AuthUpdate.vue'
       <div class="control-row">
         <AdminInfo></AdminInfo>
       </div>
+      <div class="control-divider"></div>
+      <div class="control-row decoration"></div>
     </div>
   </div>
 </template>

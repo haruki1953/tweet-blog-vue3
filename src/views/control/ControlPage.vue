@@ -117,6 +117,10 @@ const menu: IconMenuItem[] = [
     }
     .control-row {
       padding: 15px 20px;
+      &.decoration {
+        padding: 0;
+        height: 25px;
+      }
     }
     .control-lable {
       font-size: 14px;
@@ -156,6 +160,17 @@ const menu: IconMenuItem[] = [
         transition:
           border 0.5s,
           color 0.2s;
+      }
+    }
+
+    .control-textarea {
+      .el-textarea__inner {
+        padding: 10px 20px;
+        border-radius: 20px;
+        background-color: var(--color-background);
+        transition:
+          background-color 0.5s,
+          box-shadow 0.5s;
       }
     }
 

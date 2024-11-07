@@ -73,7 +73,7 @@ const submitAuth = async () => {
         </el-form-item>
       </el-form>
     </div>
-    <div class="button-box auth-button-box">
+    <div class="button-box">
       <el-button
         @click="submitAuth"
         :loading="isSubmitingAuth"

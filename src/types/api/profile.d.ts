@@ -43,3 +43,13 @@ export type BackendProfileStore = {
     addAt: Date
   }[]
 }
+
+export type ProfileUpdateNameBioJsonType = {
+  name: string
+  bio: string
+}
+
+export type ProfileUpdateNameBioData = {
+  store: BackendProfileStore
+}
+export type ProfileUpdateNameBioRes = ResData<ProfileUpdateNameBioData>

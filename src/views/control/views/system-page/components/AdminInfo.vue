@@ -93,7 +93,7 @@ const submit = async () => {
           <div class="second-mark">秒</div>
         </div>
       </div>
-      <div class="button-box auth-button-box">
+      <div class="button-box">
         <el-button @click="submit" :loading="isSubmiting" type="success" round>
           保存
         </el-button>
