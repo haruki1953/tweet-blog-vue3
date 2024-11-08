@@ -31,6 +31,7 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
             <el-scrollbar :height="leftHeight">
               <slot name="colLeft"></slot>
             </el-scrollbar>
+            <div class="gradient-mask"></div>
           </div>
         </el-affix>
       </el-col>
@@ -48,6 +49,7 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
             <el-scrollbar :height="leftHeight">
               <slot name="colLeft"></slot>
             </el-scrollbar>
+            <div class="gradient-mask"></div>
           </div>
         </el-affix>
       </el-col>
@@ -71,6 +73,20 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
 }
 
 .col2-left {
+  position: relative;
+  .gradient-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(
+      to bottom,
+      var(--color-background),
+      transparent
+    );
+    pointer-events: none; /* 允许点击穿透 */
+  }
   .el-scrollbar {
     overflow: visible;
     :deep() {

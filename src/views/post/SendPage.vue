@@ -378,7 +378,7 @@ const imageBoxSize = useElementSize(refImageBox)
     margin: 5px 10px 0 0;
     display: flex;
     align-items: center;
-    justify-content: right;
+    justify-content: flex-end;
   }
 }
 .image-group-transition-container {

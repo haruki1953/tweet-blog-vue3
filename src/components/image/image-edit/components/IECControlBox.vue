@@ -210,7 +210,7 @@ const {
 .button-box {
   margin-right: 2px;
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
   position: relative;

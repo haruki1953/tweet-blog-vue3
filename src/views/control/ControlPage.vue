@@ -102,7 +102,7 @@ const menu: IconMenuItem[] = [
     .button-box {
       margin-right: 4px;
       display: flex;
-      justify-content: right;
+      justify-content: flex-end;
       align-items: center;
       flex-wrap: wrap;
       .el-button {
@@ -111,6 +111,7 @@ const menu: IconMenuItem[] = [
     }
 
     .control-box {
+      margin-bottom: 20px;
       background-color: var(--color-background-soft);
       transition: background-color 0.5s;
       border-radius: 20px;
