@@ -113,8 +113,9 @@ const router = createRouter({
   scrollBehavior: async (to, from, savedPosition) => {
     // console.log(to, from)
     // console.log(to.path, from.path)
+    // console.log(to.matched, from.matched)
 
-    // 刷新时会有savedPosition，但自己想默认
+    // 点中当前路径时，不滚动
     if (to.path === from.path) {
       return
     }
@@ -134,6 +135,15 @@ const router = createRouter({
     if (['/album', '/send'].includes(to.path)) {
       const imageStore = useImageStore()
       imageStore.resetLimited()
+      return { top: 0 }
+    }
+    // 在控制页 /control 之间切换时，延迟0.3秒回到顶部，以此优化动画
+    if (
+      from.matched.some((record) => record.path === '/control') &&
+      to.matched.some((record) => record.path === '/control')
+    ) {
+      console.log('在控制页 /control 之间切换')
+      await new Promise((resolve) => setTimeout(resolve, 300))
       return { top: 0 }
     }
     // 默认回到顶部

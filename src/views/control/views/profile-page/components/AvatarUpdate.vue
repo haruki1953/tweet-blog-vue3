@@ -1,12 +1,38 @@
 <script setup lang="ts">
-import userAvatar from '@/assets/haruki.jpg'
-import { sakiMessage } from '@/utils'
+import type AvatarSelector from '@/components/profile/AvatarSelector.vue'
+import { profileConfig } from '@/config'
+import { useProfileStore } from '@/stores'
+import type { BackendProfileStore } from '@/types'
+import { profileAvatarUrl, sakiMessage } from '@/utils'
+import { onMounted } from 'vue'
+import { computed } from 'vue'
 import { ref } from 'vue'
 
+const profileStore = useProfileStore()
+
+const selectedAvatar = ref<BackendProfileStore['avatarArray']>([])
+const currentAvatar = computed(() => {
+  if (selectedAvatar.value.length > 0) {
+    return selectedAvatar.value[0]
+  }
+  return profileStore.avatarItem
+})
+const showAvatar = computed(() => {
+  if (currentAvatar.value) {
+    return profileAvatarUrl(currentAvatar.value)
+  }
+  return profileConfig.avatarDefault
+})
+
+const refAvatarSelector = ref<InstanceType<typeof AvatarSelector> | null>(null)
+
 const initData = () => {
-  // name.value = profileStore.name
-  // bio.value = profileStore.bio
+  if (profileStore.avatar === null) {
+    return
+  }
+  refAvatarSelector.value?.selectImgById(profileStore.avatar)
 }
+onMounted(initData)
 
 const isSubmiting = ref(false)
 const submit = async () => {
@@ -32,7 +58,13 @@ const submit = async () => {
     <div class="control-row">
       <div class="control-lable">修改头像</div>
       <div class="avatar-box">
-        <el-avatar :size="100" :src="userAvatar" />
+        <Transition name="fade-pop" mode="out-in">
+          <el-avatar
+            :size="100"
+            :src="showAvatar"
+            :key="showAvatar || 'null'"
+          />
+        </Transition>
       </div>
       <div class="button-box">
         <el-button @click="submit" :loading="isSubmiting" type="success" round>
@@ -43,7 +75,10 @@ const submit = async () => {
     </div>
     <div class="control-divider"></div>
     <div class="avatar-select-box">
-      <AvatarSelector></AvatarSelector>
+      <AvatarSelector
+        ref="refAvatarSelector"
+        v-model="selectedAvatar"
+      ></AvatarSelector>
     </div>
   </div>
 </template>

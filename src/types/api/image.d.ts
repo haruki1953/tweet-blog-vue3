@@ -1,5 +1,4 @@
-import type { Image, ImageStoreData } from '../data'
-import type { ResData } from './base'
+import type { ResData, Image, ImageStoreData } from './base'
 
 export type ImageUploadRes = ResData<Image>
 

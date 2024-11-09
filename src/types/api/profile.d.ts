@@ -1,4 +1,4 @@
-import type { ResData } from './base'
+import type { ResData, BackendProfileStore } from './base'
 
 export type ProfileGetAllData = {
   data: {
@@ -9,47 +9,19 @@ export type ProfileGetAllData = {
 }
 export type ProfileGetAllRes = ResData<ProfileGetAllData>
 
-export type BackendProfileStore = {
-  avatar: string | null
-  avatarArray: {
-    path: string
-    uuid: string
-    size: number
-    addAt: Date
-  }[]
-  name: string
-  bio: string
-  socialMedias: {
-    uuid: string
-    name: string
-    description: string
-    link: string
-    fontawesomeClass: string
-  }[]
-  aboutMarkdown: string
-  externalLinks: {
-    type: 'contact' | 'friend'
-    uuid: string
-    name: string
-    description: string
-    link: string
-    icon: string
-    isRadiu: boolean
-  }[]
-  externalIcons: {
-    path: string
-    uuid: string
-    size: number
-    addAt: Date
-  }[]
-}
-
 export type ProfileUpdateNameBioJsonType = {
   name: string
   bio: string
 }
 
-export type ProfileUpdateNameBioData = {
+export type ProfileResData = {
   store: BackendProfileStore
 }
+
+export type ProfileUpdateNameBioData = ProfileResData
 export type ProfileUpdateNameBioRes = ResData<ProfileUpdateNameBioData>
+
+export type ProfileAddAvatarData = ProfileResData & {
+  newAvatar: BackendProfileStore['avatarArray'][number]
+}
+export type ProfileAddAvatarRes = ResData<ProfileAddAvatarData>

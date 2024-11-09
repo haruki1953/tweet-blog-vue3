@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLayoutStore } from '@/stores'
+import { useLayoutStore, useStatesStore } from '@/stores'
 import { computed } from 'vue'
 
 const props = withDefaults(
@@ -21,6 +21,10 @@ const leftHeight = computed(() => {
 const show2Col = computed(() => layoutStore.col2IsShow2Col)
 const largeColSpan = computed(() => (show2Col.value ? props.span : 24))
 const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
+
+const statesStore = useStatesStore()
+// 在明暗切换时不显示渐变遮罩
+const showGradientMask = computed(() => !statesStore.isDarkTransitioning)
 </script>
 <template>
   <div class="col2-page">
@@ -31,7 +35,7 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
             <el-scrollbar :height="leftHeight">
               <slot name="colLeft"></slot>
             </el-scrollbar>
-            <div class="gradient-mask"></div>
+            <div class="gradient-mask" v-show="showGradientMask"></div>
           </div>
         </el-affix>
       </el-col>
@@ -49,7 +53,7 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
             <el-scrollbar :height="leftHeight">
               <slot name="colLeft"></slot>
             </el-scrollbar>
-            <div class="gradient-mask"></div>
+            <div class="gradient-mask" v-show="showGradientMask"></div>
           </div>
         </el-affix>
       </el-col>
@@ -79,7 +83,7 @@ const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
     top: 0;
     left: 0;
     right: 0;
-    height: 20px;
+    height: 10px;
     background: linear-gradient(
       to bottom,
       var(--color-background),

@@ -1,11 +1,31 @@
+export const appInfo = {
+  copyright: {
+    text: '© 2024 tweet-blog',
+    link: '/'
+  },
+  version: {
+    text: 'v0.0.1',
+    link: '/'
+  }
+}
+
 export const axiosConfig = {
-  baseUrl: 'http://192.168.2.110:3000/',
-  // baseUrl: 'http://localhost:3000/',
+  // baseUrl: 'http://192.168.2.110:3000/',
+  baseUrl: 'http://localhost:3000/',
   timeout: 20000
 }
 
-const imageBaseUrl = 'http://192.168.2.110:5500/image/'
-// const imageBaseUrl = 'http://localhost:5500/image/'
+export const profileConfig = {
+  // nameDefault: 'tweet-blog',
+  avatarDefault: '',
+  // avatarUrl: 'http://192.168.2.110:5500/avatar/',
+  avatarUrl: 'http://localhost:5500/avatar/',
+  // iconUrl: 'http://192.168.2.110:5500/icon/'
+  iconUrl: 'http://localhost:5500/icon/'
+}
+
+// const imageBaseUrl = 'http://192.168.2.110:5500/image/'
+const imageBaseUrl = 'http://localhost:5500/image/'
 export const imageConfig = {
   // 图片基础路径
   baseUrl: imageBaseUrl,
@@ -46,7 +66,7 @@ export const postConfig = {
   remainingCharsToWarning: 20
 }
 
-export const webName = 'haruki🐻'
+export const webName = '小祥の博客'
 
 // logo图标
 import logoImage from '@/assets/logo.png'
@@ -55,6 +75,7 @@ export { logoImage }
 // 海报 占位 失败
 import sakiPlaceholder from '@/assets/saki-placeholder.jpg'
 import sakiError from '@/assets/saki-error.jpg'
+import { version } from 'vue'
 export { sakiPlaceholder, sakiError }
 
 interface LinkInfo {

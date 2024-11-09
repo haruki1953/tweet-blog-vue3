@@ -1,7 +1,7 @@
 import { profileGetAllApi } from '@/api'
 import { computed, ref, type Ref } from 'vue'
 import type { ProfileStoreModuleDependencies } from '..'
-import type { ProfileUpdateNameBioData } from '@/types'
+import type { ProfileResData } from '@/types'
 
 export const useLoadModule = (dependencies: ProfileStoreModuleDependencies) => {
   const { postNumber, imageNumber, profile } = dependencies
@@ -18,13 +18,22 @@ export const useLoadModule = (dependencies: ProfileStoreModuleDependencies) => {
     loadingMark.value = false
   }
 
-  const loadProfileByRes = (resData: ProfileUpdateNameBioData) => {
+  const loadProfileByRes = (resData: ProfileResData) => {
     profile.value = resData.store
+  }
+
+  const loadAvatarArrayByRes = (resData: ProfileResData) => {
+    if (!profile.value) {
+      loadProfileByRes(resData)
+      return
+    }
+    profile.value.avatarArray = resData.store.avatarArray
   }
 
   return {
     isLoading,
     loadAll,
-    loadProfileByRes
+    loadProfileByRes,
+    loadAvatarArrayByRes
   }
 }

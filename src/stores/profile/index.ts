@@ -20,6 +20,16 @@ export const useProfileStore = defineStore(
 
     const avatar = computed(() => profile.value?.avatar || null)
     const avatarArray = computed(() => profile.value?.avatarArray || [])
+    const avatarItem = computed(() => {
+      if (avatar.value === null) {
+        return null
+      }
+      const find = avatarArray.value.find((a) => a.uuid === avatar.value)
+      if (find === undefined) {
+        return null
+      }
+      return find
+    })
     const name = computed(() => profile.value?.name || '')
     const bio = computed(() => profile.value?.bio || '')
     const socialMedias = computed(() => profile.value?.socialMedias || [])
@@ -42,6 +52,7 @@ export const useProfileStore = defineStore(
       imageNumber,
       avatar,
       avatarArray,
+      avatarItem,
       name,
       bio,
       socialMedias,

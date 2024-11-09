@@ -1,5 +1,4 @@
-import type { Post, PostData, Image } from '../data'
-import type { ResData } from './base'
+import type { ResData, Post, PostData, Image } from './base'
 
 export type PostGetByCursorQueryType = {
   content?: string | undefined

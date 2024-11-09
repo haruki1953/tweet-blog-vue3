@@ -1,49 +1,179 @@
 <script setup lang="ts">
-import { Upload, CircleCheckFilled } from '@element-plus/icons-vue'
-import userAvatar from '@/assets/haruki.jpg'
+import { Upload, CircleCheckFilled, Setting } from '@element-plus/icons-vue'
 import { computed, ref } from 'vue'
 import { useElementSize } from '@vueuse/core'
+import type { BackendProfileStore, ProfileAddAvatarData } from '@/types'
+import { useProfileStore, useStatesStore } from '@/stores'
+import { useAvatarAddService } from '@/services'
+import { profileAvatarUrl } from '@/utils'
 
+const props = withDefaults(
+  defineProps<{
+    max?: number
+    couldCancel?: boolean
+    onUploaded?: (resData: ProfileAddAvatarData) => void
+  }>(),
+  {
+    max: 1,
+    couldCancel: false,
+    onUploaded: () => {}
+  }
+)
+const propsonUploaded = computed(() => props.onUploaded)
+
+type ImgItem = BackendProfileStore['avatarArray'][number]
+const model = defineModel<ImgItem[]>({
+  required: true
+})
+
+const profileStore = useProfileStore()
+
+/* 行为逻辑 */
+const imageArray = computed(() => {
+  return [...profileStore.avatarArray].sort(
+    (a, b) => new Date(b.addAt).getTime() - new Date(a.addAt).getTime()
+  )
+  // return []
+})
+const isSelected = (img: ImgItem) => {
+  const findImg = model.value.find((i) => i.uuid === img.uuid)
+  if (findImg) {
+    return true
+  } else {
+    return false
+  }
+}
+const selectImage = (img: ImgItem) => {
+  if (isSelected(img)) {
+    if (!props.couldCancel) {
+      return
+    }
+    model.value = model.value.filter(
+      (selectedImg) => selectedImg.uuid !== img.uuid
+    )
+  } else {
+    model.value.push(img)
+    if (model.value.length > props.max) {
+      model.value = model.value.slice(-props.max)
+    }
+  }
+}
+
+const selectImgById = (uuid: string) => {
+  const findImg = imageArray.value.find((i) => i.uuid === uuid)
+  if (findImg) {
+    // model.value = [findImg]
+    selectImage(findImg)
+  }
+  return findImg
+}
+defineExpose({
+  selectImgById
+})
+
+/* 样式控制 */
 const boxRef = ref<HTMLElement | null>(null)
 const boxSize = useElementSize(boxRef)
-const imageSize = computed(() => {
+const imageLargeSize = 100
+const imageSmallSize = 60
+const imageSizeMark = computed(() => {
   if (boxRef.value == null) {
-    return 50
+    return 'small'
   }
   if (boxSize.width.value > 500) {
-    return 80
-    // return 6
+    return 'large'
   }
-  return 50
+  return 'small'
 })
+const imageSize = computed(() => {
+  if (imageSizeMark.value === 'large') {
+    return imageLargeSize
+  }
+  return imageSmallSize
+})
+
+const { isUploading, uploadImage } = useAvatarAddService({
+  propsonUploaded
+})
+
+const statesStore = useStatesStore()
+// 在明暗切换时不显示渐变遮罩
+const showGradientMask = computed(() => !statesStore.isDarkTransitioning)
 </script>
 <template>
   <div class="avatar-selector" ref="boxRef">
     <div class="selector-image-row">
       <el-scrollbar>
-        <div class="scroll-image-box">
-          <div class="item-image-box" v-for="item in 20" :key="item">
-            <div class="img-box">
-              <el-avatar shape="square" :size="imageSize" :src="userAvatar" />
-              <div class="img-mask">
-                <Transition name="fade-pop">
-                  <el-icon size="20" v-show="0">
-                    <CircleCheckFilled />
-                  </el-icon>
-                </Transition>
+        <div
+          class="scroll-image-box"
+          :class="{
+            large: imageSizeMark === 'large',
+            small: imageSizeMark === 'small'
+          }"
+        >
+          <div><div class="scroll-gasket"></div></div>
+          <TransitionGroup name="fade-slide-list">
+            <div :span="24" v-if="imageArray.length === 0">
+              暂无头像，请上传
+            </div>
+            <div
+              class="item-image-box"
+              v-for="item in imageArray"
+              :key="item.uuid"
+            >
+              <div class="img-box">
+                <el-avatar
+                  shape="square"
+                  :size="imageSize"
+                  :src="profileAvatarUrl(item)"
+                />
+                <div class="img-mask" @click="selectImage(item)">
+                  <Transition name="fade-pop">
+                    <el-icon :size="imageSize / 2.2" v-show="isSelected(item)">
+                      <CircleCheckFilled />
+                    </el-icon>
+                  </Transition>
+                </div>
               </div>
             </div>
-          </div>
+          </TransitionGroup>
+          <div><div class="scroll-gasket"></div></div>
         </div>
       </el-scrollbar>
-      <div class="gradient-mask-left"></div>
-      <div class="gradient-mask-right"></div>
+      <div class="gradient-mask-left" v-show="showGradientMask"></div>
+      <div class="gradient-mask-right" v-show="showGradientMask"></div>
     </div>
     <div class="selector-botton-row">
-      <el-button type="primary" round size="small" :icon="Upload">
-        上传图片
-      </el-button>
-      <el-button type="info" round size="small"> 操作 </el-button>
+      <div class="upload-button-group">
+        <el-upload
+          :auto-upload="false"
+          accept="image/*"
+          :on-change="uploadImage"
+          :show-file-list="false"
+          class="upload-button"
+          :class="{
+            'is-uploading': isUploading
+          }"
+        >
+          <el-button
+            type="success"
+            round
+            size="small"
+            :icon="Upload"
+            :loading="isUploading"
+          >
+            添加头像
+          </el-button>
+        </el-upload>
+        <el-button
+          type="success"
+          circle
+          size="small"
+          :icon="Setting"
+          class="setting-button"
+        ></el-button>
+      </div>
+      <div><el-button type="info" round size="small"> 操作 </el-button></div>
     </div>
   </div>
 </template>
@@ -51,9 +181,23 @@ const imageSize = computed(() => {
 <style lang="scss" scoped>
 .selector-botton-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  .upload-button-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .setting-button {
+      margin-left: 6px;
+    }
+    .upload-button {
+      &.is-uploading {
+        pointer-events: none; /* 禁用自身点击 */
+      }
+    }
+  }
 }
+
 .selector-image-row {
   position: relative;
   .gradient-mask-left {
@@ -61,7 +205,7 @@ const imageSize = computed(() => {
     left: 0;
     top: 0;
     bottom: 0;
-    width: 20px;
+    width: 10px;
     background: linear-gradient(
       to right,
       var(--color-background-soft),
@@ -74,7 +218,7 @@ const imageSize = computed(() => {
     right: 0;
     top: 0;
     bottom: 0;
-    width: 20px;
+    width: 10px;
     background: linear-gradient(
       to left,
       var(--color-background-soft),
@@ -84,16 +228,21 @@ const imageSize = computed(() => {
   }
 }
 .scroll-image-box {
+  position: relative;
   display: flex;
-  // padding: 10px 20px;
   padding: 10px 0;
   .item-image-box {
-    padding: 0 5px;
-    &:first-child {
-      padding-left: 20px;
+    padding: 0 3px;
+  }
+  .scroll-gasket {
+    width: 10px;
+  }
+  &.large {
+    .item-image-box {
+      padding: 0 5px;
     }
-    &:last-child {
-      padding-right: 20px;
+    .scroll-gasket {
+      width: 15px;
     }
   }
 }
@@ -102,7 +251,7 @@ const imageSize = computed(() => {
   &:hover {
     .el-avatar,
     .img-mask {
-      transform: scale(0.95, 0.95);
+      transform: scale(1.05, 1.05);
     }
   }
   .img-mask {
@@ -125,10 +274,9 @@ const imageSize = computed(() => {
   .el-avatar {
     display: flex;
     border: 1px solid var(--color-background-mute);
-    background-color: var(--color-background-mute);
+    background-color: transparent;
     user-select: none;
     transition:
-      background-color 0.5s,
       transform 0.2s,
       border 0.5s;
   }

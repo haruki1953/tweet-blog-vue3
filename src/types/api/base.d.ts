@@ -8,3 +8,5 @@ export type ResData<DataType = undefined> = Promise<
     data: DataType
   }>
 >
+
+export * from '../data'

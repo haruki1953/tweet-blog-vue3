@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { useStatesStore } from '@/stores'
 import type { PostData, PostsGetMode } from '@/types'
+import { computed } from 'vue'
 
 withDefaults(
   defineProps<{
@@ -16,10 +18,19 @@ withDefaults(
     postMode: 'normal'
   }
 )
+
+const statesStore = useStatesStore()
+// 在明暗切换时不显示渐变条动画
 </script>
 <template>
   <div class="post-group post-group-skeleton" v-if="data.length === 0">
-    <el-skeleton :rows="5" animated />
+    <el-skeleton
+      :rows="5"
+      animated
+      :class="{
+        'is-dark-transitioning': statesStore.isDarkTransitioning
+      }"
+    />
   </div>
   <div class="post-group" :class="{ 'card-mini': mini }" v-else>
     <template v-for="(post, index) in data" :key="post.id">
@@ -59,7 +70,9 @@ withDefaults(
   .el-skeleton {
     :deep() {
       .el-skeleton__item {
-        background: linear-gradient(
+        background: none;
+        background-color: var(--color-background);
+        background-image: linear-gradient(
           90deg,
           var(--color-background) 25%,
           var(--color-background-mute) 37%,
@@ -76,6 +89,13 @@ withDefaults(
         width: 60%;
         margin: 0 20%;
         margin-top: 16px;
+      }
+    }
+    &.is-dark-transitioning {
+      :deep() {
+        .el-skeleton__item {
+          background-image: none;
+        }
       }
     }
   }

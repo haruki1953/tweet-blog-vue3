@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import userAvatar from '@/assets/haruki.jpg'
 import { computed, onMounted, ref } from 'vue'
 import {
   Search,
@@ -16,7 +15,8 @@ import {
 } from '@/stores'
 import type { IconMenuItem, PostsGetMode } from '@/types'
 import PostDeleteAllDialog from './PostDeleteAllDialog.vue'
-import { sakiMessage } from '@/utils'
+import { profileAvatarUrl, sakiMessage } from '@/utils'
+import { profileConfig } from '@/config'
 
 // withDefaults(
 //   defineProps<{
@@ -213,12 +213,21 @@ const newPostText = computed(() => {
     ></PostDeleteAllDialog>
     <div class="user">
       <div class="avatar">
-        <el-avatar :size="72" :src="userAvatar" />
+        <el-avatar
+          :size="72"
+          :src="
+            profileStore.avatarItem
+              ? profileAvatarUrl(profileStore.avatarItem)
+              : profileConfig.avatarDefault
+          "
+        />
       </div>
-      <div class="name">haruki🐻</div>
+      <div class="name">{{ profileStore.name }}</div>
     </div>
     <div class="bio-box">
-      <div class="bio">可怜的孩子 不再胆怯</div>
+      <div class="bio">
+        <TextWithLink :data="profileStore.bio"></TextWithLink>
+      </div>
     </div>
 
     <div class="blog-info" :class="{ normal: postsGetModeMark === 'normal' }">
@@ -351,8 +360,14 @@ const newPostText = computed(() => {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    padding: 0 20px;
     .bio {
-      white-space: pre-line;
+      max-width: 100%;
+      color: var(--color-text);
+      white-space: pre-wrap;
+      // 解决在全英文无空格时，文字无法换行的问题
+      word-wrap: break-word;
+      transition: all 0.2s;
     }
   }
 
