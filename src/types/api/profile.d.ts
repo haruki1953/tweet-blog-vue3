@@ -25,3 +25,6 @@ export type ProfileAddAvatarData = ProfileResData & {
   newAvatar: BackendProfileStore['avatarArray'][number]
 }
 export type ProfileAddAvatarRes = ResData<ProfileAddAvatarData>
+
+export type ProfileUpdateAvatarData = ProfileResData
+export type ProfileUpdateAvatarRes = ResData<ProfileUpdateAvatarData>

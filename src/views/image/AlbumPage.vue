@@ -47,12 +47,14 @@ onMounted(() => {
   <div>
     <Col2Layout reverse>
       <template #colLeftSm>
-        <AlbumInfo></AlbumInfo>
-        <ImageEditDialog
-          v-model="imagesData"
-          autoOpen
-          cancelOnClose
-        ></ImageEditDialog>
+        <DataContainerMountedMask>
+          <AlbumInfo></AlbumInfo>
+          <ImageEditDialog
+            v-model="imagesData"
+            autoOpen
+            cancelOnClose
+          ></ImageEditDialog>
+        </DataContainerMountedMask>
       </template>
       <template #colLeft>
         <AlbumInfo></AlbumInfo>
@@ -72,11 +74,13 @@ onMounted(() => {
         </div>
       </template>
       <template #colRight>
-        <ImageSelector
-          v-model="imagesData"
-          infiniteScroll
-          ref="refImageSelecter"
-        ></ImageSelector>
+        <DataContainerMountedMask>
+          <ImageSelector
+            v-model="imagesData"
+            infiniteScroll
+            ref="refImageSelecter"
+          ></ImageSelector>
+        </DataContainerMountedMask>
       </template>
     </Col2Layout>
   </div>

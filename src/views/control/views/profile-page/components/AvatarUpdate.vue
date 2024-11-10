@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { profileUpdateAvatarApi } from '@/api'
 import type AvatarSelector from '@/components/profile/AvatarSelector.vue'
 import { profileConfig } from '@/config'
 import { useProfileStore } from '@/stores'
@@ -36,14 +37,14 @@ onMounted(initData)
 
 const isSubmiting = ref(false)
 const submit = async () => {
+  if (currentAvatar.value === null) {
+    return
+  }
   isSubmiting.value = true
   try {
-    // const res = await profileUpdateNameBioApi({
-    //   name: name.value,
-    //   bio: bio.value
-    // })
-    // // 更新store
-    // profileStore.loadProfileByRes(res.data.data)
+    const res = await profileUpdateAvatarApi(currentAvatar.value.uuid)
+    // 更新store
+    profileStore.loadProfileByRes(res.data.data)
     sakiMessage({
       type: 'success',
       message: '修改成功'
@@ -67,7 +68,13 @@ const submit = async () => {
         </Transition>
       </div>
       <div class="button-box">
-        <el-button @click="submit" :loading="isSubmiting" type="success" round>
+        <el-button
+          @click="submit"
+          :loading="isSubmiting"
+          :disabled="currentAvatar === null"
+          type="success"
+          round
+        >
           保存
         </el-button>
         <el-button @click="initData" type="info" round> 取消 </el-button>
@@ -89,6 +96,9 @@ const submit = async () => {
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
+  .el-avatar {
+    background-color: transparent;
+  }
 }
 .avatar-select-box {
   padding: 10px;

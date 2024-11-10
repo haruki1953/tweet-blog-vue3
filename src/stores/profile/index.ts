@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
 import { useLoadModule } from './modules/load'
 import type { BackendProfileStore } from '@/types'
+import { useSettingModule } from './modules/setting'
 
 export type ProfileStoreModuleDependencies = {
   postNumber: Ref<number>
@@ -44,9 +45,11 @@ export const useProfileStore = defineStore(
     }
 
     const loadModule = useLoadModule(dependencies)
+    const settingModule = useSettingModule()
 
     return {
       ...loadModule,
+      ...settingModule,
       profile,
       postNumber,
       imageNumber,

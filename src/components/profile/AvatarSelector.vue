@@ -6,6 +6,7 @@ import type { BackendProfileStore, ProfileAddAvatarData } from '@/types'
 import { useProfileStore, useStatesStore } from '@/stores'
 import { useAvatarAddService } from '@/services'
 import { profileAvatarUrl } from '@/utils'
+import type AvatarSettingDialog from './AvatarSettingDialog.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -71,6 +72,10 @@ defineExpose({
   selectImgById
 })
 
+const { isUploading, uploadImage } = useAvatarAddService({
+  propsonUploaded
+})
+
 /* 样式控制 */
 const boxRef = ref<HTMLElement | null>(null)
 const boxSize = useElementSize(boxRef)
@@ -92,16 +97,17 @@ const imageSize = computed(() => {
   return imageSmallSize
 })
 
-const { isUploading, uploadImage } = useAvatarAddService({
-  propsonUploaded
-})
-
 const statesStore = useStatesStore()
 // 在明暗切换时不显示渐变遮罩
 const showGradientMask = computed(() => !statesStore.isDarkTransitioning)
+
+const refAvatarSettingDialog = ref<InstanceType<
+  typeof AvatarSettingDialog
+> | null>(null)
 </script>
 <template>
   <div class="avatar-selector" ref="boxRef">
+    <AvatarSettingDialog ref="refAvatarSettingDialog"></AvatarSettingDialog>
     <div class="selector-image-row">
       <el-scrollbar>
         <div
@@ -171,6 +177,7 @@ const showGradientMask = computed(() => !statesStore.isDarkTransitioning)
           size="small"
           :icon="Setting"
           class="setting-button"
+          @click="refAvatarSettingDialog?.open"
         ></el-button>
       </div>
       <div><el-button type="info" round size="small"> 操作 </el-button></div>

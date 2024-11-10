@@ -20,6 +20,12 @@ export const profileConfig = {
   avatarDefault: '',
   // avatarUrl: 'http://192.168.2.110:5500/avatar/',
   avatarUrl: 'http://localhost:5500/avatar/',
+  avatarProcessSettingDefault: {
+    imageProcess: true,
+    imageType: 'image/jpeg' as const,
+    imageQuality: 0.9,
+    imageWidth: 400
+  },
   // iconUrl: 'http://192.168.2.110:5500/icon/'
   iconUrl: 'http://localhost:5500/icon/'
 }

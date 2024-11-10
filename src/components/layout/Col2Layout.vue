@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useLayoutStore, useStatesStore } from '@/stores'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import type { ElScrollbar } from 'element-plus'
+import { useScroll } from '@vueuse/core'
 
 const props = withDefaults(
   defineProps<{
@@ -23,8 +25,16 @@ const largeColSpan = computed(() => (show2Col.value ? props.span : 24))
 const smallColSpan = computed(() => (show2Col.value ? 24 - props.span : 24))
 
 const statesStore = useStatesStore()
+
+const refScroll = ref<InstanceType<typeof ElScrollbar> | null>(null)
+const refWrap = computed(() => refScroll.value?.wrapRef)
+const warpScroll = useScroll(refWrap)
+
+// 在在滚动条置顶时不显示渐变遮罩
 // 在明暗切换时不显示渐变遮罩
-const showGradientMask = computed(() => !statesStore.isDarkTransitioning)
+const showGradientMask = computed(
+  () => !statesStore.isDarkTransitioning && !warpScroll.arrivedState.top
+)
 </script>
 <template>
   <div class="col2-page">
@@ -32,7 +42,7 @@ const showGradientMask = computed(() => !statesStore.isDarkTransitioning)
       <el-col :span="smallColSpan" v-if="!reverse && show2Col">
         <el-affix :offset="61" :z-index="1">
           <div class="col2-left">
-            <el-scrollbar :height="leftHeight">
+            <el-scrollbar :height="leftHeight" ref="refScroll">
               <slot name="colLeft"></slot>
             </el-scrollbar>
             <div class="gradient-mask" v-show="showGradientMask"></div>
@@ -50,7 +60,7 @@ const showGradientMask = computed(() => !statesStore.isDarkTransitioning)
       <el-col :span="smallColSpan" v-if="reverse && show2Col">
         <el-affix :offset="61" :z-index="1">
           <div class="col2-left reverse">
-            <el-scrollbar :height="leftHeight">
+            <el-scrollbar :height="leftHeight" ref="refScroll">
               <slot name="colLeft"></slot>
             </el-scrollbar>
             <div class="gradient-mask" v-show="showGradientMask"></div>

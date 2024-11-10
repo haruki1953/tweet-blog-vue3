@@ -22,18 +22,18 @@ export const useLoadModule = (dependencies: ProfileStoreModuleDependencies) => {
     profile.value = resData.store
   }
 
-  const loadAvatarArrayByRes = (resData: ProfileResData) => {
-    if (!profile.value) {
-      loadProfileByRes(resData)
-      return
-    }
-    profile.value.avatarArray = resData.store.avatarArray
-  }
+  // const loadAvatarArrayByRes = (resData: ProfileResData) => {
+  //   if (!profile.value) {
+  //     loadProfileByRes(resData)
+  //     return
+  //   }
+  //   profile.value.avatarArray = resData.store.avatarArray
+  // }
 
   return {
     isLoading,
     loadAll,
-    loadProfileByRes,
-    loadAvatarArrayByRes
+    loadProfileByRes
+    // loadAvatarArrayByRes
   }
 }

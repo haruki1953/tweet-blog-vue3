@@ -22,23 +22,41 @@ export const useAvatarAddService = (dependencies: {
     if (uploadFile.raw === undefined) {
       throw new Error('没有文件')
     }
+    const uploadFileRaw = uploadFile.raw
 
     isUploading.value = true
     try {
       // 处理图片
-      const imageEl = await imageLoadImageFromFileService(uploadFile)
-      const imageCropTo11 = imageCropToRatioService(imageEl, 1, 1)
-      const imageResize = imageResizeImageService(imageCropTo11, 400, 400)
-      const imageBlob = await new Promise<Blob>((resolve) => {
-        imageResize.toBlob((blob) => {
-          if (!blob) {
-            throw new Error()
-          }
-          resolve(blob)
-        }, 'image/png')
-      })
-      const res = await profileAddAvatarApi(imageBlob)
-      profileStore.loadAvatarArrayByRes(res.data.data)
+      const { imageType, imageQuality, imageWidth, imageProcess } =
+        profileStore.avatarProcessSetting
+      const blob = await (async () => {
+        if (imageProcess) {
+          const imageEl = await imageLoadImageFromFileService(uploadFile)
+          const imageCropTo11 = imageCropToRatioService(imageEl, 1, 1)
+          const imageResize = imageResizeImageService(
+            imageCropTo11,
+            imageWidth,
+            imageWidth
+          )
+          const imageBlob = await new Promise<Blob>((resolve) => {
+            imageResize.toBlob(
+              (blob) => {
+                if (!blob) {
+                  throw new Error()
+                }
+                resolve(blob)
+              },
+              imageType,
+              imageQuality
+            )
+          })
+          return imageBlob
+        } else {
+          return uploadFileRaw
+        }
+      })()
+      const res = await profileAddAvatarApi(blob)
+      profileStore.loadProfileByRes(res.data.data)
       propsonUploaded.value(res.data.data)
       sakiMessage({
         type: 'success',
@@ -49,6 +67,7 @@ export const useAvatarAddService = (dependencies: {
         type: 'error',
         message: '头像处理失败'
       })
+      console.log(error)
     } finally {
       isUploading.value = false
     }

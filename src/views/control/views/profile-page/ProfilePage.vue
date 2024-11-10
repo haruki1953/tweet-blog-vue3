@@ -14,6 +14,7 @@ import AvatarUpdate from './components/AvatarUpdate.vue'
     <div class="control-box">
       <AvatarUpdate></AvatarUpdate>
     </div>
+    <PageFooter></PageFooter>
   </div>
 </template>
 

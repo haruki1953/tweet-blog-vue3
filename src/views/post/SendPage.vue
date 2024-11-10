@@ -11,7 +11,7 @@ import { useImageStore, usePostStore } from '@/stores'
 import { postConfig } from '@/config'
 import { formatTime, imageToImageStoreData } from '@/utils'
 import InfoEditDialog from './components/InfoEditDialog.vue'
-import type ImageEditDialog from '@/components/ImageEditDialog.vue'
+import type ImageEditDialog from '@/components/image/image-edit/ImageEditDialog.vue'
 import { useElementSize, useNow } from '@vueuse/core'
 import { computed } from 'vue'
 import { onMounted } from 'vue'
@@ -173,6 +173,20 @@ const imageBoxSize = useElementSize(refImageBox)
             {{ infoBySendType.topBarBtnText }}
           </el-button>
         </TopBar>
+        <DataContainerMountedMask>
+          <div
+            class="post-group-box"
+            v-if="
+              ['reply'].includes(infoBySendType.type) && infoBySendType.data
+            "
+          >
+            <PostGroup
+              :data="[infoBySendType.data]"
+              mini
+              notPreview
+            ></PostGroup>
+          </div>
+        </DataContainerMountedMask>
       </template>
       <template #colLeft>
         <TopBar :title="infoBySendType.topBarTitle">
@@ -187,17 +201,25 @@ const imageBoxSize = useElementSize(refImageBox)
             {{ infoBySendType.topBarBtnText }}
           </el-button>
         </TopBar>
-        <div
-          class="post-group-box"
-          v-if="['reply'].includes(infoBySendType.type) && infoBySendType.data"
-        >
-          <PostGroup :data="[infoBySendType.data]" mini></PostGroup>
-        </div>
-        <ImageUploader :onUploaded="addImage"></ImageUploader>
-        <ImageSelector
-          v-model="imagesData"
-          :max="postConfig.postMaxImages"
-        ></ImageSelector>
+        <DataContainerMountedMask>
+          <div
+            class="post-group-box"
+            v-if="
+              ['reply'].includes(infoBySendType.type) && infoBySendType.data
+            "
+          >
+            <PostGroup
+              :data="[infoBySendType.data]"
+              mini
+              notPreview
+            ></PostGroup>
+          </div>
+          <ImageUploader :onUploaded="addImage"></ImageUploader>
+          <ImageSelector
+            v-model="imagesData"
+            :max="postConfig.postMaxImages"
+          ></ImageSelector>
+        </DataContainerMountedMask>
       </template>
       <template #colRight>
         <div class="info-bar">
@@ -277,10 +299,13 @@ const imageBoxSize = useElementSize(refImageBox)
           :class="{ 'image-box-show': imagesData.length > 0 }"
         >
           <ImageUploader :onUploaded="addImage"></ImageUploader>
-          <ImageSelector
-            v-model="imagesData"
-            :max="postConfig.postMaxImages"
-          ></ImageSelector>
+          <DataContainerMountedMask>
+            <ImageSelector
+              v-model="imagesData"
+              :max="postConfig.postMaxImages"
+              infiniteScroll
+            ></ImageSelector>
+          </DataContainerMountedMask>
         </div>
       </template>
     </Col2Layout>

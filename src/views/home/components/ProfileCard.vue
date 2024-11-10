@@ -349,7 +349,10 @@ const newPostText = computed(() => {
     justify-content: center;
     margin-bottom: 10px;
     .avatar {
-      margin-right: 12px;
+      margin: 0 12px;
+      .el-avatar {
+        background-color: transparent;
+      }
     }
     .name {
       font-size: 20px;

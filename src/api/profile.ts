@@ -1,6 +1,7 @@
 import type {
   ProfileAddAvatarRes,
   ProfileGetAllRes,
+  ProfileUpdateAvatarRes,
   ProfileUpdateNameBioJsonType,
   ProfileUpdateNameBioRes
 } from '@/types'
@@ -25,4 +26,10 @@ export const profileAddAvatarApi = (imageBlob: Blob): ProfileAddAvatarRes => {
   const fd = new FormData()
   fd.append('image', imageBlob, `image.${fileType}`)
   return http.post('/profile/avatar', fd)
+}
+
+export const profileUpdateAvatarApi = (
+  uuid: string
+): ProfileUpdateAvatarRes => {
+  return http.put('/profile/avatar', { uuid })
 }

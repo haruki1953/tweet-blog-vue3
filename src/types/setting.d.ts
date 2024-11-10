@@ -25,3 +25,12 @@ export type IconMenuItem = {
   onSelect?: () => void
   onClick?: () => void
 }
+
+export interface ImageProcessSetting {
+  imageProcess: boolean
+  imageType: 'image/png' | 'image/jpeg' | 'image/webp'
+  imageQuality: number
+  imageWidth: number
+}
+
+export interface AvatarProcessSetting extends ImageProcessSetting {}

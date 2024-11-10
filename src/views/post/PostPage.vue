@@ -5,6 +5,7 @@ import { onMounted } from 'vue'
 import { ref, watch } from 'vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import BottomSkeleton from './components/BottomSkeleton.vue'
 
 const route = useRoute()
 const postStore = usePostStore()
@@ -68,6 +69,15 @@ const checkShouldShowSkeletonOnMounted = async () => {
   }
   shouldShowSkeletonOnMounted.value = false
 }
+
+// // 测试骨架屏
+// const isBlue = ref(false)
+// setInterval(() => {
+//   isBlue.value = !isBlue.value
+// }, 2000)
+// const isShowSkeleton = computed(() => isBlue.value)
+// // const isShowSkeleton = computed(() => true)
+
 const isShowSkeleton = computed(() => {
   if (!postPoolItem.value) {
     return false
@@ -116,74 +126,88 @@ const replyPost = () => {
   }
   postStore.toReplySendPage(postPoolItem.value.mainPost)
 }
+
+// 优化单帖子（无回复，即单列显示）情况下，从骨架屏到帖子的过渡
+// 当在初始化（setup）时就有数据，禁用过渡（避免重复过渡）
+const haveMainPostOnSetUp = mainPostGroup.value != null
 </script>
 <template>
-  <div>
-    <!-- <Transition name="fade-slide"> -->
-    <Col1Layout v-if="!shouldShow2Col">
-      <TopBar title="查看推文"></TopBar>
-      <!-- id参数无效 -->
-      <div v-if="routePostId == null">
-        <SakiEmpty description="推文 id 无效" type="error"></SakiEmpty>
-      </div>
-      <!-- 暂无此贴，显示骨架屏 -->
-      <div v-else-if="mainPostGroup == null">
-        <PostGroup :data="[]"></PostGroup>
-      </div>
-      <!-- 显示帖子 -->
-      <div v-else>
-        <div class="main-post-group-box">
-          <PostGroup :data="mainPostGroup"></PostGroup>
-        </div>
-        <div class="replie-button-box col1">
-          <el-button type="primary" round @click="replyPost"> 回 复 </el-button>
-        </div>
-        <Transition name="fade-slide">
-          <div v-if="isShowSkeleton">
+  <div :key="String(route.params.id) + String(shouldShow2Col)">
+    <div v-if="!shouldShow2Col">
+      <Col1Layout>
+        <DataContainerMountedMask>
+          <TopBar title="查看推文"></TopBar>
+          <!-- id参数无效 -->
+          <div v-if="routePostId == null">
+            <SakiEmpty description="推文 id 无效" type="error"></SakiEmpty>
+          </div>
+          <!-- 暂无此贴，显示骨架屏 -->
+          <div v-else-if="mainPostGroup == null">
             <PostGroup :data="[]"></PostGroup>
           </div>
-        </Transition>
-      </div>
-      <!-- 没有回帖 -->
-    </Col1Layout>
-    <Col2Layout v-else :span="12">
-      <template #colLeftSm>
-        <TopBar title="查看推文"></TopBar>
-        <div class="main-post-group-box" v-if="mainPostGroup">
-          <PostGroup :data="mainPostGroup"></PostGroup>
-        </div>
-        <div class="replie-button-box">
-          <el-button type="primary" round @click="replyPost"> 回 复 </el-button>
-        </div>
-      </template>
-      <template #colLeft>
-        <TopBar title="查看推文"></TopBar>
-        <div class="main-post-group-box" v-if="mainPostGroup">
-          <PostGroup :data="mainPostGroup"></PostGroup>
-        </div>
-        <div class="replie-button-box">
-          <el-button type="primary" round @click="replyPost"> 回 复 </el-button>
-        </div>
-      </template>
-      <template #colRight>
-        <div class="replies-post-group-box" v-if="postPoolItem">
-          <!-- <TransitionGroup name="fade-slide"> -->
-          <PostGroup
-            v-for="postGroup in postPoolItem.replies"
-            :key="postGroup.map((p) => p.id).toString()"
-            :data="postGroup"
-          >
-          </PostGroup>
-          <!-- </TransitionGroup> -->
-        </div>
-        <Transition name="fade-slide">
-          <div v-if="isShowSkeleton">
-            <PostGroup :data="[]"></PostGroup>
+          <!-- 显示帖子 -->
+          <div v-else>
+            <DataContainerMountedMask :disabled="haveMainPostOnSetUp">
+              <div class="main-post-group-box">
+                <PostGroup :data="mainPostGroup"></PostGroup>
+              </div>
+              <div class="replie-button-box col1">
+                <el-button type="primary" round @click="replyPost">
+                  回 复
+                </el-button>
+              </div>
+              <BottomSkeleton :show="isShowSkeleton"></BottomSkeleton>
+            </DataContainerMountedMask>
           </div>
-        </Transition>
-      </template>
-    </Col2Layout>
-    <!-- </Transition> -->
+          <!-- 没有回帖 -->
+        </DataContainerMountedMask>
+      </Col1Layout>
+    </div>
+    <div v-else>
+      <Col2Layout :span="12">
+        <template #colLeftSm>
+          <DataContainerMountedMask>
+            <TopBar title="查看推文"></TopBar>
+            <div class="main-post-group-box" v-if="mainPostGroup">
+              <PostGroup :data="mainPostGroup"></PostGroup>
+            </div>
+            <div class="replie-button-box">
+              <el-button type="primary" round @click="replyPost">
+                回 复
+              </el-button>
+            </div>
+          </DataContainerMountedMask>
+        </template>
+        <template #colLeft>
+          <DataContainerMountedMask>
+            <TopBar title="查看推文"></TopBar>
+            <div class="main-post-group-box" v-if="mainPostGroup">
+              <PostGroup :data="mainPostGroup"></PostGroup>
+            </div>
+            <div class="replie-button-box">
+              <el-button type="primary" round @click="replyPost">
+                回 复
+              </el-button>
+            </div>
+          </DataContainerMountedMask>
+        </template>
+        <template #colRight>
+          <DataContainerMountedMask>
+            <div class="replies-post-group-box" v-if="postPoolItem">
+              <!-- <TransitionGroup name="fade-slide"> -->
+              <PostGroup
+                v-for="postGroup in postPoolItem.replies"
+                :key="postGroup.map((p) => p.id).toString()"
+                :data="postGroup"
+              >
+              </PostGroup>
+              <!-- </TransitionGroup> -->
+            </div>
+            <BottomSkeleton :show="isShowSkeleton"></BottomSkeleton>
+          </DataContainerMountedMask>
+        </template>
+      </Col2Layout>
+    </div>
   </div>
 </template>
 

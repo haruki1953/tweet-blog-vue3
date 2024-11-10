@@ -56,60 +56,64 @@ const postMode = computed(() => postStore.postsGetMode)
   <div>
     <Col2Layout>
       <template #colLeftSm>
-        <ProfileCard> </ProfileCard>
+        <DataContainerMountedMask :disabled="postStore.isFirstRequest">
+          <ProfileCard> </ProfileCard>
+        </DataContainerMountedMask>
       </template>
       <template #colLeft>
         <ProfileCard> </ProfileCard>
       </template>
       <template #colRight>
-        <div class="post-skeleton-container">
-          <Transition name="fade-slide">
-            <div
-              class="post-skeleton"
-              key="skeleton"
-              ref="refSkeleton"
-              v-if="isShowSkeleton"
-            >
-              <PostGroup :data="[]"></PostGroup>
-            </div>
-          </Transition>
-        </div>
+        <DataContainerMountedMask :disabled="postStore.isFirstRequest">
+          <div class="post-skeleton-container">
+            <Transition name="fade-slide">
+              <div
+                class="post-skeleton"
+                key="skeleton"
+                ref="refSkeleton"
+                v-if="isShowSkeleton"
+              >
+                <PostGroup :data="[]"></PostGroup>
+              </div>
+            </Transition>
+          </div>
 
-        <div
-          v-infinite-scroll="postStore.loadLimited"
-          :infinite-scroll-distance="200"
-          :infinite-scroll-delay="0"
-          :infinite-scroll-immediate="false"
-          class="post-container"
-          :style="{ transform: `translateY(${skeletonSize.height.value}px)` }"
-        >
-          <TransitionGroup name="fade-slide-list">
-            <!-- <div class="post-box" key="skeleton" v-if="isShowSkeleton">
+          <div
+            v-infinite-scroll="postStore.loadLimited"
+            :infinite-scroll-distance="200"
+            :infinite-scroll-delay="0"
+            :infinite-scroll-immediate="false"
+            class="post-container"
+            :style="{ transform: `translateY(${skeletonSize.height.value}px)` }"
+          >
+            <TransitionGroup name="fade-slide-list">
+              <!-- <div class="post-box" key="skeleton" v-if="isShowSkeleton">
               <PostGroup :data="[]"></PostGroup>
             </div> -->
+              <div
+                class="post-box"
+                v-for="postGroup in postStore.limitedList"
+                :key="postGroup.map((p) => p.id).toString()"
+              >
+                <PostGroup :data="postGroup" :postMode="postMode"> </PostGroup>
+              </div>
+            </TransitionGroup>
             <div
-              class="post-box"
-              v-for="postGroup in postStore.limitedList"
-              :key="postGroup.map((p) => p.id).toString()"
+              class="load-button-box"
+              v-if="postStore.isHaveMoreLimited && postStore.limitedList.length"
             >
-              <PostGroup :data="postGroup" :postMode="postMode"> </PostGroup>
+              <el-button
+                type="primary"
+                round
+                size="small"
+                :loading="postStore.isLoadingLimited"
+                @click="postStore.loadLimited"
+              >
+                加载更多
+              </el-button>
             </div>
-          </TransitionGroup>
-          <div
-            class="load-button-box"
-            v-if="postStore.isHaveMoreLimited && postStore.limitedList.length"
-          >
-            <el-button
-              type="primary"
-              round
-              size="small"
-              :loading="postStore.isLoadingLimited"
-              @click="postStore.loadLimited"
-            >
-              加载更多
-            </el-button>
           </div>
-        </div>
+        </DataContainerMountedMask>
       </template>
     </Col2Layout>
   </div>

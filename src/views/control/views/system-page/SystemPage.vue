@@ -13,6 +13,7 @@ import AuthUpdate from './components/AuthUpdate.vue'
         <AdminInfo></AdminInfo>
       </div>
     </div>
+    <PageFooter></PageFooter>
   </div>
 </template>
 
