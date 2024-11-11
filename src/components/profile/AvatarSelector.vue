@@ -7,6 +7,7 @@ import { useProfileStore, useStatesStore } from '@/stores'
 import { useAvatarAddService } from '@/services'
 import { profileAvatarUrl } from '@/utils'
 import type AvatarSettingDialog from './AvatarSettingDialog.vue'
+import type AvatarEditDialog from './AvatarEditDialog.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -104,9 +105,16 @@ const showGradientMask = computed(() => !statesStore.isDarkTransitioning)
 const refAvatarSettingDialog = ref<InstanceType<
   typeof AvatarSettingDialog
 > | null>(null)
+const refAvatarEditDialog = ref<InstanceType<typeof AvatarEditDialog> | null>(
+  null
+)
 </script>
 <template>
   <div class="avatar-selector" ref="boxRef">
+    <AvatarEditDialog
+      ref="refAvatarEditDialog"
+      v-model="model"
+    ></AvatarEditDialog>
     <AvatarSettingDialog ref="refAvatarSettingDialog"></AvatarSettingDialog>
     <div class="selector-image-row">
       <el-scrollbar>
@@ -180,7 +188,16 @@ const refAvatarSettingDialog = ref<InstanceType<
           @click="refAvatarSettingDialog?.open"
         ></el-button>
       </div>
-      <div><el-button type="info" round size="small"> 操作 </el-button></div>
+      <div>
+        <el-button
+          type="info"
+          round
+          size="small"
+          @click="refAvatarEditDialog?.open"
+        >
+          操作
+        </el-button>
+      </div>
     </div>
   </div>
 </template>
