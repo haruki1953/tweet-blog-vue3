@@ -28,3 +28,14 @@ export type ProfileAddAvatarRes = ResData<ProfileAddAvatarData>
 
 export type ProfileUpdateAvatarData = ProfileResData
 export type ProfileUpdateAvatarRes = ResData<ProfileUpdateAvatarData>
+
+export type ProfileDeleteAvatarData = ProfileResData & {
+  delAvatar: BackendProfileStore['avatarArray'][number]
+}
+export type ProfileDeleteAvatarRes = ResData<ProfileDeleteAvatarData>
+
+export type ProfileDeleteAvatarNotUsedData = ProfileResData & {
+  delAvatarList: BackendProfileStore['avatarArray']
+}
+export type ProfileDeleteAvatarNotUsedRes =
+  ResData<ProfileDeleteAvatarNotUsedData>

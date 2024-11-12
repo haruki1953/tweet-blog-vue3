@@ -1,5 +1,7 @@
 import type {
   ProfileAddAvatarRes,
+  ProfileDeleteAvatarNotUsedRes,
+  ProfileDeleteAvatarRes,
   ProfileGetAllRes,
   ProfileUpdateAvatarRes,
   ProfileUpdateNameBioJsonType,
@@ -33,3 +35,14 @@ export const profileUpdateAvatarApi = (
 ): ProfileUpdateAvatarRes => {
   return http.put('/profile/avatar', { uuid })
 }
+
+export const profileDeleteAvatarApi = (
+  uuid: string
+): ProfileDeleteAvatarRes => {
+  return http.delete(`/profile/avatar/uuid/${uuid}`)
+}
+
+export const profileDeleteAvatarNotUsedApi =
+  (): ProfileDeleteAvatarNotUsedRes => {
+    return http.delete(`/profile/avatar/not-used`)
+  }

@@ -11,6 +11,7 @@ import {
 } from '@/utils'
 import type { BackendProfileStore } from '@/types'
 import { profileConfig } from '@/config'
+import { profileDeleteAvatarApi, profileDeleteAvatarNotUsedApi } from '@/api'
 
 type ImgItem = BackendProfileStore['avatarArray'][number]
 const selectedImages = defineModel<ImgItem[]>({ required: true })
@@ -24,7 +25,8 @@ const showImage = computed(() => {
   if (selectedImage.value) {
     return profileAvatarUrl(selectedImage.value)
   }
-  return profileConfig.avatarDefault
+  // return profileConfig.avatarDefault
+  return undefined
 })
 
 const profileStore = useProfileStore()
@@ -38,6 +40,50 @@ const isCurrentUsing = computed(() => {
   }
   return false
 })
+
+const isSubmitingDelete = ref(false)
+const deleteImg = async () => {
+  if (selectedImage.value === null) {
+    return
+  }
+  isSubmitingDelete.value = true
+  try {
+    const res = await profileDeleteAvatarApi(selectedImage.value.uuid)
+    // 更新store
+    profileStore.loadProfileByRes(res.data.data)
+    sakiMessage({
+      type: 'success',
+      message: '删除成功'
+    })
+    close()
+    selectedImages.value = []
+  } finally {
+    isSubmitingDelete.value = false
+  }
+}
+
+const isSubmitingDeleteNotUsed = ref(false)
+const deleteImgNotUsed = async () => {
+  if (selectedImage.value === null) {
+    return
+  }
+  isSubmitingDeleteNotUsed.value = true
+  try {
+    const res = await profileDeleteAvatarNotUsedApi()
+    // 更新store
+    profileStore.loadProfileByRes(res.data.data)
+    sakiMessage({
+      type: 'success',
+      message: '删除成功'
+    })
+    close()
+    if (!isCurrentUsing.value) {
+      selectedImages.value = []
+    }
+  } finally {
+    isSubmitingDeleteNotUsed.value = false
+  }
+}
 
 const dialogVisible = ref(false)
 
@@ -85,7 +131,7 @@ useDialogOptimization({
       <div class="edit-control-box">
         <div class="edit-control-row">
           <div class="edit-control-lable">删除头像</div>
-          <div class="button-box">
+          <div class="edit-button-box">
             <el-button
               round
               type="danger"
@@ -95,7 +141,14 @@ useDialogOptimization({
             >
               正在使用
             </el-button>
-            <el-button round type="danger" size="small" v-else>
+            <el-button
+              round
+              type="danger"
+              size="small"
+              @click="deleteImg"
+              :loading="isSubmitingDelete"
+              v-else
+            >
               删除头像
             </el-button>
           </div>
@@ -103,8 +156,16 @@ useDialogOptimization({
         <div class="edit-control-divider"></div>
         <div class="edit-control-row">
           <div class="edit-control-lable">删除全部未使用头像</div>
-          <div class="button-box">
-            <el-button round type="danger" size="small"> 删除全部 </el-button>
+          <div class="edit-button-box">
+            <el-button
+              round
+              type="danger"
+              size="small"
+              @click="deleteImgNotUsed"
+              :loading="isSubmitingDeleteNotUsed"
+            >
+              删除全部
+            </el-button>
           </div>
         </div>
       </div>

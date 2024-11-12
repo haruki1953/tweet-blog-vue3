@@ -5,7 +5,7 @@ import { profileConfig } from '@/config'
 import { useProfileStore } from '@/stores'
 import type { BackendProfileStore } from '@/types'
 import { profileAvatarUrl, sakiMessage } from '@/utils'
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { computed } from 'vue'
 import { ref } from 'vue'
 
@@ -34,6 +34,16 @@ const initData = () => {
   refAvatarSelector.value?.selectImgById(profileStore.avatar)
 }
 onMounted(initData)
+// profileStore 加载后，应初始化数据
+watch(
+  () => profileStore.isLoading,
+  () => {
+    if (profileStore.isLoading) {
+      return
+    }
+    initData()
+  }
+)
 
 const isSubmiting = ref(false)
 const submit = async () => {
@@ -91,16 +101,22 @@ const submit = async () => {
 </template>
 
 <style lang="scss" scoped>
+@use '../../../styles/control.scss';
+
 .avatar-box {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
   .el-avatar {
     background-color: transparent;
   }
 }
 .avatar-select-box {
   padding: 10px;
+}
+
+.button-box {
+  margin-bottom: -8px;
 }
 </style>

@@ -127,7 +127,7 @@ const refAvatarEditDialog = ref<InstanceType<typeof AvatarEditDialog> | null>(
         >
           <div><div class="scroll-gasket"></div></div>
           <TransitionGroup name="fade-slide-list">
-            <div :span="24" v-if="imageArray.length === 0">
+            <div class="empty-text" v-if="imageArray.length === 0">
               暂无头像，请上传
             </div>
             <div
@@ -194,6 +194,7 @@ const refAvatarEditDialog = ref<InstanceType<typeof AvatarEditDialog> | null>(
           round
           size="small"
           @click="refAvatarEditDialog?.open"
+          :disabled="model.length === 0"
         >
           操作
         </el-button>
@@ -203,6 +204,9 @@ const refAvatarEditDialog = ref<InstanceType<typeof AvatarEditDialog> | null>(
 </template>
 
 <style lang="scss" scoped>
+.empty-text {
+  color: var(--color-text-soft);
+}
 .selector-botton-row {
   display: flex;
   justify-content: space-between;

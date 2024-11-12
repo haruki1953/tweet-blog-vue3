@@ -17,4 +17,6 @@ import AuthUpdate from './components/AuthUpdate.vue'
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@use '../../styles/control.scss';
+</style>

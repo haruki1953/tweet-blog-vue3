@@ -1,6 +1,6 @@
 export const appInfo = {
   copyright: {
-    text: '© 2024 tweet-blog',
+    text: 'tweet-blog',
     link: '/'
   },
   version: {

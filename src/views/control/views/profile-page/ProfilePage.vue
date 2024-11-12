@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import NameBio from './components/NameBio.vue'
 import AvatarUpdate from './components/AvatarUpdate.vue'
+import SocialMedias from './components/SocialMedias.vue'
 </script>
 <template>
   <div class="profile-page">
@@ -14,8 +15,13 @@ import AvatarUpdate from './components/AvatarUpdate.vue'
     <div class="control-box">
       <AvatarUpdate></AvatarUpdate>
     </div>
+    <div class="control-box">
+      <SocialMedias></SocialMedias>
+    </div>
     <PageFooter></PageFooter>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@use '../../styles/control.scss';
+</style>

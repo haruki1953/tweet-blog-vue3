@@ -67,6 +67,7 @@ const submit = async () => {
             :step="86400"
             class="control-input"
             size="large"
+            title=""
           />
           <div class="second-mark">秒</div>
         </div>
@@ -89,6 +90,7 @@ const submit = async () => {
             :step="3600"
             class="control-input"
             size="large"
+            title=""
           />
           <div class="second-mark">秒</div>
         </div>
@@ -104,6 +106,8 @@ const submit = async () => {
 </template>
 
 <style lang="scss" scoped>
+@use '../../../styles/control.scss';
+
 .form-box.form-box {
   margin-bottom: 20px;
 }

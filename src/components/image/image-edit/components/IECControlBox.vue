@@ -155,9 +155,18 @@ const {
             round
             type="danger"
             size="small"
-            :disabled="disableDeleteImage"
+            disabled
+            v-if="disableDeleteImage"
+          >
+            图片使用中
+          </el-button>
+          <el-button
+            round
+            type="danger"
+            size="small"
             :loading="isImageDeleting"
             @click="deleteImage"
+            v-else
           >
             删除图片
           </el-button>
