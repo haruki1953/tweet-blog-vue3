@@ -7,11 +7,21 @@ import {
   generateRandomClassName,
   useDialogOptimization,
   sakiMessage,
-  profileAvatarUrl
+  profileAvatarUrl,
+  formatFileSize
 } from '@/utils'
 import type { BackendProfileStore } from '@/types'
 import { profileConfig } from '@/config'
 import { profileDeleteAvatarApi, profileDeleteAvatarNotUsedApi } from '@/api'
+
+// const props = withDefaults(
+//   defineProps<{
+//     onDel?: () => void
+//   }>(),
+//   {
+//     onDel: () => {}
+//   }
+// )
 
 type ImgItem = BackendProfileStore['avatarArray'][number]
 const selectedImages = defineModel<ImgItem[]>({ required: true })
@@ -57,6 +67,7 @@ const deleteImg = async () => {
     })
     close()
     selectedImages.value = []
+    // props.onDel()
   } finally {
     isSubmitingDelete.value = false
   }
@@ -79,6 +90,7 @@ const deleteImgNotUsed = async () => {
     close()
     if (!isCurrentUsing.value) {
       selectedImages.value = []
+      // props.onDel()
     }
   } finally {
     isSubmitingDeleteNotUsed.value = false
@@ -129,6 +141,24 @@ useDialogOptimization({
         <el-avatar shape="square" :size="100" :src="showImage" />
       </div>
       <div class="edit-control-box">
+        <div class="edit-control-row">
+          <div class="edit-control-lable">头像大小</div>
+          <div class="edit-button-box">
+            <el-button
+              round
+              type="warning"
+              size="small"
+              tag="a"
+              :disabled="selectedImage === null"
+              :href="showImage"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ formatFileSize(selectedImage?.size || 0) }}
+            </el-button>
+          </div>
+        </div>
+        <div class="edit-control-divider"></div>
         <div class="edit-control-row">
           <div class="edit-control-lable">删除头像</div>
           <div class="edit-button-box">

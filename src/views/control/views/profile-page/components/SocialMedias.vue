@@ -5,15 +5,23 @@ import type { BackendProfileStore } from '@/types'
 import { sakiMessage } from '@/utils'
 import { Link, Plus } from '@element-plus/icons-vue'
 import type { Ref } from 'vue'
+import { computed } from 'vue'
 import { ref, watch } from 'vue'
 
 const profileStore = useProfileStore()
 
 const socialMediasInfo = ref<BackendProfileStore['socialMedias']>([])
 
-const mode = ref<'edit' | 'add'>('add')
+const mode = ref<'edit' | 'add' | 'none'>('edit')
 const selected = ref<string>('')
 
+const selectedFaClass = ref<string[]>([])
+const faClass = computed(() => {
+  if (selectedFaClass.value.length === 0) {
+    return 'fa-brands fa-chrome'
+  }
+  return selectedFaClass.value[0]
+})
 const description = ref('')
 const link = ref('')
 
@@ -49,21 +57,21 @@ const submit = async () => {
 </script>
 <template>
   <div class="social-medias">
-    <div class="control-row">
+    <div class="control-row social-medias-row">
       <div class="control-lable">修改社交媒体信息</div>
       <div class="social-medias-group">
-        <div
-          class="social-medias-item"
-          v-for="(item, key) in contactInfo"
-          :key="key"
-        >
-          <div class="link-icon">
+        <TransitionGroup name="fade-slide-list">
+          <div
+            class="social-medias-item"
+            v-for="(item, key) in contactInfo"
+            :key="key"
+          >
             <el-icon :class="item.fontawesomeClass" size="25"></el-icon>
           </div>
-        </div>
-        <div class="social-medias-add">
-          <el-icon class="icon"><Plus /></el-icon>
-        </div>
+          <div class="social-medias-add" key="social-medias-add">
+            <el-icon class="icon"><Plus /></el-icon>
+          </div>
+        </TransitionGroup>
       </div>
       <div class="button-box save">
         <el-button @click="submit" :loading="isSubmiting" type="success" round>
@@ -73,12 +81,17 @@ const submit = async () => {
       </div>
     </div>
     <div class="control-divider"></div>
-    <div class="control-row">
-      <div class="control-lable">添加信息</div>
+    <div class="control-row info-edit-row">
       <div class="form-box">
         <div class="form-row">
           <el-row :gutter="10">
-            <el-col :span="6"> </el-col>
+            <el-col :span="6">
+              <div class="form-fa-brand">
+                <Transition name="fade-pop" mode="out-in">
+                  <el-icon :class="faClass" size="40" :key="faClass"></el-icon>
+                </Transition>
+              </div>
+            </el-col>
             <el-col :span="18">
               <div class="input-lable">描述</div>
               <el-input
@@ -105,11 +118,14 @@ const submit = async () => {
         <el-button
           @click="submit"
           :loading="isSubmiting"
-          type="primary"
+          type="warning"
           round
           size="small"
         >
           修改
+        </el-button>
+        <el-button @click="initData" type="danger" round size="small">
+          移除
         </el-button>
         <el-button @click="initData" type="info" round size="small">
           取消
@@ -130,13 +146,36 @@ const submit = async () => {
         </el-button>
       </div>
     </div>
+    <div class="control-divider"></div>
+    <div class="social-medias-select-box">
+      <SocialMediasSelector v-model="selectedFaClass"></SocialMediasSelector>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
 @use '../../../styles/control.scss';
 
+.form-fa-brand {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .button-box {
   margin-bottom: -8px;
+  &.add,
+  &.edit {
+    margin-top: 18px;
+  }
+}
+
+.info-edit-row {
+  padding-top: 25px;
+}
+
+.social-medias-select-box {
+  padding: 10px;
 }
 
 .social-medias-group {
@@ -157,7 +196,7 @@ const submit = async () => {
   cursor: pointer;
   &:hover {
     background-color: var(--color-background-mute);
-    transform: scale(1.05, 1.05);
+    transform: scale(1.1, 1.1);
   }
   &.selected {
     background-color: var(--el-color-primary-light-7);

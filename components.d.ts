@@ -59,6 +59,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SakiEmpty: typeof import('./src/components/layout/SakiEmpty.vue')['default']
+    SocialMediasSelector: typeof import('./src/components/profile/SocialMediasSelector.vue')['default']
     TestBox: typeof import('./src/components/TestBox.vue')['default']
     TextWithLink: typeof import('./src/components/post/TextWithLink.vue')['default']
     TopBar: typeof import('./src/components/layout/TopBar.vue')['default']

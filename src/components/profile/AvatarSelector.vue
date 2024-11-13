@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { Upload, CircleCheckFilled, Setting } from '@element-plus/icons-vue'
+import {
+  Upload,
+  CircleCheckFilled,
+  Setting,
+  Plus
+} from '@element-plus/icons-vue'
 import { computed, ref } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import type { BackendProfileStore, ProfileAddAvatarData } from '@/types'
@@ -108,6 +113,18 @@ const refAvatarSettingDialog = ref<InstanceType<
 const refAvatarEditDialog = ref<InstanceType<typeof AvatarEditDialog> | null>(
   null
 )
+
+// 限制图片显示个数
+const imageShowLimitNum = ref(8)
+const imageShowLimitAdd = () => {
+  imageShowLimitNum.value += 8
+}
+const imageShowLimited = computed(() => {
+  return imageArray.value.slice(0, imageShowLimitNum.value)
+})
+const imageShowLimitButton = computed(() => {
+  return imageShowLimitNum.value < imageArray.value.length
+})
 </script>
 <template>
   <div class="avatar-selector" ref="boxRef">
@@ -126,13 +143,13 @@ const refAvatarEditDialog = ref<InstanceType<typeof AvatarEditDialog> | null>(
           }"
         >
           <div><div class="scroll-gasket"></div></div>
+          <div class="empty-text" v-if="imageShowLimited.length === 0">
+            暂无头像，请上传
+          </div>
           <TransitionGroup name="fade-slide-list">
-            <div class="empty-text" v-if="imageArray.length === 0">
-              暂无头像，请上传
-            </div>
             <div
               class="item-image-box"
-              v-for="item in imageArray"
+              v-for="item in imageShowLimited"
               :key="item.uuid"
             >
               <div class="img-box">
@@ -151,6 +168,18 @@ const refAvatarEditDialog = ref<InstanceType<typeof AvatarEditDialog> | null>(
               </div>
             </div>
           </TransitionGroup>
+          <div
+            class="group-more-button"
+            key="group-more-button"
+            v-show="imageShowLimitButton"
+          >
+            <el-button
+              @click="imageShowLimitAdd"
+              type="primary"
+              circle
+              :icon="Plus"
+            ></el-button>
+          </div>
           <div><div class="scroll-gasket"></div></div>
         </div>
       </el-scrollbar>
@@ -307,6 +336,15 @@ const refAvatarEditDialog = ref<InstanceType<typeof AvatarEditDialog> | null>(
     transition:
       transform 0.2s,
       border 0.5s;
+  }
+}
+
+.group-more-button {
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  .el-button {
+    display: flex;
   }
 }
 </style>
