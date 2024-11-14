@@ -253,7 +253,7 @@ const newPostText = computed(() => {
     </div>
 
     <div class="block-part-container">
-      <Transition name="fade-up">
+      <Transition name="fade">
         <div
           class="block-part-box search-input-box"
           v-if="postsGetModeMark === 'search'"
@@ -439,6 +439,7 @@ const newPostText = computed(() => {
     .info-lable {
       font-size: 12px;
       color: var(--color-text-soft);
+      font-weight: bold;
     }
     .button-row {
       .el-button {

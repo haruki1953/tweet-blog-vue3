@@ -289,6 +289,7 @@ const imageShowLimitButton = computed(() => {
   display: flex;
   padding: 10px 0;
   .item-image-box {
+    position: relative;
     padding: 0 3px;
   }
   .scroll-gasket {

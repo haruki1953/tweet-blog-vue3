@@ -108,6 +108,14 @@ const submit = async () => {
 <style lang="scss" scoped>
 @use '../../../styles/control.scss';
 
+.loading-box {
+  :deep() {
+    .el-loading-mask {
+      z-index: 2;
+    }
+  }
+}
+
 .form-box.form-box {
   margin-bottom: 20px;
 }

@@ -3,31 +3,25 @@ import { contactInfo } from '@/config'
 import { useProfileStore } from '@/stores'
 import type { BackendProfileStore } from '@/types'
 import { sakiMessage } from '@/utils'
-import { Link, Plus } from '@element-plus/icons-vue'
+import { Link, Plus, ChatDotSquare } from '@element-plus/icons-vue'
+import { useElementSize } from '@vueuse/core'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import { ref, watch } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
+import type CompleteMessageContainer from '@/components/layout/CompleteMessageContainer.vue'
+import { cloneDeep } from 'lodash'
 
 const profileStore = useProfileStore()
 
+/* 社交媒体 */
 const socialMediasInfo = ref<BackendProfileStore['socialMedias']>([])
 
-const mode = ref<'edit' | 'add' | 'none'>('edit')
-const selected = ref<string>('')
-
-const selectedFaClass = ref<string[]>([])
-const faClass = computed(() => {
-  if (selectedFaClass.value.length === 0) {
-    return 'fa-brands fa-chrome'
-  }
-  return selectedFaClass.value[0]
-})
-const description = ref('')
-const link = ref('')
-
 const initData = () => {
-  socialMediasInfo.value = profileStore.socialMedias
+  socialMediasInfo.value = cloneDeep(profileStore.socialMedias)
 }
+initData()
+
 // profileStore 加载后，应初始化数据
 watch(
   () => profileStore.isLoading,
@@ -38,6 +32,56 @@ watch(
     initData()
   }
 )
+
+const mode = ref<'edit' | 'add' | 'none'>('none')
+const selectedUuid = ref<string>('')
+
+const selectedInfo = computed(() => {
+  if (mode.value !== 'edit') {
+    return null
+  }
+  const find = socialMediasInfo.value.find((i) => i.uuid === selectedUuid.value)
+  if (find === undefined) {
+    return null
+  }
+  return find
+})
+
+const isSelectedEdit = (info: BackendProfileStore['socialMedias'][number]) => {
+  return selectedUuid.value === info.uuid && mode.value === 'edit'
+}
+const isSelectedAdd = computed(() => mode.value === 'add')
+
+const selectEdit = (info: BackendProfileStore['socialMedias'][number]) => {
+  console.log(socialMediasInfo.value)
+  if (mode.value === 'edit' && selectedUuid.value === info.uuid) {
+    mode.value = 'none'
+    return
+  }
+  selectedUuid.value = info.uuid
+  mode.value = 'edit'
+  if (!selectedInfo.value) {
+    return
+  }
+  selectedFaClass.value = [selectedInfo.value.fontawesomeClass]
+  description.value = selectedInfo.value.description
+  link.value = selectedInfo.value.link
+}
+const selectAdd = () => {
+  if (mode.value === 'add') {
+    mode.value = 'none'
+    return
+  }
+  mode.value = 'add'
+  selectedFaClass.value = []
+  description.value = ''
+  link.value = ''
+}
+
+const cancel = () => {
+  initData()
+  mode.value = 'none'
+}
 
 const isSubmiting = ref(false)
 const submit = async () => {
@@ -54,21 +98,113 @@ const submit = async () => {
     isSubmiting.value = false
   }
 }
+
+/* 信息编辑 */
+const selectedFaClass = ref<string[]>([])
+const faClass = computed(() => {
+  if (selectedFaClass.value.length === 0) {
+    return 'fa-brands fa-font-awesome'
+  }
+  return selectedFaClass.value[0]
+})
+const description = ref('')
+const link = ref('')
+
+const addInfo = async () => {
+  socialMediasInfo.value.push({
+    uuid: uuidv4(),
+    name: faClass.value,
+    fontawesomeClass: faClass.value,
+    link: link.value,
+    description: description.value
+  })
+  refCompleteMessageContainer.value?.success()
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  mode.value = 'none'
+}
+
+const updateInfo = async () => {
+  if (selectedInfo.value === null) {
+    return
+  }
+  const info = selectedInfo.value
+  const findIndex = socialMediasInfo.value.findIndex(
+    (i) => i.uuid === info.uuid
+  )
+  if (findIndex === -1) {
+    return
+  }
+  socialMediasInfo.value[findIndex] = {
+    uuid: info.uuid,
+    name: info.name,
+    fontawesomeClass: faClass.value,
+    link: link.value,
+    description: description.value
+  }
+  refCompleteMessageContainer.value?.success()
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  mode.value = 'none'
+}
+
+const removeInfo = async () => {
+  if (selectedInfo.value === null) {
+    return
+  }
+  // refCompleteMessageContainer.value?.success()
+  // await new Promise((resolve) => setTimeout(resolve, 300))
+  const info = selectedInfo.value
+  socialMediasInfo.value = socialMediasInfo.value.filter(
+    (i) => i.uuid !== info.uuid
+  )
+  mode.value = 'none'
+}
+
+/* 样式控制 */
+const boxRef = ref<HTMLElement | null>(null)
+const boxSize = useElementSize(boxRef)
+
+const boxStyleHeight = computed(() => {
+  if (boxSize.height.value < 25) {
+    return '25px'
+  }
+  return `${boxSize.height.value}px`
+})
+const refCompleteMessageContainer = ref<InstanceType<
+  typeof CompleteMessageContainer
+> | null>(null)
 </script>
 <template>
   <div class="social-medias">
+    <!-- 社交媒体 -->
     <div class="control-row social-medias-row">
       <div class="control-lable">修改社交媒体信息</div>
       <div class="social-medias-group">
-        <TransitionGroup name="fade-slide-list">
+        <TransitionGroup name="fade-slide-right-list">
           <div
             class="social-medias-item"
-            v-for="(item, key) in contactInfo"
-            :key="key"
+            v-for="item in socialMediasInfo"
+            :key="item.uuid"
+            :class="{
+              selected: isSelectedEdit(item)
+            }"
+            @click="selectEdit(item)"
           >
-            <el-icon :class="item.fontawesomeClass" size="25"></el-icon>
+            <Transition name="fade-pop" mode="out-in">
+              <el-icon
+                :class="item.fontawesomeClass"
+                size="25"
+                :key="item.fontawesomeClass"
+              ></el-icon>
+            </Transition>
           </div>
-          <div class="social-medias-add" key="social-medias-add">
+          <div
+            class="social-medias-add"
+            key="social-medias-add"
+            :class="{
+              selected: isSelectedAdd
+            }"
+            @click="selectAdd"
+          >
             <el-icon class="icon"><Plus /></el-icon>
           </div>
         </TransitionGroup>
@@ -77,86 +213,128 @@ const submit = async () => {
         <el-button @click="submit" :loading="isSubmiting" type="success" round>
           保存
         </el-button>
-        <el-button @click="initData" type="info" round> 取消 </el-button>
+        <el-button @click="cancel" type="info" round> 取消 </el-button>
       </div>
     </div>
     <div class="control-divider"></div>
-    <div class="control-row info-edit-row">
-      <div class="form-box">
-        <div class="form-row">
-          <el-row :gutter="10">
-            <el-col :span="6">
-              <div class="form-fa-brand">
-                <Transition name="fade-pop" mode="out-in">
-                  <el-icon :class="faClass" size="40" :key="faClass"></el-icon>
-                </Transition>
-              </div>
-            </el-col>
-            <el-col :span="18">
-              <div class="input-lable">描述</div>
-              <el-input
-                v-model="description"
-                placeholder="将会悬停提示"
-                size="large"
-                class="control-input"
-              ></el-input>
-            </el-col>
-          </el-row>
-        </div>
-        <div class="form-row">
-          <div class="input-lable">链接</div>
-          <el-input
-            v-model="link"
-            :prefix-icon="Link"
-            placeholder="链接"
-            size="large"
-            class="control-input"
-          ></el-input>
-        </div>
-      </div>
-      <div class="button-box edit" v-if="mode === 'edit'">
-        <el-button
-          @click="submit"
-          :loading="isSubmiting"
-          type="warning"
-          round
-          size="small"
+    <div
+      class="style-box"
+      :style="{
+        height: boxStyleHeight
+      }"
+    >
+      <Transition name="fade05">
+        <div
+          class="social-medias-edit-box"
+          ref="boxRef"
+          v-if="selectedInfo || isSelectedAdd"
         >
-          修改
-        </el-button>
-        <el-button @click="initData" type="danger" round size="small">
-          移除
-        </el-button>
-        <el-button @click="initData" type="info" round size="small">
-          取消
-        </el-button>
-      </div>
-      <div class="button-box add" v-else>
-        <el-button
-          @click="submit"
-          :loading="isSubmiting"
-          type="primary"
-          round
-          size="small"
-        >
-          添加
-        </el-button>
-        <el-button @click="initData" type="info" round size="small">
-          取消
-        </el-button>
-      </div>
-    </div>
-    <div class="control-divider"></div>
-    <div class="social-medias-select-box">
-      <SocialMediasSelector v-model="selectedFaClass"></SocialMediasSelector>
+          <!-- 信息编辑 -->
+          <Transition name="fade" mode="out-in">
+            <div
+              class="control-row info-edit-row"
+              :key="mode + selectedInfo?.uuid"
+            >
+              <CompleteMessageContainer
+                ref="refCompleteMessageContainer"
+                backgroundColor="var(--color-background-soft)"
+              >
+                <div class="form-box">
+                  <div class="form-row">
+                    <div class="form-fa-brand">
+                      <Transition name="fade-pop" mode="out-in">
+                        <el-icon
+                          :class="faClass"
+                          size="40"
+                          :key="faClass"
+                        ></el-icon>
+                      </Transition>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="input-lable">描述</div>
+                    <el-input
+                      v-model="description"
+                      :prefix-icon="ChatDotSquare"
+                      placeholder="将会悬停提示"
+                      size="large"
+                      class="control-input"
+                    ></el-input>
+                  </div>
+                  <div class="form-row">
+                    <div class="input-lable">链接</div>
+                    <el-input
+                      v-model="link"
+                      :prefix-icon="Link"
+                      placeholder="链接"
+                      size="large"
+                      class="control-input"
+                    ></el-input>
+                  </div>
+                </div>
+                <div class="button-box edit" v-if="mode === 'edit'">
+                  <el-button
+                    @click="updateInfo"
+                    type="warning"
+                    round
+                    size="small"
+                  >
+                    修改
+                  </el-button>
+                  <el-button
+                    @click="removeInfo"
+                    type="danger"
+                    round
+                    size="small"
+                  >
+                    移除
+                  </el-button>
+                  <el-button
+                    @click="mode = 'none'"
+                    type="info"
+                    round
+                    size="small"
+                  >
+                    取消
+                  </el-button>
+                </div>
+                <div class="button-box add" v-else>
+                  <el-button @click="addInfo" type="primary" round size="small">
+                    添加
+                  </el-button>
+                  <el-button
+                    @click="mode = 'none'"
+                    type="info"
+                    round
+                    size="small"
+                  >
+                    取消
+                  </el-button>
+                </div>
+              </CompleteMessageContainer>
+            </div>
+          </Transition>
+          <div class="control-divider"></div>
+          <div class="social-medias-select-box">
+            <SocialMediasSelector
+              v-model="selectedFaClass"
+            ></SocialMediasSelector>
+          </div>
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
 @use '../../../styles/control.scss';
 
+.style-box {
+  overflow: hidden;
+  transition: height 0.8s ease-in-out;
+  // transition: height 1s;
+}
+
 .form-fa-brand {
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,7 +349,7 @@ const submit = async () => {
 }
 
 .info-edit-row {
-  padding-top: 25px;
+  padding-top: 24px;
 }
 
 .social-medias-select-box {

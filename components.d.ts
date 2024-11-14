@@ -12,6 +12,7 @@ declare module 'vue' {
     AvatarSettingDialog: typeof import('./src/components/profile/AvatarSettingDialog.vue')['default']
     Col1Layout: typeof import('./src/components/layout/Col1Layout.vue')['default']
     Col2Layout: typeof import('./src/components/layout/Col2Layout.vue')['default']
+    CompleteMessageContainer: typeof import('./src/components/layout/CompleteMessageContainer.vue')['default']
     DataContainerMountedMask: typeof import('./src/components/layout/DataContainerMountedMask.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']

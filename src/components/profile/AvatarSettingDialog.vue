@@ -8,6 +8,7 @@ import {
   useDialogOptimization,
   sakiMessage
 } from '@/utils'
+import type CompleteMessageContainer from '../layout/CompleteMessageContainer.vue'
 
 const dialogVisible = ref(false)
 
@@ -50,16 +51,17 @@ const initSetting = () => {
 
 const saveSetting = () => {
   profileStore.avatarProcessSettingSave(avatarProcessSetting.value)
-  sakiMessage({
-    type: 'success',
-    message: '已保存'
-  })
+  refCompleteMessageContainer.value?.success()
 }
 
 const resetSetting = () => {
   profileStore.avatarProcessSettingReset()
   initSetting()
 }
+
+const refCompleteMessageContainer = ref<InstanceType<
+  typeof CompleteMessageContainer
+> | null>(null)
 </script>
 <template>
   <div class="avatar-setting-dialog">
@@ -69,62 +71,67 @@ const resetSetting = () => {
       :lock-scroll="false"
       :modal-class="overlayClass"
     >
-      <div class="setting-row setting-center-box">
-        <el-checkbox
-          v-model="avatarProcessSetting.imageProcess"
-          label="对头像进行处理"
-        />
-      </div>
-      <div class="setting-row setting-center-box">
-        <div class="setting-lable">图片格式</div>
-        <div class="setting-input-box">
-          <el-radio-group
-            v-model="avatarProcessSetting.imageType"
-            size="small"
-            :disabled="avatarProcessSetting.imageProcess === false"
-          >
-            <el-radio value="image/png">png</el-radio>
-            <el-radio value="image/jpeg">jpg</el-radio>
-            <el-radio value="image/webp">webp</el-radio>
-          </el-radio-group>
+      <CompleteMessageContainer
+        ref="refCompleteMessageContainer"
+        backgroundColor="var(--el-dialog-bg-color)"
+      >
+        <div class="setting-row setting-center-box">
+          <el-checkbox
+            v-model="avatarProcessSetting.imageProcess"
+            label="对头像进行处理"
+          />
         </div>
-      </div>
-      <Transition name="fade-slide">
-        <div
-          class="setting-row setting-center-box"
-          v-show="
-            avatarProcessSetting.imageType === 'image/jpeg' ||
-            avatarProcessSetting.imageType === 'image/webp'
-          "
-          style="margin-top: -8px"
-        >
-          <div class="setting-lable">图片质量</div>
+        <div class="setting-row setting-center-box">
+          <div class="setting-lable">图片格式</div>
+          <div class="setting-input-box">
+            <el-radio-group
+              v-model="avatarProcessSetting.imageType"
+              size="small"
+              :disabled="avatarProcessSetting.imageProcess === false"
+            >
+              <el-radio value="image/png">png</el-radio>
+              <el-radio value="image/jpeg">jpg</el-radio>
+              <el-radio value="image/webp">webp</el-radio>
+            </el-radio-group>
+          </div>
+        </div>
+        <Transition name="fade-slide">
+          <div
+            class="setting-row setting-center-box"
+            v-show="
+              avatarProcessSetting.imageType === 'image/jpeg' ||
+              avatarProcessSetting.imageType === 'image/webp'
+            "
+            style="margin-top: -8px"
+          >
+            <div class="setting-lable">图片质量</div>
+            <div class="setting-input-box">
+              <el-input-number
+                v-model="avatarProcessSetting.imageQuality"
+                size="small"
+                step-strictly
+                :step="0.01"
+                :precision="2"
+                :min="0.01"
+                :max="1"
+                :disabled="avatarProcessSetting.imageProcess === false"
+              />
+            </div>
+          </div>
+        </Transition>
+        <div class="setting-row setting-center-box">
+          <div class="setting-lable">图片大小（单位px）</div>
           <div class="setting-input-box">
             <el-input-number
-              v-model="avatarProcessSetting.imageQuality"
-              size="small"
+              v-model="avatarProcessSetting.imageWidth"
+              :step="1"
               step-strictly
-              :step="0.01"
-              :precision="2"
-              :min="0.01"
-              :max="1"
+              size="small"
               :disabled="avatarProcessSetting.imageProcess === false"
             />
           </div>
         </div>
-      </Transition>
-      <div class="setting-row setting-center-box">
-        <div class="setting-lable">图片大小（单位px）</div>
-        <div class="setting-input-box">
-          <el-input-number
-            v-model="avatarProcessSetting.imageWidth"
-            :step="1"
-            step-strictly
-            size="small"
-            :disabled="avatarProcessSetting.imageProcess === false"
-          />
-        </div>
-      </div>
+      </CompleteMessageContainer>
       <div class="setting-button-box">
         <el-button type="success" size="small" round @click="saveSetting">
           保存

@@ -142,7 +142,7 @@ const router = createRouter({
       from.matched.some((record) => record.path === '/control') &&
       to.matched.some((record) => record.path === '/control')
     ) {
-      console.log('在控制页 /control 之间切换')
+      // console.log('在控制页 /control 之间切换')
       await new Promise((resolve) => setTimeout(resolve, 300))
       return { top: 0 }
     }

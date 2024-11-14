@@ -38,9 +38,11 @@ onMounted(async () => {
     ]"
   ></MenuBar>
 
-  <div class="container">
-    <router-view></router-view>
-  </div>
+  <DataContainerMountedMask>
+    <div class="container">
+      <router-view></router-view>
+    </div>
+  </DataContainerMountedMask>
 </template>
 
 <style lang="scss" scoped>
