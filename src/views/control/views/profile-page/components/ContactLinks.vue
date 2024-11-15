@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useProfileStore } from '@/stores'
 import type { BackendProfileStore } from '@/types'
-import { sakiMessage, sakiNotification } from '@/utils'
+import { profileIconUrl, sakiMessage, sakiNotification } from '@/utils'
 import {
   Link,
   Plus,
@@ -17,14 +17,21 @@ import { v4 as uuidv4 } from 'uuid'
 import type CompleteMessageContainer from '@/components/layout/CompleteMessageContainer.vue'
 import { cloneDeep } from 'lodash'
 import { profileUpdateSocialMediasApi } from '@/api'
+import { profileConfig } from '@/config'
 
 const profileStore = useProfileStore()
 
-/* 社交媒体 */
-const socialMediasInfo = ref<BackendProfileStore['socialMedias']>([])
+type ExternalLinkItem = BackendProfileStore['externalLinks'][number]
+
+const linkType = 'contact'
+
+/* 联系方式 */
+const externalLinksInfo = ref<BackendProfileStore['externalLinks']>([])
 
 const initData = () => {
-  socialMediasInfo.value = cloneDeep(profileStore.socialMedias)
+  externalLinksInfo.value = cloneDeep(profileStore.externalLinks).filter(
+    (i) => i.type === linkType
+  )
 }
 initData()
 
@@ -46,20 +53,22 @@ const selectedInfo = computed(() => {
   if (mode.value !== 'edit') {
     return null
   }
-  const find = socialMediasInfo.value.find((i) => i.uuid === selectedUuid.value)
+  const find = externalLinksInfo.value.find(
+    (i) => i.uuid === selectedUuid.value
+  )
   if (find === undefined) {
     return null
   }
   return find
 })
 
-const isSelectedEdit = (info: BackendProfileStore['socialMedias'][number]) => {
+const isSelectedEdit = (info: ExternalLinkItem) => {
   return selectedUuid.value === info.uuid && mode.value === 'edit'
 }
 const isSelectedAdd = computed(() => mode.value === 'add')
 
-const selectEdit = (info: BackendProfileStore['socialMedias'][number]) => {
-  console.log(socialMediasInfo.value)
+const selectEdit = (info: ExternalLinkItem) => {
+  console.log(externalLinksInfo.value)
   if (mode.value === 'edit' && selectedUuid.value === info.uuid) {
     mode.value = 'none'
     return
@@ -69,8 +78,8 @@ const selectEdit = (info: BackendProfileStore['socialMedias'][number]) => {
   if (!selectedInfo.value) {
     return
   }
-  selectedFaClass.value = [selectedInfo.value.fontawesomeClass]
-  description.value = selectedInfo.value.description
+  selectedIconUuid.value = [selectedInfo.value.icon]
+  name.value = selectedInfo.value.name
   link.value = selectedInfo.value.link
 }
 const selectAdd = () => {
@@ -79,8 +88,8 @@ const selectAdd = () => {
     return
   }
   mode.value = 'add'
-  selectedFaClass.value = []
-  description.value = ''
+  selectedIconUuid.value = []
+  name.value = ''
   link.value = ''
 }
 
@@ -93,11 +102,11 @@ const isSubmiting = ref(false)
 const submit = async () => {
   isSubmiting.value = true
   try {
-    const res = await profileUpdateSocialMediasApi({
-      socialMedias: socialMediasInfo.value
-    })
-    // 更新store
-    profileStore.loadProfileByRes(res.data.data)
+    // const res = await profileUpdateSocialMediasApi({
+    //   socialMedias: externalLinksInfo.value
+    // })
+    // // 更新store
+    // profileStore.loadProfileByRes(res.data.data)
     sakiMessage({
       type: 'success',
       message: '修改成功'
@@ -108,22 +117,23 @@ const submit = async () => {
 }
 
 /* 信息编辑 */
-const selectedFaClass = ref<string[]>([])
-const faClass = computed(() => {
-  if (selectedFaClass.value.length === 0) {
-    return 'fa-brands fa-font-awesome'
+const selectedIconUuid = ref<string[]>([])
+const selectedIcon = computed(() => {
+  if (selectedIconUuid.value.length === 0) {
+    return null
   }
-  return selectedFaClass.value[0]
+  return profileStore.getExternalIconItemByUuid(selectedIconUuid.value[0])
 })
-const description = ref('')
+const name = ref('')
 const link = ref('')
+const isCircle = ref(false)
 
 const couldLeft = computed(() => {
   if (selectedInfo.value === null) {
     return false
   }
   const info = selectedInfo.value
-  const findIndex = socialMediasInfo.value.findIndex(
+  const findIndex = externalLinksInfo.value.findIndex(
     (i) => i.uuid === info.uuid
   )
   if (findIndex === -1) {
@@ -140,13 +150,13 @@ const couldRight = computed(() => {
     return false
   }
   const info = selectedInfo.value
-  const findIndex = socialMediasInfo.value.findIndex(
+  const findIndex = externalLinksInfo.value.findIndex(
     (i) => i.uuid === info.uuid
   )
   if (findIndex === -1) {
     return false
   }
-  if (findIndex === socialMediasInfo.value.length - 1) {
+  if (findIndex === externalLinksInfo.value.length - 1) {
     return false
   }
   return true
@@ -157,7 +167,7 @@ const moveLeft = () => {
     return
   }
   const info = selectedInfo.value
-  const findIndex = socialMediasInfo.value.findIndex(
+  const findIndex = externalLinksInfo.value.findIndex(
     (i) => i.uuid === info.uuid
   )
   if (findIndex === -1) {
@@ -170,11 +180,11 @@ const moveLeft = () => {
     return findIndex - 1
   })()
 
-  let newList = [...socialMediasInfo.value]
+  let newList = [...externalLinksInfo.value]
   newList = newList.filter((i) => i.uuid !== info.uuid)
   newList.splice(targetIndex, 0, info)
 
-  socialMediasInfo.value = newList
+  externalLinksInfo.value = newList
 }
 
 const moveRight = () => {
@@ -182,72 +192,66 @@ const moveRight = () => {
     return
   }
   const info = selectedInfo.value
-  const findIndex = socialMediasInfo.value.findIndex(
+  const findIndex = externalLinksInfo.value.findIndex(
     (i) => i.uuid === info.uuid
   )
   if (findIndex === -1) {
     return
   }
   const targetIndex = (() => {
-    if (findIndex === socialMediasInfo.value.length - 1) {
+    if (findIndex === externalLinksInfo.value.length - 1) {
       return findIndex
     }
     return findIndex + 1
   })()
 
-  let newList = [...socialMediasInfo.value]
+  let newList = [...externalLinksInfo.value]
   newList = newList.filter((i) => i.uuid !== info.uuid)
   newList.splice(targetIndex, 0, info)
 
-  socialMediasInfo.value = newList
+  externalLinksInfo.value = newList
 }
 
-const isShowedMoreThan4Notification = ref(false)
 const addInfo = async () => {
-  socialMediasInfo.value.push({
+  // if (!selectedIcon.value) {
+  //   return
+  // }
+  externalLinksInfo.value.push({
     uuid: uuidv4(),
-    name: faClass.value,
-    fontawesomeClass: faClass.value,
+    icon: selectedIcon.value?.uuid || '',
     link: link.value,
-    description: description.value
+    name: name.value,
+    description: name.value,
+    isCircle: isCircle.value,
+    type: linkType
   })
-  if (socialMediasInfo.value.length > 4) {
-    ;(() => {
-      if (isShowedMoreThan4Notification.value) {
-        return
-      }
-      isShowedMoreThan4Notification.value = true
-      sakiNotification({
-        type: 'info',
-        title: '关于社交媒体显示',
-        message:
-          '为避免显示问题，菜单栏中将只显示前四个社交媒体标志，完整内容将在关于页底部显示。',
-        duration: 10000
-      })
-    })()
-  }
   refCompleteMessageContainer.value?.success()
   await new Promise((resolve) => setTimeout(resolve, 300))
   mode.value = 'none'
 }
 
 const updateInfo = async () => {
+  // if (!selectedIcon.value) {
+  //   return
+  // }
   if (selectedInfo.value === null) {
     return
   }
   const info = selectedInfo.value
-  const findIndex = socialMediasInfo.value.findIndex(
+  const findIndex = externalLinksInfo.value.findIndex(
     (i) => i.uuid === info.uuid
   )
   if (findIndex === -1) {
     return
   }
-  socialMediasInfo.value[findIndex] = {
+  externalLinksInfo.value[findIndex] = {
     uuid: info.uuid,
-    name: info.name,
-    fontawesomeClass: faClass.value,
+    icon: selectedIcon.value?.uuid || '',
     link: link.value,
-    description: description.value
+    name: name.value,
+    description: name.value,
+    isCircle: isCircle.value,
+    type: linkType
   }
   refCompleteMessageContainer.value?.success()
   await new Promise((resolve) => setTimeout(resolve, 300))
@@ -261,7 +265,7 @@ const removeInfo = async () => {
   // refCompleteMessageContainer.value?.success()
   // await new Promise((resolve) => setTimeout(resolve, 300))
   const info = selectedInfo.value
-  socialMediasInfo.value = socialMediasInfo.value.filter(
+  externalLinksInfo.value = externalLinksInfo.value.filter(
     (i) => i.uuid !== info.uuid
   )
   mode.value = 'none'
@@ -282,38 +286,44 @@ const refCompleteMessageContainer = ref<InstanceType<
 > | null>(null)
 </script>
 <template>
-  <div class="social-medias">
-    <!-- 社交媒体 -->
-    <div class="control-row social-medias-row">
-      <div class="control-lable">修改社交媒体信息</div>
-      <div class="social-medias-group">
+  <div class="contact-link">
+    <!-- 链接信息 -->
+    <div class="control-row external-links-row">
+      <div class="control-lable">修改联系信息</div>
+      <div class="sm-group external-links-group">
         <TransitionGroup name="fade-slide-right-list">
           <div
-            class="social-medias-item"
-            v-for="item in socialMediasInfo"
+            class="sm-item external-links-item"
+            v-for="item in externalLinksInfo"
             :key="item.uuid"
             :class="{
               selected: isSelectedEdit(item)
             }"
             @click="selectEdit(item)"
           >
-            <Transition name="fade-pop" mode="out-in">
-              <el-icon
-                :class="item.fontawesomeClass"
-                size="25"
-                :key="item.fontawesomeClass"
-              ></el-icon>
-            </Transition>
+            <div class="link-box">
+              <div class="avatar-name" :href="item.link" target="_blank">
+                <Transition name="fade-pop" mode="out-in">
+                  <img
+                    class="avatar"
+                    :class="{ circle: item.isCircle }"
+                    :src="profileStore.getIconUrlByLinkItem(item)"
+                    :key="item.icon"
+                  />
+                </Transition>
+                <span class="name">{{ item.name }}</span>
+              </div>
+            </div>
           </div>
           <div
-            class="social-medias-add"
-            key="social-medias-add"
+            class="sm-add external-links-add"
+            key="add"
             :class="{
               selected: isSelectedAdd
             }"
             @click="selectAdd"
           >
-            <el-icon class="icon"><Plus /></el-icon>
+            <el-icon class="icon" size="25"><Plus /></el-icon>
           </div>
         </TransitionGroup>
       </div>
@@ -333,7 +343,7 @@ const refCompleteMessageContainer = ref<InstanceType<
     >
       <Transition name="fade05">
         <div
-          class="social-medias-edit-box"
+          class="external-links-edit-box"
           ref="boxRef"
           v-if="selectedInfo || isSelectedAdd"
         >
@@ -349,7 +359,7 @@ const refCompleteMessageContainer = ref<InstanceType<
               >
                 <div class="form-box">
                   <div class="form-row">
-                    <div class="form-fa-brand">
+                    <div class="form-icon">
                       <div class="left">
                         <Transition name="fade">
                           <el-icon
@@ -362,11 +372,17 @@ const refCompleteMessageContainer = ref<InstanceType<
                         </Transition>
                       </div>
                       <Transition name="fade-pop" mode="out-in">
-                        <el-icon
-                          :class="faClass"
-                          size="40"
-                          :key="faClass"
-                        ></el-icon>
+                        <div :key="selectedIcon?.uuid || 'none'">
+                          <el-avatar
+                            :size="60"
+                            :src="
+                              selectedIcon
+                                ? profileIconUrl(selectedIcon)
+                                : profileConfig.iconDefault
+                            "
+                            :shape="isCircle ? 'circle' : 'square'"
+                          />
+                        </div>
                       </Transition>
                       <div class="right">
                         <Transition name="fade">
@@ -384,7 +400,7 @@ const refCompleteMessageContainer = ref<InstanceType<
                   <div class="form-row">
                     <div class="input-lable">描述</div>
                     <el-input
-                      v-model="description"
+                      v-model="name"
                       :prefix-icon="ChatDotSquare"
                       placeholder="将会悬停提示"
                       size="large"
@@ -445,10 +461,10 @@ const refCompleteMessageContainer = ref<InstanceType<
             </div>
           </Transition>
           <div class="control-divider"></div>
-          <div class="social-medias-select-box">
-            <SocialMediasSelector
-              v-model="selectedFaClass"
-            ></SocialMediasSelector>
+          <div class="sm-select-box external-links-select-box">
+            <!-- <SocialMediasSelector
+              v-model="selectedIconUuid"
+            ></SocialMediasSelector> -->
           </div>
         </div>
       </Transition>
@@ -458,13 +474,19 @@ const refCompleteMessageContainer = ref<InstanceType<
 <style lang="scss" scoped>
 @use '../../../styles/control.scss';
 
+.el-avatar {
+  background-color: transparent;
+  border: 2px solid var(--color-background-mute);
+  transition: border 0.5s;
+}
+
 .style-box {
   overflow: hidden;
   transition: height 0.8s ease-in-out;
   // transition: height 1s;
 }
 
-.form-fa-brand {
+.form-icon {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -506,19 +528,30 @@ const refCompleteMessageContainer = ref<InstanceType<
   padding-top: 24px;
 }
 
-.social-medias-select-box {
+.external-links-select-box {
   padding: 10px;
 }
+// .social-medias-select-box {
+//   padding: 10px;
+// }
 
-.social-medias-group {
+.external-links-group {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-bottom: 18px;
 }
-.social-medias-item {
-  margin: 3px;
+// .social-medias-group {
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: center;
+//   align-items: center;
+//   margin-bottom: 18px;
+// }
+
+.external-links-item {
+  margin: 8px;
   padding: 8px;
   border-radius: 10px;
   transition:
@@ -533,17 +566,58 @@ const refCompleteMessageContainer = ref<InstanceType<
   &.selected {
     background-color: var(--el-color-primary-light-7);
   }
-  .el-icon {
-    display: flex;
+  .link-box {
+    display: block;
+    // margin: 10px;
+    .avatar-name {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--color-text);
+      .avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 4px;
+        &.circle {
+          border-radius: 50%;
+        }
+      }
+      .name {
+        margin-left: 10px;
+        transition: all 0.5s;
+      }
+    }
   }
 }
-.social-medias-add {
+// .social-medias-item {
+//   margin: 3px;
+//   padding: 8px;
+//   border-radius: 10px;
+//   transition:
+//     background-color 0.5s,
+//     color 0.2s,
+//     transform 0.2s;
+//   cursor: pointer;
+//   &:hover {
+//     background-color: var(--color-background-mute);
+//     transform: scale(1.1, 1.1);
+//   }
+//   &.selected {
+//     background-color: var(--el-color-primary-light-7);
+//   }
+//   .el-icon {
+//     display: flex;
+//   }
+// }
+
+.external-links-add {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 41px;
-  height: 41px;
-  margin: 3px;
+  width: 100px;
+  height: 60px;
+  margin: 8px;
   border: 2px dashed var(--el-border-color);
   border-radius: 10px;
   cursor: pointer;
@@ -562,4 +636,29 @@ const refCompleteMessageContainer = ref<InstanceType<
     color: #8c939d;
   }
 }
+// .social-medias-add {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   width: 41px;
+//   height: 41px;
+//   margin: 3px;
+//   border: 2px dashed var(--el-border-color);
+//   border-radius: 10px;
+//   cursor: pointer;
+//   transition:
+//     border var(--el-transition-duration),
+//     background-color 0.5s,
+//     transform 0.2s;
+//   &:hover {
+//     background-color: var(--color-background-mute);
+//     transform: scale(1.05, 1.05);
+//   }
+//   &.selected {
+//     border-color: var(--el-color-primary);
+//   }
+//   .el-icon {
+//     color: #8c939d;
+//   }
+// }
 </style>

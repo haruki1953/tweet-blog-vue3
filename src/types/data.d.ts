@@ -75,7 +75,7 @@ export type BackendProfileStore = {
     description: string
     link: string
     icon: string
-    isRadiu: boolean
+    isCircle: boolean
   }[]
   externalIcons: {
     path: string

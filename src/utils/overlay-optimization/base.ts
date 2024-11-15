@@ -34,19 +34,20 @@ export const optimizationScrollOnOverlayShow = () => {
     }
   })
   // 通知 设置right时会有过渡 效果不好
-  // const notifications = document.querySelectorAll('.el-notification.right')
-  // notifications.forEach((notification) => {
-  //   if (!(notification instanceof HTMLElement)) {
-  //     return
-  //   }
-  //   if (notification.style.left !== '') {
-  //     // 已设置，说明是在禁止滚动时弹出的，恢复为空
-  //     notification.style.right = ''
-  //   } else {
-  //     // 未设置，应向左偏移
-  //     notification.style.right = `calc(16px + ${scrollbarWidth}px)`
-  //   }
-  // })
+  // 已在 src\styles\main.scss 去除right过渡
+  const notifications = document.querySelectorAll('.el-notification.right')
+  notifications.forEach((notification) => {
+    if (!(notification instanceof HTMLElement)) {
+      return
+    }
+    if (notification.style.right !== '') {
+      // 已设置，说明是在禁止滚动时弹出的，恢复为空
+      notification.style.right = ''
+    } else {
+      // 未设置，应向左偏移
+      notification.style.right = `calc(16px + ${scrollbarWidth}px)`
+    }
+  })
 }
 
 export const optimizationScrollOnOverlayClose = () => {
@@ -87,18 +88,18 @@ export const optimizationScrollOnOverlayClose = () => {
       message.style.left = ''
     }
   })
-  // // 通知
-  // const notifications = document.querySelectorAll('.el-notification.right')
-  // notifications.forEach((notification) => {
-  //   if (!(notification instanceof HTMLElement)) {
-  //     return
-  //   }
-  //   if (notification.style.left === '') {
-  //     // 未设置，说明是在禁止滚动时弹出的，应向右偏移
-  //     notification.style.right = `calc(16px - ${scrollbarWidth}px)`
-  //   } else {
-  //     // 已设置，恢复为空
-  //     notification.style.right = ''
-  //   }
-  // })
+  // 通知
+  const notifications = document.querySelectorAll('.el-notification.right')
+  notifications.forEach((notification) => {
+    if (!(notification instanceof HTMLElement)) {
+      return
+    }
+    if (notification.style.right === '') {
+      // 未设置，说明是在禁止滚动时弹出的，应向右偏移
+      notification.style.right = `calc(16px - ${scrollbarWidth}px)`
+    } else {
+      // 已设置，恢复为空
+      notification.style.right = ''
+    }
+  })
 }

@@ -39,3 +39,10 @@ export type ProfileDeleteAvatarNotUsedData = ProfileResData & {
 }
 export type ProfileDeleteAvatarNotUsedRes =
   ResData<ProfileDeleteAvatarNotUsedData>
+
+export type ProfileUpdateSocialMediasJsonType = {
+  socialMedias: BackendProfileStore['socialMedias']
+}
+export type ProfileUpdateSocialMediasData = ProfileResData
+export type ProfileUpdateSocialMediasRes =
+  ResData<ProfileUpdateSocialMediasData>

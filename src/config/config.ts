@@ -26,6 +26,7 @@ export const profileConfig = {
     imageQuality: 0.9,
     imageWidth: 400
   },
+  iconDefault: '',
   // iconUrl: 'http://192.168.2.110:5500/icon/'
   iconUrl: 'http://localhost:5500/icon/'
 }

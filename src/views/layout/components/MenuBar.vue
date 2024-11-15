@@ -5,7 +5,7 @@ import { logoImage } from '@/config'
 import { MoonNight, Sunrise, MoreFilled } from '@element-plus/icons-vue'
 import DecorationDot from './DecorationDot.vue'
 import { webName } from '@/config'
-import { useStatesStore } from '@/stores'
+import { useProfileStore, useStatesStore } from '@/stores'
 import { computed } from 'vue'
 import { watch } from 'vue'
 import { generateRandomClassName, useDrawerOptimization } from '@/utils'
@@ -22,6 +22,7 @@ defineProps<{
 }>()
 
 const statesStore = useStatesStore()
+const profileStore = useProfileStore()
 
 const isDark = useDark({ disableTransition: false })
 const toggleDark = useToggle(isDark)
@@ -84,6 +85,7 @@ watch(
       mode="horizontal"
       :ellipsis="false"
       router
+      class="top-menu-bar"
     >
       <!-- 边距垫片 -->
       <div class="shim"></div>
@@ -113,7 +115,12 @@ watch(
         </el-icon>
         <span>{{ item.title }}</span>
       </el-menu-item>
-      <div class="menu-item switch-item lg">
+      <div
+        class="menu-item switch-item lg"
+        :class="{
+          'not-show-right-border': profileStore.socialMedias.length === 0
+        }"
+      >
         <el-switch
           class="switch-dark"
           size="large"
@@ -125,7 +132,7 @@ watch(
         />
       </div>
       <div class="menu-item link-group-box lg">
-        <LinkGroup></LinkGroup>
+        <SocialMediasGroup limit></SocialMediasGroup>
       </div>
 
       <!-- 小屏显示的内容 sm -->
@@ -192,7 +199,7 @@ watch(
               :inactive-icon="Sunrise"
               @click="toggleDark()"
             />
-            <LinkGroup></LinkGroup>
+            <SocialMediasGroup limit></SocialMediasGroup>
           </div>
         </div>
       </el-drawer>
@@ -244,6 +251,12 @@ watch(
     background-color: transparent;
     border-bottom-color: transparent;
   }
+  &.top-menu-bar {
+    --el-menu-hover-bg-color: transparent;
+    // &:hover {
+    //   background-color: transparent;
+    // }
+  }
   .el-menu-item {
     --el-menu-text-color: var(--color-text);
     user-select: none;
@@ -266,6 +279,9 @@ watch(
     padding: 0 18px;
     border-left: 2px solid var(--color-border); /* 左边框 */
     border-right: 2px solid var(--color-border); /* 右边框 */
+    &.not-show-right-border {
+      border-right: none;
+    }
   }
   .link-group-box {
     margin: 0 20px 0 10px;

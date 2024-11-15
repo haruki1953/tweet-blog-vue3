@@ -3,11 +3,7 @@ import { computed } from 'vue'
 import { ref } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import { useProfileStore } from '@/stores'
-import {
-  generateRandomClassName,
-  useDialogOptimization,
-  sakiMessage
-} from '@/utils'
+import { generateRandomClassName, useDialogOptimization } from '@/utils'
 import type CompleteMessageContainer from '../layout/CompleteMessageContainer.vue'
 
 const dialogVisible = ref(false)

@@ -5,7 +5,9 @@ import type {
   ProfileGetAllRes,
   ProfileUpdateAvatarRes,
   ProfileUpdateNameBioJsonType,
-  ProfileUpdateNameBioRes
+  ProfileUpdateNameBioRes,
+  ProfileUpdateSocialMediasJsonType,
+  ProfileUpdateSocialMediasRes
 } from '@/types'
 import { http } from '@/utils'
 
@@ -46,3 +48,9 @@ export const profileDeleteAvatarNotUsedApi =
   (): ProfileDeleteAvatarNotUsedRes => {
     return http.delete(`/profile/avatar/not-used`)
   }
+
+export const profileUpdateSocialMediasApi = (
+  json: ProfileUpdateSocialMediasJsonType
+): ProfileUpdateSocialMediasRes => {
+  return http.put('/profile/social-medias', json)
+}

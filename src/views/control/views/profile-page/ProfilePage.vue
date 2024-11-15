@@ -2,6 +2,7 @@
 import NameBio from './components/NameBio.vue'
 import AvatarUpdate from './components/AvatarUpdate.vue'
 import SocialMedias from './components/SocialMedias.vue'
+import ContactLinks from './components/ContactLinks.vue'
 </script>
 <template>
   <div class="profile-page">
@@ -17,6 +18,9 @@ import SocialMedias from './components/SocialMedias.vue'
     </div>
     <div class="control-box">
       <SocialMedias></SocialMedias>
+    </div>
+    <div class="control-box">
+      <ContactLinks></ContactLinks>
     </div>
     <PageFooter></PageFooter>
   </div>

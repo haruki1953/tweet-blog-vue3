@@ -4,6 +4,8 @@ import { useLoadModule } from './modules/load'
 import type { BackendProfileStore } from '@/types'
 import { useSettingModule } from './modules/setting'
 import { useSocialMediasModule } from './modules/social-medias'
+import { profileIconUrl } from '@/utils'
+import { profileConfig } from '@/config'
 
 export type ProfileStoreModuleDependencies = {
   postNumber: Ref<number>
@@ -38,6 +40,18 @@ export const useProfileStore = defineStore(
     const aboutMarkdown = computed(() => profile.value?.aboutMarkdown || '')
     const externalLinks = computed(() => profile.value?.externalLinks || [])
     const externalIcons = computed(() => profile.value?.externalIcons || [])
+    const getExternalIconItemByUuid = (uuid: string) => {
+      return externalIcons.value.find((i) => i.uuid === uuid) || null
+    }
+    const getIconUrlByLinkItem = (
+      item: BackendProfileStore['externalLinks'][number]
+    ) => {
+      const icon = getExternalIconItemByUuid(item.icon)
+      if (icon === null) {
+        return profileConfig.iconDefault
+      }
+      return profileIconUrl(icon)
+    }
 
     const dependencies = {
       postNumber,
@@ -64,7 +78,9 @@ export const useProfileStore = defineStore(
       socialMedias,
       aboutMarkdown,
       externalLinks,
-      externalIcons
+      externalIcons,
+      getExternalIconItemByUuid,
+      getIconUrlByLinkItem
     }
   },
   {

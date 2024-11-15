@@ -331,7 +331,7 @@ const imageShowLimitButton = computed(() => {
   // 有了上面的遮罩，图片就不会被拖动
   .el-avatar {
     display: flex;
-    border: 1px solid var(--color-background-mute);
+    border: 2px solid var(--color-background-mute);
     background-color: transparent;
     user-select: none;
     transition:
