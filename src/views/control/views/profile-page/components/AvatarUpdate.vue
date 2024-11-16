@@ -110,6 +110,7 @@ const submit = async () => {
   margin-bottom: 18px;
   .el-avatar {
     background-color: transparent;
+    user-select: none;
   }
 }
 .avatar-select-box {

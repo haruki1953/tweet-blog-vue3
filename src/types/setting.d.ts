@@ -32,5 +32,5 @@ export interface ImageProcessSetting {
   imageQuality: number
   imageWidth: number
 }
-
 export interface AvatarProcessSetting extends ImageProcessSetting {}
+export interface IconProcessSetting extends ImageProcessSetting {}

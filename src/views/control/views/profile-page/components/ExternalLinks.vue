@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useProfileStore } from '@/stores'
 import type { BackendProfileStore } from '@/types'
-import { profileIconUrl, sakiMessage, sakiNotification } from '@/utils'
+import { profileIconUrl, sakiMessage } from '@/utils'
 import {
   Link,
   Plus,
@@ -10,27 +10,34 @@ import {
   ArrowRight
 } from '@element-plus/icons-vue'
 import { useElementSize } from '@vueuse/core'
-import type { Ref } from 'vue'
 import { computed } from 'vue'
 import { ref, watch } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import type CompleteMessageContainer from '@/components/layout/CompleteMessageContainer.vue'
 import { cloneDeep } from 'lodash'
-import { profileUpdateSocialMediasApi } from '@/api'
+import { profileUpdateExternalLinksApi } from '@/api'
 import { profileConfig } from '@/config'
+import type IconSelector from '@/components/profile/IconSelector.vue'
+import { nextTick } from 'vue'
+
+const props = defineProps<{
+  type: BackendProfileStore['externalLinks'][number]['type']
+  title: string
+}>()
 
 const profileStore = useProfileStore()
 
 type ExternalLinkItem = BackendProfileStore['externalLinks'][number]
+type ExternalIconItem = BackendProfileStore['externalIcons'][number]
 
-const linkType = 'contact'
+const linkType = computed(() => props.type)
 
 /* 联系方式 */
 const externalLinksInfo = ref<BackendProfileStore['externalLinks']>([])
 
 const initData = () => {
   externalLinksInfo.value = cloneDeep(profileStore.externalLinks).filter(
-    (i) => i.type === linkType
+    (i) => i.type === linkType.value
   )
 }
 initData()
@@ -67,10 +74,12 @@ const isSelectedEdit = (info: ExternalLinkItem) => {
 }
 const isSelectedAdd = computed(() => mode.value === 'add')
 
-const selectEdit = (info: ExternalLinkItem) => {
+const selectEdit = async (info: ExternalLinkItem) => {
   console.log(externalLinksInfo.value)
   if (mode.value === 'edit' && selectedUuid.value === info.uuid) {
     mode.value = 'none'
+    selectedIconInit.value = undefined
+    selectedIconList.value = []
     return
   }
   selectedUuid.value = info.uuid
@@ -78,9 +87,15 @@ const selectEdit = (info: ExternalLinkItem) => {
   if (!selectedInfo.value) {
     return
   }
-  selectedIconUuid.value = [selectedInfo.value.icon]
   name.value = selectedInfo.value.name
   link.value = selectedInfo.value.link
+  isCircle.value = selectedInfo.value.isCircle
+
+  // 确保选中对应图标
+  selectedIconList.value = []
+  selectedIconInit.value = selectedInfo.value.icon
+  await nextTick()
+  refIconSelector.value?.selectImgById(selectedInfo.value.icon)
 }
 const selectAdd = () => {
   if (mode.value === 'add') {
@@ -88,9 +103,11 @@ const selectAdd = () => {
     return
   }
   mode.value = 'add'
-  selectedIconUuid.value = []
+  selectedIconInit.value = undefined
+  selectedIconList.value = []
   name.value = ''
   link.value = ''
+  isCircle.value = false
 }
 
 const cancel = () => {
@@ -102,11 +119,16 @@ const isSubmiting = ref(false)
 const submit = async () => {
   isSubmiting.value = true
   try {
-    // const res = await profileUpdateSocialMediasApi({
-    //   socialMedias: externalLinksInfo.value
-    // })
-    // // 更新store
-    // profileStore.loadProfileByRes(res.data.data)
+    const externalLinks = [
+      ...profileStore.externalLinks.filter((i) => i.type !== linkType.value),
+      ...externalLinksInfo.value
+    ]
+
+    const res = await profileUpdateExternalLinksApi({
+      externalLinks
+    })
+    // 更新store
+    profileStore.loadProfileByRes(res.data.data)
     sakiMessage({
       type: 'success',
       message: '修改成功'
@@ -117,16 +139,19 @@ const submit = async () => {
 }
 
 /* 信息编辑 */
-const selectedIconUuid = ref<string[]>([])
+const selectedIconInit = ref<string | undefined>(undefined)
+const selectedIconList = ref<ExternalIconItem[]>([])
 const selectedIcon = computed(() => {
-  if (selectedIconUuid.value.length === 0) {
+  if (selectedIconList.value.length === 0) {
     return null
   }
-  return profileStore.getExternalIconItemByUuid(selectedIconUuid.value[0])
+  return selectedIconList.value[0]
 })
 const name = ref('')
 const link = ref('')
 const isCircle = ref(false)
+
+const refIconSelector = ref<InstanceType<typeof IconSelector> | null>(null)
 
 const couldLeft = computed(() => {
   if (selectedInfo.value === null) {
@@ -223,7 +248,7 @@ const addInfo = async () => {
     name: name.value,
     description: name.value,
     isCircle: isCircle.value,
-    type: linkType
+    type: linkType.value
   })
   refCompleteMessageContainer.value?.success()
   await new Promise((resolve) => setTimeout(resolve, 300))
@@ -251,7 +276,7 @@ const updateInfo = async () => {
     name: name.value,
     description: name.value,
     isCircle: isCircle.value,
-    type: linkType
+    type: linkType.value
   }
   refCompleteMessageContainer.value?.success()
   await new Promise((resolve) => setTimeout(resolve, 300))
@@ -286,10 +311,10 @@ const refCompleteMessageContainer = ref<InstanceType<
 > | null>(null)
 </script>
 <template>
-  <div class="contact-link">
+  <div class="external-links">
     <!-- 链接信息 -->
     <div class="control-row external-links-row">
-      <div class="control-lable">修改联系信息</div>
+      <div class="control-lable">{{ title }}</div>
       <div class="sm-group external-links-group">
         <TransitionGroup name="fade-slide-right-list">
           <div
@@ -304,14 +329,17 @@ const refCompleteMessageContainer = ref<InstanceType<
             <div class="link-box">
               <div class="avatar-name" :href="item.link" target="_blank">
                 <Transition name="fade-pop" mode="out-in">
-                  <img
-                    class="avatar"
-                    :class="{ circle: item.isCircle }"
-                    :src="profileStore.getIconUrlByLinkItem(item)"
-                    :key="item.icon"
-                  />
+                  <div class="avatar-box" :key="item.icon">
+                    <img
+                      class="avatar"
+                      :class="{ circle: item.isCircle }"
+                      :src="profileStore.getIconUrlByLinkItem(item)"
+                    />
+                  </div>
                 </Transition>
-                <span class="name">{{ item.name }}</span>
+                <span class="name" v-if="item.name !== ''">{{
+                  item.name
+                }}</span>
               </div>
             </div>
           </div>
@@ -398,11 +426,19 @@ const refCompleteMessageContainer = ref<InstanceType<
                     </div>
                   </div>
                   <div class="form-row">
-                    <div class="input-lable">描述</div>
+                    <div class="control-radio">
+                      <el-radio-group v-model="isCircle">
+                        <el-radio :value="true"> 圆形 </el-radio>
+                        <el-radio :value="false"> 方形 </el-radio>
+                      </el-radio-group>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="input-lable">名称</div>
                     <el-input
                       v-model="name"
                       :prefix-icon="ChatDotSquare"
-                      placeholder="将会悬停提示"
+                      placeholder="名称"
                       size="large"
                       class="control-input"
                     ></el-input>
@@ -462,9 +498,11 @@ const refCompleteMessageContainer = ref<InstanceType<
           </Transition>
           <div class="control-divider"></div>
           <div class="sm-select-box external-links-select-box">
-            <!-- <SocialMediasSelector
-              v-model="selectedIconUuid"
-            ></SocialMediasSelector> -->
+            <IconSelector
+              v-model="selectedIconList"
+              ref="refIconSelector"
+              :initUuid="selectedIconInit"
+            ></IconSelector>
           </div>
         </div>
       </Transition>
@@ -477,7 +515,10 @@ const refCompleteMessageContainer = ref<InstanceType<
 .el-avatar {
   background-color: transparent;
   border: 2px solid var(--color-background-mute);
-  transition: border 0.5s;
+  transition:
+    border 0.5s,
+    border-radius 0.5s;
+  user-select: none;
 }
 
 .style-box {
@@ -531,9 +572,6 @@ const refCompleteMessageContainer = ref<InstanceType<
 .external-links-select-box {
   padding: 10px;
 }
-// .social-medias-select-box {
-//   padding: 10px;
-// }
 
 .external-links-group {
   display: flex;
@@ -542,17 +580,10 @@ const refCompleteMessageContainer = ref<InstanceType<
   align-items: center;
   margin-bottom: 18px;
 }
-// .social-medias-group {
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: center;
-//   align-items: center;
-//   margin-bottom: 18px;
-// }
 
 .external-links-item {
   margin: 8px;
-  padding: 8px;
+  padding: 8px 10px;
   border-radius: 10px;
   transition:
     background-color 0.5s,
@@ -569,47 +600,33 @@ const refCompleteMessageContainer = ref<InstanceType<
   .link-box {
     display: block;
     // margin: 10px;
+    user-select: none;
     .avatar-name {
       height: 44px;
       display: flex;
       align-items: center;
       text-decoration: none;
       color: var(--color-text);
+      .avatar-box {
+        display: flex;
+        align-items: center;
+      }
       .avatar {
         width: 44px;
         height: 44px;
         border-radius: 4px;
+        transition: border-radius 0.5s;
         &.circle {
           border-radius: 50%;
         }
       }
       .name {
-        margin-left: 10px;
+        margin: 0 0 0 10px;
         transition: all 0.5s;
       }
     }
   }
 }
-// .social-medias-item {
-//   margin: 3px;
-//   padding: 8px;
-//   border-radius: 10px;
-//   transition:
-//     background-color 0.5s,
-//     color 0.2s,
-//     transform 0.2s;
-//   cursor: pointer;
-//   &:hover {
-//     background-color: var(--color-background-mute);
-//     transform: scale(1.1, 1.1);
-//   }
-//   &.selected {
-//     background-color: var(--el-color-primary-light-7);
-//   }
-//   .el-icon {
-//     display: flex;
-//   }
-// }
 
 .external-links-add {
   display: flex;
@@ -636,29 +653,4 @@ const refCompleteMessageContainer = ref<InstanceType<
     color: #8c939d;
   }
 }
-// .social-medias-add {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   width: 41px;
-//   height: 41px;
-//   margin: 3px;
-//   border: 2px dashed var(--el-border-color);
-//   border-radius: 10px;
-//   cursor: pointer;
-//   transition:
-//     border var(--el-transition-duration),
-//     background-color 0.5s,
-//     transform 0.2s;
-//   &:hover {
-//     background-color: var(--color-background-mute);
-//     transform: scale(1.05, 1.05);
-//   }
-//   &.selected {
-//     border-color: var(--el-color-primary);
-//   }
-//   .el-icon {
-//     color: #8c939d;
-//   }
-// }
 </style>

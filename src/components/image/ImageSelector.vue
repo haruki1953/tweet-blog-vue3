@@ -183,7 +183,7 @@ defineExpose({
     --border-radius-val: 5px;
     aspect-ratio: var(--aspect-ratio-val);
     border-radius: var(--border-radius-val);
-    border: 1px solid var(--color-background-mute);
+    border: 2px solid var(--color-background-mute);
     user-select: none;
     transition:
       transform 0.2s,

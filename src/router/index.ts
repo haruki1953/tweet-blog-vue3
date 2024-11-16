@@ -19,7 +19,7 @@ import ForwardConfig from '@/views/control/views/ForwardConfig.vue'
 import TweetImport from '@/views/control/views/TweetImport.vue'
 import LogPage from '@/views/control/views/LogPage.vue'
 
-import { useImageStore, usePostStore } from '@/stores'
+import { useImageStore, usePostStore, useProfileStore } from '@/stores'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -159,11 +159,14 @@ router.beforeEach((to) => {
   // 路由加载标识
   isLoading.value = true
 
+  const profileStore = useProfileStore()
+  const title = profileStore.name || webName
+
   // 根据路由设置页面标题
   if (to.meta.title) {
-    document.title = (to.meta.title as string) + ' | ' + webName
+    document.title = (to.meta.title as string) + ' | ' + title
   } else {
-    document.title = webName
+    document.title = title
   }
 
   // 路由不存在，拦截到首页

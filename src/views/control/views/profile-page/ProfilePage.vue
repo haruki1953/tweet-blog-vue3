@@ -2,7 +2,7 @@
 import NameBio from './components/NameBio.vue'
 import AvatarUpdate from './components/AvatarUpdate.vue'
 import SocialMedias from './components/SocialMedias.vue'
-import ContactLinks from './components/ContactLinks.vue'
+import ExternalLinks from './components/ExternalLinks.vue'
 </script>
 <template>
   <div class="profile-page">
@@ -20,7 +20,10 @@ import ContactLinks from './components/ContactLinks.vue'
       <SocialMedias></SocialMedias>
     </div>
     <div class="control-box">
-      <ContactLinks></ContactLinks>
+      <ExternalLinks type="contact" title="修改联系信息"></ExternalLinks>
+    </div>
+    <div class="control-box">
+      <ExternalLinks type="friend" title="修改友情链接"></ExternalLinks>
     </div>
     <PageFooter></PageFooter>
   </div>

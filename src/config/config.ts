@@ -15,9 +15,14 @@ export const axiosConfig = {
   timeout: 20000
 }
 
+export const webName = 'tweet-blog'
+
+// logo图标
+import logoImage from '@/assets/logo.png'
+export { logoImage }
+
 export const profileConfig = {
-  // nameDefault: 'tweet-blog',
-  avatarDefault: '',
+  avatarDefault: logoImage,
   // avatarUrl: 'http://192.168.2.110:5500/avatar/',
   avatarUrl: 'http://localhost:5500/avatar/',
   avatarProcessSettingDefault: {
@@ -26,9 +31,15 @@ export const profileConfig = {
     imageQuality: 0.9,
     imageWidth: 400
   },
-  iconDefault: '',
-  // iconUrl: 'http://192.168.2.110:5500/icon/'
-  iconUrl: 'http://localhost:5500/icon/'
+  iconDefault: logoImage,
+  // iconUrl: 'http://192.168.2.110:5500/icon/',
+  iconUrl: 'http://localhost:5500/icon/',
+  iconProcessSettingDefault: {
+    imageProcess: true,
+    imageType: 'image/jpeg' as const,
+    imageQuality: 0.9,
+    imageWidth: 200
+  }
 }
 
 // const imageBaseUrl = 'http://192.168.2.110:5500/image/'
@@ -73,16 +84,9 @@ export const postConfig = {
   remainingCharsToWarning: 20
 }
 
-export const webName = '小祥の博客'
-
-// logo图标
-import logoImage from '@/assets/logo.png'
-export { logoImage }
-
 // 海报 占位 失败
 import sakiPlaceholder from '@/assets/saki-placeholder.jpg'
 import sakiError from '@/assets/saki-error.jpg'
-import { version } from 'vue'
 export { sakiPlaceholder, sakiError }
 
 interface LinkInfo {
