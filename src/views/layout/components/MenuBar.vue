@@ -21,7 +21,6 @@ defineProps<{
   }[]
 }>()
 
-const statesStore = useStatesStore()
 const profileStore = useProfileStore()
 
 const isDark = useDark({ disableTransition: false })
@@ -53,29 +52,10 @@ const menuDrawerSelect = async (index: string) => {
   router.push(index)
 }
 
+const refDecorationDot = ref<InstanceType<typeof DecorationDot> | null>(null)
 const shouldDecorationDotHidden = computed(() => {
-  const isShould = !arrivedState.top && !statesStore.isLoadingData
-  return isShould
+  return !arrivedState.top && !refDecorationDot.value?.loading
 })
-const limitedSDDH = ref(false)
-const isUpdateing = ref(false)
-
-watch(
-  shouldDecorationDotHidden,
-  async () => {
-    if (isUpdateing.value) return
-    isUpdateing.value = true
-    limitedSDDH.value = shouldDecorationDotHidden.value
-    if (statesStore.isLoadingData) {
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-    } else {
-      await new Promise((resolve) => setTimeout(resolve, 300))
-    }
-    limitedSDDH.value = shouldDecorationDotHidden.value
-    isUpdateing.value = false
-  },
-  { immediate: true }
-)
 </script>
 <template>
   <div class="menu-bar">
@@ -140,10 +120,14 @@ watch(
       <div class="menu-item decoration-item sm">
         <DecorationDot
           class="decoration-dot"
-          :class="{ hidden: limitedSDDH }"
+          :class="{ hidden: shouldDecorationDotHidden }"
+          ref="refDecorationDot"
         ></DecorationDot>
-        <div class="decoration-text" :class="{ show: limitedSDDH }">
-          {{ $route.meta.title || webName }}
+        <div
+          class="decoration-text"
+          :class="{ show: shouldDecorationDotHidden }"
+        >
+          {{ $route.meta.title || profileStore.name || webName }}
         </div>
       </div>
       <div class="flex-grow sm"></div>

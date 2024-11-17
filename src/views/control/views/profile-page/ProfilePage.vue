@@ -3,6 +3,7 @@ import NameBio from './components/NameBio.vue'
 import AvatarUpdate from './components/AvatarUpdate.vue'
 import SocialMedias from './components/SocialMedias.vue'
 import ExternalLinks from './components/ExternalLinks.vue'
+import AboutMarkdown from './components/AboutMarkdown.vue'
 </script>
 <template>
   <div class="profile-page">
@@ -24,6 +25,13 @@ import ExternalLinks from './components/ExternalLinks.vue'
     </div>
     <div class="control-box">
       <ExternalLinks type="friend" title="修改友情链接"></ExternalLinks>
+    </div>
+    <div class="control-box">
+      <div class="control-row">
+        <AboutMarkdown></AboutMarkdown>
+      </div>
+      <!-- <div class="control-divider"></div>
+      <div class="control-row decoration"></div> -->
     </div>
     <PageFooter></PageFooter>
   </div>
