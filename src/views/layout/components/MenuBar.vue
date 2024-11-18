@@ -173,7 +173,12 @@ const shouldDecorationDotHidden = computed(() => {
               <span>{{ item.title }}</span>
             </el-menu-item>
           </el-menu>
-          <div class="dark-link">
+          <div
+            class="dark-link"
+            :class="{
+              center: profileStore.socialMedias.length === 0
+            }"
+          >
             <el-switch
               class="switch-dark"
               size="large"
@@ -263,6 +268,7 @@ const shouldDecorationDotHidden = computed(() => {
     padding: 0 18px;
     border-left: 2px solid var(--color-border); /* 左边框 */
     border-right: 2px solid var(--color-border); /* 右边框 */
+    transition: all 0.5s;
     &.not-show-right-border {
       border-right: none;
     }
@@ -354,6 +360,9 @@ const shouldDecorationDotHidden = computed(() => {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      &.center {
+        justify-content: center;
+      }
     }
   }
 }

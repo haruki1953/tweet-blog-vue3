@@ -14,7 +14,6 @@ import ControlPage from '@/views/control/ControlPage.vue'
 import SystemPage from '@/views/control/views/system-page/SystemPage.vue'
 import ProfilePage from '@/views/control/views/profile-page/ProfilePage.vue'
 
-import ImageConfig from '@/views/control/views/ImageConfig.vue'
 import ForwardConfig from '@/views/control/views/ForwardConfig.vue'
 import TweetImport from '@/views/control/views/TweetImport.vue'
 import LogPage from '@/views/control/views/LogPage.vue'
@@ -79,12 +78,6 @@ const router = createRouter({
               path: '/profile',
               component: ProfilePage,
               meta: { title: `个人信息` }
-            },
-            {
-              name: 'image-config',
-              path: '/image-config',
-              component: ImageConfig,
-              meta: { title: `图片设置` }
             },
             {
               name: 'forward-config',

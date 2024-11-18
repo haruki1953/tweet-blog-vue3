@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import AdminInfo from './components/AdminInfo.vue'
 import AuthUpdate from './components/AuthUpdate.vue'
+import ImageConfig from './components/ImageConfig.vue'
+import ImageNotUsedDelete from './components/ImageNotUsedDelete.vue'
+import ImageAllOriginalDelete from './components/ImageAllOriginalDelete.vue'
 </script>
 <template>
   <div class="system-page">
@@ -11,6 +14,19 @@ import AuthUpdate from './components/AuthUpdate.vue'
       <div class="control-divider"></div>
       <div class="control-row">
         <AdminInfo></AdminInfo>
+      </div>
+    </div>
+    <div class="control-box">
+      <div class="control-row">
+        <ImageConfig></ImageConfig>
+      </div>
+      <div class="control-divider"></div>
+      <div class="control-row">
+        <ImageNotUsedDelete></ImageNotUsedDelete>
+      </div>
+      <div class="control-divider"></div>
+      <div class="control-row">
+        <ImageAllOriginalDelete></ImageAllOriginalDelete>
       </div>
     </div>
     <PageFooter></PageFooter>

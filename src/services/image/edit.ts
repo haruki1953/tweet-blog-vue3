@@ -1,5 +1,5 @@
 import { imageDeleteApi, imageDeleteOriginalApi, imageUpdateApi } from '@/api'
-import { useImageStore } from '@/stores'
+import { useImageStore, useProfileStore } from '@/stores'
 import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
 import {
   manageRefDataImageAfterDeleteImage,
@@ -18,6 +18,7 @@ export const useImageEditService = (dependencies: {
   const { selectedImages, formModel, isIndexAble, imageByIndex } = dependencies
 
   const imageStore = useImageStore()
+  const profileStore = useProfileStore()
 
   // 修改图片信息
   const isSending = ref(false)
@@ -84,6 +85,8 @@ export const useImageEditService = (dependencies: {
         { imageList: selectedImages },
         resImage
       )
+      // 删除图片后，重新获取个人信息中的图片数量
+      profileStore.loadAll()
 
       sakiMessage({
         type: 'success',

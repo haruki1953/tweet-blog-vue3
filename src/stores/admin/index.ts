@@ -7,21 +7,33 @@ export type AdminStoreModuleDependencies = {
   jwtAdminExpSeconds: Ref<number | null>
   loginMaxFailCount: Ref<number | null>
   loginLockSeconds: Ref<number | null>
+  imageLargeMaxLength: Ref<number | null>
+  imageSmallMaxLength: Ref<number | null>
+  imageQuality: Ref<number | null>
 }
 
 export const useAdminStore = defineStore(
   'tweet-admin',
   () => {
+    // 系统配置
     const isAuthDefault = ref<boolean | null>(null)
     const jwtAdminExpSeconds = ref<number | null>(null)
     const loginMaxFailCount = ref<number | null>(null)
     const loginLockSeconds = ref<number | null>(null)
 
+    // 图片配置
+    const imageLargeMaxLength = ref<number | null>(null)
+    const imageSmallMaxLength = ref<number | null>(null)
+    const imageQuality = ref<number | null>(null)
+
     const dependencies = {
       isAuthDefault,
       jwtAdminExpSeconds,
       loginMaxFailCount,
-      loginLockSeconds
+      loginLockSeconds,
+      imageLargeMaxLength,
+      imageSmallMaxLength,
+      imageQuality
     }
 
     const loadModule = useLoadModule(dependencies)
@@ -31,7 +43,10 @@ export const useAdminStore = defineStore(
       isAuthDefault,
       jwtAdminExpSeconds,
       loginMaxFailCount,
-      loginLockSeconds
+      loginLockSeconds,
+      imageLargeMaxLength,
+      imageSmallMaxLength,
+      imageQuality
     }
   },
   {

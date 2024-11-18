@@ -1,5 +1,5 @@
 import { profileGetAllApi } from '@/api'
-import { computed, ref, type Ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { ProfileStoreModuleDependencies } from '..'
 import type { ProfileResData } from '@/types'
 

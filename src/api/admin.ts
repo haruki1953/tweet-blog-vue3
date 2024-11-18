@@ -1,4 +1,12 @@
-import type { AdminGetInfoRes, AdminUpdateInfoJsonType, ResData } from '@/types'
+import type {
+  AdminDeleteAllOriginalImageRes,
+  AdminDeleteNotUsedImageRes,
+  AdminGatImageConfigRes,
+  AdminGetInfoRes,
+  AdminUpdateImageConfigJsonType,
+  AdminUpdateInfoJsonType,
+  ResData
+} from '@/types'
 import { http } from '@/utils'
 
 type AdminLoginJsonType = {
@@ -26,3 +34,22 @@ export const adminGetInfoApi = (): AdminGetInfoRes => {
 export const adminUpdateInfoApi = (json: AdminUpdateInfoJsonType) => {
   return http.put('/admin/info', json)
 }
+
+export const adminGetImageConfigApi = (): AdminGatImageConfigRes => {
+  return http.get('/image/config')
+}
+
+export const adminUpdateImageConfigApi = (
+  json: AdminUpdateImageConfigJsonType
+) => {
+  return http.put('/image/config', json)
+}
+
+export const adminDeleteNotUsedImageApi = (): AdminDeleteNotUsedImageRes => {
+  return http.delete('/image/all')
+}
+
+export const adminDeleteAllOriginalImageApi =
+  (): AdminDeleteAllOriginalImageRes => {
+    return http.delete('/image/original/all')
+  }

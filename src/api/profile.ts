@@ -12,7 +12,9 @@ import type {
   ProfileUpdateNameBioJsonType,
   ProfileUpdateNameBioRes,
   ProfileUpdateSocialMediasJsonType,
-  ProfileUpdateSocialMediasRes
+  ProfileUpdateSocialMediasRes,
+  profileUpdateAboutMdJsonType,
+  profileUpdateAboutMdRes
 } from '@/types'
 import { http } from '@/utils'
 
@@ -82,4 +84,10 @@ export const profileUpdateExternalLinksApi = (
   json: ProfileUpdateExternalLinksJsonType
 ): ProfileUpdateExternalLinksRes => {
   return http.put('/profile/external-links', json)
+}
+
+export const profileUpdateAboutMdApi = (
+  json: profileUpdateAboutMdJsonType
+): profileUpdateAboutMdRes => {
+  return http.put('/profile/about-md', json)
 }

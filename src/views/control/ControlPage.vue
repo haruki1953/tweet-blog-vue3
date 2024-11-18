@@ -32,15 +32,6 @@ const menu: IconMenuItem[] = [
     }
   },
   {
-    index: '/image-config',
-    title: `图片设置`,
-    icon: Picture,
-    actionColor: 'primary',
-    onClick() {
-      router.push('/image-config')
-    }
-  },
-  {
     index: '/forward-config',
     title: `转发设置`,
     icon: Connection,

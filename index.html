@@ -52,7 +52,6 @@
     }
 
     #index-loading {
-      opacity: 1;
       transition: opacity 0.3s;
     }
 
@@ -126,6 +125,9 @@
     if (scheme === 'dark' || (scheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     }
+
+    // 禁用滚动，在 App.vue 中恢复，同时防止抖动
+    document.documentElement.style.overflowY = 'hidden'
   </script>
 </head>
 

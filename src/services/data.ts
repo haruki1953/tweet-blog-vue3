@@ -28,7 +28,8 @@ export const dataFirstLoadService = async () => {
     postStore.reGetPosts(),
     imageStore.reGetImages(),
     profileStore.loadAll(),
-    adminStore.loadInfo()
+    adminStore.loadInfo(),
+    adminStore.loadImageConfig()
   ])
   statesStore.setFirstDataLoading(false)
 }

@@ -1,4 +1,4 @@
-import { adminGetInfoApi } from '@/api'
+import { adminGetImageConfigApi, adminGetInfoApi } from '@/api'
 import type { AdminStoreModuleDependencies } from '..'
 import { sakiNotification } from '@/utils'
 import { computed, ref } from 'vue'
@@ -8,7 +8,10 @@ export const useLoadModule = (dependencies: AdminStoreModuleDependencies) => {
     isAuthDefault,
     jwtAdminExpSeconds,
     loginMaxFailCount,
-    loginLockSeconds
+    loginLockSeconds,
+    imageLargeMaxLength,
+    imageSmallMaxLength,
+    imageQuality
   } = dependencies
 
   const loadingMark = ref<boolean>(false)
@@ -31,9 +34,22 @@ export const useLoadModule = (dependencies: AdminStoreModuleDependencies) => {
     loadingMark.value = false
   }
 
+  const loadingMarkImageConfig = ref<boolean>(false)
+  const isLoadingImageConfig = computed(() => loadingMark.value)
+
+  const loadImageConfig = async () => {
+    loadingMarkImageConfig.value = true
+    const res = await adminGetImageConfigApi()
+    imageLargeMaxLength.value = res.data.data.imageLargeMaxLength
+    imageSmallMaxLength.value = res.data.data.imageSmallMaxLength
+    imageQuality.value = res.data.data.imageQuality
+    loadingMarkImageConfig.value = false
+  }
+
   return {
-    //
     isLoading,
-    loadInfo
+    loadInfo,
+    isLoadingImageConfig,
+    loadImageConfig
   }
 }

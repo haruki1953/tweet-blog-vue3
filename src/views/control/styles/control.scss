@@ -8,10 +8,12 @@
     margin-bottom: 4px;
   }
 }
-
 @media (max-width: 500px) {
   .button-box {
     justify-content: center;
+  }
+  .button-box.not-center {
+    justify-content: flex-end;
   }
 }
 

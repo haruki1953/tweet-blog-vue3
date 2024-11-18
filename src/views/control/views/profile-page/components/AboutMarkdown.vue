@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { profileUpdateNameBioApi } from '@/api'
+import { profileUpdateAboutMdApi } from '@/api'
 import { useProfileStore } from '@/stores'
 import { sakiMessage } from '@/utils'
-import { House } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
 
 const profileStore = useProfileStore()
@@ -28,12 +27,11 @@ const isSubmiting = ref(false)
 const submit = async () => {
   isSubmiting.value = true
   try {
-    // const res = await profileUpdateNameBioApi({
-    //   name: name.value,
-    //   bio: bio.value
-    // })
-    // // 更新store
-    // profileStore.loadProfileByRes(res.data.data)
+    const res = await profileUpdateAboutMdApi({
+      aboutMarkdown: aboutMarkdown.value
+    })
+    // 更新store
+    profileStore.loadProfileByRes(res.data.data)
     sakiMessage({
       type: 'success',
       message: '修改成功'

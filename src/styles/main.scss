@@ -60,27 +60,34 @@ $dark-steps: 1, 2, 3, 4, 5, 6, 7, 8, 9;
 
 .el-message.el-message {
   border-radius: 20px;
-  transition: 
+  transition:
     box-shadow .5s,
     border .5s,
-    background-color .5s, 
-    opacity var(--el-transition-duration), 
-    transform .4s, 
+    background-color .5s,
+    opacity var(--el-transition-duration),
+    transform .4s,
     top .4s;
   box-shadow: var(--el-box-shadow-light);
   --el-message-bg-color: var(--color-background-soft);
-  --el-message-border-color: transparent; 
+  --el-message-border-color: transparent;
+
+  .el-message__badge {
+    .el-badge__content {
+      transition:
+        border 0.5s;
+    }
+  }
 }
 
 .el-notification.right {
-  transition: 
+  transition:
     box-shadow .5s,
     border .5s,
-    background-color .5s, 
-    opacity var(--el-transition-duration), 
-    transform var(--el-transition-duration), 
-    left var(--el-transition-duration), 
+    background-color .5s,
+    opacity var(--el-transition-duration),
+    transform var(--el-transition-duration),
+    left var(--el-transition-duration),
     // right var(--el-transition-duration), 
-    top .4s, 
+    top .4s,
     bottom var(--el-transition-duration);
 }
