@@ -318,7 +318,7 @@ const refCompleteMessageContainer = ref<InstanceType<
       <div class="sm-group external-links-group">
         <TransitionGroup name="fade-slide-right-list">
           <div
-            class="sm-item external-links-item"
+            class="external-links-item"
             v-for="item in externalLinksInfo"
             :key="item.uuid"
             :class="{

@@ -46,6 +46,7 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    ExternalLinksGroup: typeof import('./src/components/profile/ExternalLinksGroup.vue')['default']
     IconEditDialog: typeof import('./src/components/profile/IconEditDialog.vue')['default']
     IconMenuBox: typeof import('./src/components/layout/IconMenuBox.vue')['default']
     IconSelector: typeof import('./src/components/profile/IconSelector.vue')['default']

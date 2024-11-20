@@ -10,6 +10,7 @@ import SendPage from '@/views/post/SendPage.vue'
 import PostPage from '@/views/post/PostPage.vue'
 import AlbumPage from '@/views/image/AlbumPage.vue'
 import ControlPage from '@/views/control/ControlPage.vue'
+import AboutPage from '@/views/about/AboutPage.vue'
 
 import SystemPage from '@/views/control/views/system-page/SystemPage.vue'
 import ProfilePage from '@/views/control/views/profile-page/ProfilePage.vue'
@@ -98,6 +99,12 @@ const router = createRouter({
               meta: { title: `日志` }
             }
           ]
+        },
+        {
+          name: 'about',
+          path: '/about',
+          component: AboutPage,
+          meta: { title: `关于` }
         }
       ]
     }

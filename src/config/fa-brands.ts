@@ -372,6 +372,7 @@ export const faBrandsNameList = [
   'first-order',
   'firefox-browser',
   'firefox',
+  'files-pinwheel',
   'fedora',
   'fedex',
   'fantasy-flight-games',

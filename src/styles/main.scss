@@ -73,8 +73,8 @@ $dark-steps: 1, 2, 3, 4, 5, 6, 7, 8, 9;
 
   .el-message__badge {
     .el-badge__content {
-      transition:
-        border 0.5s;
+      // transition: border 0.5s;
+      border: none;
     }
   }
 }

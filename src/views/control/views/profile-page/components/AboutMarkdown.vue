@@ -51,7 +51,7 @@ const submit = async () => {
           v-model="aboutMarkdown"
           placeholder="# Markdown"
           type="textarea"
-          :autosize="{ minRows: 10, maxRows: 30 }"
+          :autosize="{ minRows: 10, maxRows: 20 }"
           resize="none"
           class="control-textarea"
         ></el-input>
