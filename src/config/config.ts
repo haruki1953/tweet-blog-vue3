@@ -1,6 +1,6 @@
 export const appInfo = {
   copyright: {
-    text: 'tweet-blog',
+    text: 'Tweblog',
     link: '/'
   },
   version: {
@@ -15,10 +15,11 @@ export const axiosConfig = {
   timeout: 20000
 }
 
-export const webName = 'tweet-blog'
+export const webName = 'Tweblog'
 
 // logo图标
-import logoImage from '@/assets/logo.png'
+// import logoImage from '@/assets/logo.png'
+import logoImage from '@/assets/icon2x.png'
 export { logoImage }
 
 export const profileConfig = {
