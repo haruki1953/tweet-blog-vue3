@@ -14,7 +14,6 @@ declare module 'vue' {
     Col2Layout: typeof import('./src/components/layout/Col2Layout.vue')['default']
     CompleteMessageContainer: typeof import('./src/components/layout/CompleteMessageContainer.vue')['default']
     ConfirmContainer: typeof import('./src/components/layout/ConfirmContainer.vue')['default']
-    copy: typeof import('./src/components/profile/AvatarSettingDialog copy.vue')['default']
     DataContainerMountedMask: typeof import('./src/components/layout/DataContainerMountedMask.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']

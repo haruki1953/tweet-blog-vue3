@@ -127,7 +127,9 @@ const shouldDecorationDotHidden = computed(() => {
           class="decoration-text"
           :class="{ show: shouldDecorationDotHidden }"
         >
-          {{ $route.meta.title || profileStore.name || webName }}
+          <div class="text-box">
+            {{ $route.meta.title || profileStore.name || webName }}
+          </div>
         </div>
       </div>
       <div class="flex-grow sm"></div>
@@ -276,38 +278,56 @@ const shouldDecorationDotHidden = computed(() => {
   .link-group-box {
     margin: 0 20px 0 10px;
   }
-  .decoration-item {
-    position: relative;
-    margin: 0 10px;
-    // overflow: hidden;
-    .decoration-dot {
-      transition: all 0.5s;
-      &.hidden {
-        transform: translateY(-60px);
-      }
+}
+.decoration-item {
+  position: relative;
+  margin: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // overflow: hidden;
+  .decoration-dot {
+    transition: all 0.5s;
+    &.hidden {
+      transform: translateY(-60px);
     }
-    .decoration-text {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: absolute;
-      top: 0;
-      left: 0;
+  }
+  .decoration-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 允许点击穿透蒙版 */
+    transform: translateY(60px);
+    transition: all 0.5s;
+    font-size: 18px;
+    font-weight: bold;
+    opacity: 0;
+    &.show {
+      transform: translateY(0);
+      opacity: 10;
+    }
+    .text-box {
       width: 100%;
-      height: 100%;
       pointer-events: none; /* 允许点击穿透蒙版 */
-      transform: translateY(60px);
       transition: all 0.5s;
       font-size: 18px;
       font-weight: bold;
-      opacity: 0;
-      &.show {
-        transform: translateY(0);
-        opacity: 10;
-      }
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
+  &.sm {
+    width: calc(100% - (76px * 2) - (10px * 2));
+  }
 }
+
 .switch-dark {
   --el-switch-off-color: var(--el-color-primary);
   :deep() {

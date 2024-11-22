@@ -4,14 +4,19 @@ export const appInfo = {
     link: '/'
   },
   version: {
-    text: 'v0.0.1',
+    text: 'v0.0.0',
     link: '/'
   }
 }
 
+const apiBaseUrl = 'http://localhost:3000/api/'
+const staticBaseUrl = 'http://localhost:3000/'
+// const apiBaseUrl = '/api/'
+// const staticBaseUrl = '/'
+
 export const axiosConfig = {
   // baseUrl: 'http://192.168.2.110:3000/',
-  baseUrl: 'http://localhost:3000/',
+  baseUrl: apiBaseUrl,
   timeout: 20000
 }
 
@@ -25,7 +30,8 @@ export { logoImage }
 export const profileConfig = {
   avatarDefault: logoImage,
   // avatarUrl: 'http://192.168.2.110:5500/avatar/',
-  avatarUrl: 'http://localhost:5500/avatar/',
+  // avatarUrl: 'http://localhost:5500/avatar/',
+  avatarUrl: staticBaseUrl + 'avatar/',
   avatarProcessSettingDefault: {
     imageProcess: true,
     imageType: 'image/jpeg' as const,
@@ -34,7 +40,8 @@ export const profileConfig = {
   },
   iconDefault: logoImage,
   // iconUrl: 'http://192.168.2.110:5500/icon/',
-  iconUrl: 'http://localhost:5500/icon/',
+  // iconUrl: 'http://localhost:5500/icon/',
+  iconUrl: staticBaseUrl + 'icon/',
   iconProcessSettingDefault: {
     imageProcess: true,
     imageType: 'image/jpeg' as const,
@@ -44,7 +51,7 @@ export const profileConfig = {
 }
 
 // const imageBaseUrl = 'http://192.168.2.110:5500/image/'
-const imageBaseUrl = 'http://localhost:5500/image/'
+const imageBaseUrl = staticBaseUrl + 'image/'
 export const imageConfig = {
   // 图片基础路径
   baseUrl: imageBaseUrl,
