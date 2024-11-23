@@ -99,8 +99,10 @@ export const useListModule = (dependencies: {
 
     const resPosts = res.data.data
     // const resPosts: typeof res.data.data = []
-    if (resPosts.length === 0) {
+    if (resPosts.length < postConfig.postNumInOnceRequest) {
       haveMoreMark.value = false
+    }
+    if (resPosts.length === 0) {
       return false
     }
     const tempList = postGetByCursorDataHandle(resPosts)

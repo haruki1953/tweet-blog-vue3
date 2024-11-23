@@ -43,8 +43,10 @@ export const useListModule = (dependencies: {
 
     const resImages = res.data.data
     // const resImages: typeof res.data.data = []
-    if (resImages.length === 0) {
+    if (resImages.length < imageConfig.imageNumInOnceRequest) {
       haveMoreMark.value = false
+    }
+    if (resImages.length === 0) {
       return false
     }
 
