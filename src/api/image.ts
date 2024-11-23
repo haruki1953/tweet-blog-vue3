@@ -17,10 +17,11 @@ export const imageUploadApi = (imageRawFile: UploadRawFile): ImageUploadRes => {
 }
 
 export const imageGetByCursorApi = (
-  cursorId: number,
+  cursorId: string,
   query?: ImageGetByCursorQueryType
 ): ImageGetByCursorRes => {
-  return http.get(`/image/cursor/${cursorId}`, {
+  const slash = cursorId === '' ? '' : '/'
+  return http.get(`/image/cursor${slash}${cursorId}`, {
     params: query
   })
 }
@@ -29,12 +30,12 @@ export const imageUpdateApi = (json: ImageUpdateJsonType): ImageUpdateRes => {
   return http.patch('/image', json)
 }
 
-export const imageDeleteApi = (imageId: number): ImageDeleteRes => {
+export const imageDeleteApi = (imageId: string): ImageDeleteRes => {
   return http.delete(`/image/id/${imageId}`)
 }
 
 export const imageDeleteOriginalApi = (
-  imageId: number
+  imageId: string
 ): ImageDeleteOriginalRes => {
   return http.delete(`/image/original/id/${imageId}`)
 }

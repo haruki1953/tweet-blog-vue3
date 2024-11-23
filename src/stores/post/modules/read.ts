@@ -6,7 +6,7 @@ export const useReadModule = (dependencies: {
 }) => {
   const { postList } = dependencies
 
-  const readPostIds = ref<number[]>([])
+  const readPostIds = ref<string[]>([])
   const readLastTime = ref('')
 
   const readLastTimeDate = computed(() => {
@@ -50,7 +50,7 @@ export const useReadModule = (dependencies: {
   }
 
   const readNewPostIds = computed(() => {
-    const notReadPostIds: number[] = []
+    const notReadPostIds: string[] = []
     postList.value.forEach((postGroup) => {
       postGroup.forEach((post) => {
         if (!readIsPostRead(post) && !notReadPostIds.includes(post.id)) {

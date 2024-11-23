@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useStatesStore } from '@/stores'
 import type { PostData, PostsGetMode } from '@/types'
-import { computed } from 'vue'
 
 withDefaults(
   defineProps<{

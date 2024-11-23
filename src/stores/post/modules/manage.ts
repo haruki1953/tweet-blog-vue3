@@ -9,7 +9,7 @@ export const useManageModule = (dependencies: {
   const { postList } = dependencies
 
   // update post in postList
-  const updatePostListIsDeleted = (id: number, isDeleted: boolean) => {
+  const updatePostListIsDeleted = (id: string, isDeleted: boolean) => {
     postList.value.forEach((group) => {
       const findPost = group.find((post) => post.id === id)
       if (findPost) {
@@ -17,7 +17,7 @@ export const useManageModule = (dependencies: {
       }
     })
   }
-  const updatePostListToRemove = (id: number) => {
+  const updatePostListToRemove = (id: string) => {
     postList.value = postList.value
       .map((group) => {
         return group.filter((post) => post.id !== id)

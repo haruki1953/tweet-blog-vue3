@@ -11,10 +11,9 @@ import {
   CollectionTag
 } from '@element-plus/icons-vue'
 import type { PostData, PostsGetMode } from '@/types'
-import { formatTimeAgoChs, sakiMessage } from '@/utils'
+import { formatTimeAgoChs } from '@/utils'
 import { usePostStore } from '@/stores'
 import { computed, ref } from 'vue'
-import { postUpdateApi } from '@/api'
 import type PostDeleteDialog from './PostDeleteDialog.vue'
 import { useRouter } from 'vue-router'
 import {

@@ -7,7 +7,7 @@ import { axiosConfig } from '@/config'
 // 全局储存已加载的图片信息
 const imageLoadedInfos = ref<
   {
-    imageId: number
+    imageId: string
     isLoaded: boolean
   }[]
 >([])

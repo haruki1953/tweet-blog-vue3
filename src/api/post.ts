@@ -15,10 +15,11 @@ import type {
 import { http } from '@/utils'
 
 export const postGetByCursorApi = (
-  cursorId: number,
+  cursorId: string,
   query?: PostGetByCursorQueryType
 ): PostGetByCursorRes => {
-  return http.get(`/post/cursor/${cursorId}`, {
+  const slash = cursorId === '' ? '' : '/'
+  return http.get(`/post/cursor${slash}${cursorId}`, {
     params: query
   })
 }
@@ -32,7 +33,7 @@ export const postUpdateApi = (json: PostUpdateJsonType): PostUpdateRes => {
 }
 
 export const postGetByIdApi = (
-  postId: number,
+  postId: string,
   query?: PostGetByIdQueryType
 ): PostGetByIdRes => {
   return http.get(`/post/id/${postId}`, {
@@ -41,7 +42,7 @@ export const postGetByIdApi = (
 }
 
 export const postDeleteApi = (
-  postId: number,
+  postId: string,
   query?: PostDeleteQueryType
 ): PostDeleteRes => {
   return http.delete(`/post/id/${postId}`, {

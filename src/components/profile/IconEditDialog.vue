@@ -11,7 +11,6 @@ import {
   formatFileSize
 } from '@/utils'
 import type { BackendProfileStore } from '@/types'
-import { profileConfig } from '@/config'
 import { profileDeleteIconApi, profileDeleteIconNotUsedApi } from '@/api'
 
 // const props = withDefaults(

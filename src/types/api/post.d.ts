@@ -9,9 +9,9 @@ export type PostGetByCursorRes = ResData<PostGetByCursorData>
 
 export type PostSendJsonType = {
   content?: string | undefined
-  images?: number[] | undefined
+  images?: string[] | undefined
   createdAt?: Date | undefined
-  parentPostId?: number | null | undefined
+  parentPostId?: string | null | undefined
   twitterId?: string | null | undefined
   twitterLink?: string | null | undefined
   isDeleted?: boolean | undefined
@@ -19,7 +19,7 @@ export type PostSendJsonType = {
 export type PostSendRes = ResData<Post>
 
 export type PostUpdateJsonType = PostSendJsonType & {
-  id: number
+  id: string
 }
 export type PostUpdateRes = ResData<Post>
 

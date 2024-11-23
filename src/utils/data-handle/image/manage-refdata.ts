@@ -1,5 +1,5 @@
 import type { ImageStoreData } from '@/types'
-import type { ModelRef, Ref } from 'vue'
+import type { Ref } from 'vue'
 import type { Image } from '@/types'
 import { imageToImageStoreData } from '@/utils'
 

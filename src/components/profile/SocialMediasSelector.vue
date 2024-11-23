@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { Plus, Search } from '@element-plus/icons-vue'
 import { computed, ref } from 'vue'
-import { useElementSize } from '@vueuse/core'
-import type { BackendProfileStore, ProfileAddAvatarData } from '@/types'
+import type { ProfileAddAvatarData } from '@/types'
 import { useProfileStore, useStatesStore } from '@/stores'
-import { useAvatarAddService } from '@/services'
-import { profileAvatarUrl } from '@/utils'
-import { faBrandsNameList, faBrandsClassList, faBandsGroupList } from '@/config'
+import { faBandsGroupList } from '@/config'
 
 const props = withDefaults(
   defineProps<{

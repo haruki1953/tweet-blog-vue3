@@ -1,8 +1,7 @@
 import {
   faBrandsClassList,
   faBrandsNameList,
-  faBrandsNameToClass,
-  profileConfig
+  faBrandsNameToClass
 } from '@/config'
 import { computed, ref } from 'vue'
 

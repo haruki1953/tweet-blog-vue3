@@ -1,5 +1,5 @@
 export interface Image {
-  id: number
+  id: string
   alt: string | null
   path: string
   addedAt: string
@@ -11,12 +11,12 @@ export interface Image {
 }
 
 export interface PostBase {
-  id: number
+  id: string
   createdAt: string
   addedAt: string
   content: string
   isDeleted: boolean
-  parentPostId: number | null
+  parentPostId: string | null
   twitterId: string | null
   twitterLink: string | null
   imagesOrder: string | null
@@ -41,7 +41,7 @@ export interface ImageStoreData extends Image {
 }
 
 export interface PosPoolItem {
-  id: number
+  id: string
   pushAt: string // Date
   updateAt: string // Date
   mainPost: PostData

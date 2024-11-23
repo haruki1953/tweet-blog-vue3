@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import {
-  CircleCloseFilled,
-  SuccessFilled,
-  WarningFilled
-} from '@element-plus/icons-vue'
 import { ref } from 'vue'
 
-const props = withDefaults(
+// const props =
+withDefaults(
   defineProps<{
     backgroundNone?: boolean
     backgroundColor?: string

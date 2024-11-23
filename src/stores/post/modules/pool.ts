@@ -10,12 +10,12 @@ export const usePoolModule = (dependencies: {
   const { postPool } = dependencies
 
   // data
-  const getPostPoolItem = (id: number): PosPoolItem | undefined => {
+  const getPostPoolItem = (id: string): PosPoolItem | undefined => {
     return postPool.value.find((i) => i.id === id)
   }
 
-  const requestedPostIds = ref<number[]>([])
-  const isPostRequested = (id: number) => {
+  const requestedPostIds = ref<string[]>([])
+  const isPostRequested = (id: string) => {
     const find = requestedPostIds.value.find((i) => i === id)
     if (find == null) {
       return false
@@ -31,7 +31,7 @@ export const usePoolModule = (dependencies: {
   const statesStore = useStatesStore()
 
   // GET post to postPool
-  const getPostById = async (id: number) => {
+  const getPostById = async (id: string) => {
     statesStore.setPostIdLoading(id)
     let res
     try {

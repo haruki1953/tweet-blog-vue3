@@ -13,7 +13,7 @@ export const useListFavoriteModule = () => {
     // TODO: 将对应帖子加入关联帖子组
   }
 
-  const favoriteDelPostById = (id: number) => {
+  const favoriteDelPostById = (id: string) => {
     favoriteBaseList.value = favoriteBaseList.value.filter((p) => p.id !== id)
   }
 
@@ -21,7 +21,7 @@ export const useListFavoriteModule = () => {
     favoriteBaseList.value = []
   }
 
-  const favoriteGetPostById = (id: number) => {
+  const favoriteGetPostById = (id: string) => {
     return favoriteBaseList.value.find((p) => p.id === id)
   }
 

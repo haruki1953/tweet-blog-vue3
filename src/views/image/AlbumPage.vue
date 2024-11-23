@@ -32,8 +32,17 @@ watch(
 
 // onMounted, select image by query
 onMounted(() => {
-  const routeImgId = Number(route.query.img)
-  if (!isNaN(routeImgId)) {
+  const routeImgId = (() => {
+    if (route.query.img == null) {
+      return null
+    }
+    if (typeof route.query.img === 'string') {
+      return route.query.img
+    } else {
+      return route.query.img[0]
+    }
+  })()
+  if (routeImgId) {
     const findImg = refImageSelecter.value?.selectImgById(routeImgId)
     if (!findImg) {
       router.replace({ name: route.name })

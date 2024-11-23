@@ -15,8 +15,8 @@ export const postGetByCursorDataHandle = (
 
   // 1 将有关系的帖子合并在一起
   // 转为id二维数组
-  const idTempGrid: number[][] = data.map((post) => {
-    const idList: number[] = []
+  const idTempGrid: string[][] = data.map((post) => {
+    const idList: string[] = []
     if (post.parentPost != null) {
       idList.push(post.parentPost.id)
     }
@@ -65,7 +65,7 @@ export const postGetByCursorDataHandle = (
     latestPost = mainPost
 
     // 2 递归处理回复与回复的回复
-    const recursionToHandleReplies = (parentId: number) => {
+    const recursionToHandleReplies = (parentId: string) => {
       // 查找
       const replies = postList.filter(
         (post) => post.parentPost?.id === parentId
@@ -145,8 +145,11 @@ const handlePostWithNotParent = (post: PostData | Post): Post => {
 }
 
 // 类型守卫函数
-function isNumberArray(arr: any[]): arr is number[] {
-  return arr.every((item) => typeof item === 'number')
+// function isNumberArray(arr: any[]): arr is number[] {
+//   return arr.every((item) => typeof item === 'number')
+// }
+function isStringArray(arr: any[]): arr is string[] {
+  return arr.every((item) => typeof item === 'string')
 }
 // 利用 imagesOrder 对 images 排序
 const handlePostImagesOrder = (post: PostData): PostData => {
@@ -158,7 +161,7 @@ const handlePostImagesOrder = (post: PostData): PostData => {
     const imagesOrderIdList = JSON.parse(post.imagesOrder)
     if (
       !Array.isArray(imagesOrderIdList) ||
-      !isNumberArray(imagesOrderIdList)
+      !isStringArray(imagesOrderIdList)
     ) {
       throw new Error()
     }

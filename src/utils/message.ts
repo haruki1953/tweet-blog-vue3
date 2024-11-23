@@ -1,4 +1,4 @@
-import type { MessageHandler, NotificationParams } from 'element-plus'
+import type { MessageHandler } from 'element-plus'
 import type { AppContext } from 'vue'
 
 export const sakiMessage = ((

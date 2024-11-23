@@ -15,9 +15,9 @@ export const useListModule = (dependencies: {
   const { postList } = dependencies
 
   // cursor for pagination query
-  const cursor = ref(0)
+  const cursor = ref('')
   const isFirstRequest = computed(() => {
-    return cursor.value === 0
+    return cursor.value === ''
   })
   const haveMoreMark = ref(false)
   const isHaveMore = computed(() => {
@@ -105,7 +105,7 @@ export const useListModule = (dependencies: {
     }
     const tempList = postGetByCursorDataHandle(resPosts)
 
-    if (cursor.value === 0) {
+    if (cursor.value === '') {
       postList.value = tempList
     } else {
       postList.value.push(...tempList)
@@ -116,7 +116,7 @@ export const useListModule = (dependencies: {
 
   // reset an get post by any mode
   const resetCursorInfo = () => {
-    cursor.value = 0
+    cursor.value = ''
     haveMoreMark.value = true
     postGetByCursorQuery.value = {}
     isFavoriteMode.value = false

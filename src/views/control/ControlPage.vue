@@ -3,7 +3,6 @@ import type { IconMenuItem } from '@/types'
 import {
   User,
   Postcard,
-  Picture,
   Connection,
   Sell,
   Tickets

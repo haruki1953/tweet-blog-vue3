@@ -2,7 +2,6 @@
 import type { ImageStoreData, ImageUpdateJsonType } from '@/types'
 import { computed } from 'vue'
 import {
-  openLink,
   imgLargeUrl,
   imgSamllUrl,
   imgOriginalUrl,

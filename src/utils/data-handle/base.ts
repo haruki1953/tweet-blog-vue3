@@ -1,11 +1,11 @@
-export function mergeArrays(idRelationGrid: number[][]): number[][] {
-  const merged: number[][] = []
+export function mergeArrays<T>(idRelationGrid: T[][]): T[][] {
+  const merged: T[][] = []
 
   idRelationGrid.forEach((arr) => {
-    let newMerged: number[] = [...arr]
+    let newMerged: T[] = [...arr]
 
     for (let i = merged.length - 1; i >= 0; i--) {
-      const intersection = merged[i].some((num) => newMerged.includes(num))
+      const intersection = merged[i].some((item) => newMerged.includes(item))
       if (intersection) {
         newMerged = Array.from(new Set([...newMerged, ...merged[i]]))
         merged.splice(i, 1) // Remove the merged array from the list

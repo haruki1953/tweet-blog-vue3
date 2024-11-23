@@ -2,7 +2,7 @@
 import { useAdminStore } from '@/stores'
 import { watch } from 'vue'
 import { ref } from 'vue'
-import { formatDuration, sakiMessage } from '@/utils'
+import { sakiMessage } from '@/utils'
 import { adminUpdateImageConfigApi } from '@/api'
 
 const adminStore = useAdminStore()

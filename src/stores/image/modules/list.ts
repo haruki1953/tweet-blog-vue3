@@ -10,7 +10,7 @@ export const useListModule = (dependencies: {
   // data
   const { imageList } = dependencies
 
-  const cursor = ref(0)
+  const cursor = ref('')
   const haveMoreMark = ref(false)
   const isHaveMore = computed(() => {
     return haveMoreMark.value
@@ -48,7 +48,7 @@ export const useListModule = (dependencies: {
       return false
     }
 
-    if (cursor.value === 0) {
+    if (cursor.value === '') {
       imageList.value = resImages
     } else {
       imageList.value.push(...resImages)
@@ -58,7 +58,7 @@ export const useListModule = (dependencies: {
   }
 
   const reGetImages = async () => {
-    cursor.value = 0
+    cursor.value = ''
     haveMoreMark.value = true
     resetLimited()
     await getImages()

@@ -11,11 +11,14 @@ const route = useRoute()
 const postStore = usePostStore()
 
 const routePostId = computed(() => {
-  const userId = Number(route.params.id)
-  if (isNaN(userId)) {
-    return undefined
-  } else {
+  const userId = route.params.id
+  if (userId == null) {
+    return null
+  }
+  if (typeof userId === 'string') {
     return userId
+  } else {
+    return userId[0]
   }
 })
 const postPoolItem = computed((): PosPoolItem | undefined => {
@@ -139,7 +142,7 @@ const haveMainPostOnSetUp = mainPostGroup.value != null
           <TopBar title="查看推文"></TopBar>
           <!-- id参数无效 -->
           <div v-if="routePostId == null">
-            <SakiEmpty description="推文 id 无效" type="error"></SakiEmpty>
+            <SakiEmpty description="推文迷路了" type="error"></SakiEmpty>
           </div>
           <!-- 暂无此贴，显示骨架屏 -->
           <div v-else-if="mainPostGroup == null">

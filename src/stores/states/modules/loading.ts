@@ -4,7 +4,7 @@ export const useLoadingModule = () => {
   const loadingMark = ref(false)
   const loadingPostMark = ref(false)
   const loadingImageMark = ref(false)
-  const loadingPostIds = ref<number[]>([])
+  const loadingPostIds = ref<string[]>([])
   // dataFirstLoadService
   const loadingFirstDataMark = ref(false)
 
@@ -36,13 +36,13 @@ export const useLoadingModule = () => {
   const setImageLoading = (isLoading: boolean) => {
     loadingImageMark.value = isLoading
   }
-  const setPostIdLoading = (id: number) => {
+  const setPostIdLoading = (id: string) => {
     loadingPostIds.value.push(id)
   }
-  const setPostIdLoaded = (id: number) => {
+  const setPostIdLoaded = (id: string) => {
     loadingPostIds.value = loadingPostIds.value.filter((i) => i !== id)
   }
-  const isLoadingPostId = (id: number) => {
+  const isLoadingPostId = (id: string) => {
     const loadingId = loadingPostIds.value.find((i) => i === id)
     if (loadingId === undefined) {
       return false

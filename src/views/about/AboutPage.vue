@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { sakiMessage } from '@/utils'
 import markdownit from 'markdown-it'
 import { useProfileStore } from '@/stores'
 import { computed } from 'vue'
