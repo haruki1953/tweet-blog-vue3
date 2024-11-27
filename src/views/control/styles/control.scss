@@ -8,10 +8,12 @@
     margin-bottom: 4px;
   }
 }
+
 @media (max-width: 500px) {
   .button-box {
     justify-content: center;
   }
+
   .button-box.not-center {
     justify-content: flex-end;
   }
@@ -57,6 +59,7 @@
 .control-input {
   display: flex;
   width: 100%;
+
   :deep() {
     .el-input__wrapper {
       padding: 1px 20px;
@@ -64,12 +67,12 @@
       background-color: var(--color-background);
       transition: all 0.5s;
       overflow: hidden;
-  
+
       .el-input__inner {
         margin-left: 5px;
       }
     }
-  
+
     .el-input-number__decrease,
     .el-input-number__increase {
       background-color: transparent;
@@ -81,6 +84,9 @@
 }
 
 .control-textarea {
+  overflow: hidden;
+  border-radius: 19px;
+
   :deep() {
     .el-textarea__inner {
       padding: 10px 20px;
@@ -93,10 +99,12 @@
   }
 }
 
+
 .control-radio {
   display: flex;
   justify-content: center;
   align-content: center;
+
   :deep() {
     .el-radio {
       .el-radio__inner {
@@ -105,21 +113,25 @@
         transition:
           background-color 0.5s,
           border 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+
         &::after {
           display: none;
           background-color: var(--color-background);
         }
       }
+
       .el-radio__label {
         font-size: 14px;
         font-weight: bold;
         color: var(--color-text-soft);
       }
+
       &.is-checked {
         .el-radio__inner {
           border: 5px solid var(--el-color-primary);
           background-color: var(--color-background);
         }
+
         .el-radio__label {
           color: var(--el-color-primary);
         }

@@ -16,7 +16,7 @@ const currentAvatar = computed(() => {
   if (selectedAvatar.value.length > 0) {
     return selectedAvatar.value[0]
   }
-  return profileStore.avatarItem
+  return null
 })
 const showAvatar = computed(() => {
   if (currentAvatar.value) {
@@ -47,12 +47,9 @@ watch(
 
 const isSubmiting = ref(false)
 const submit = async () => {
-  if (currentAvatar.value === null) {
-    return
-  }
   isSubmiting.value = true
   try {
-    const res = await profileUpdateAvatarApi(currentAvatar.value.uuid)
+    const res = await profileUpdateAvatarApi(currentAvatar.value?.uuid || '')
     // 更新store
     profileStore.loadProfileByRes(res.data.data)
     sakiMessage({
@@ -78,13 +75,7 @@ const submit = async () => {
         </Transition>
       </div>
       <div class="button-box">
-        <el-button
-          @click="submit"
-          :loading="isSubmiting"
-          :disabled="currentAvatar === null"
-          type="success"
-          round
-        >
+        <el-button @click="submit" :loading="isSubmiting" type="success" round>
           保存
         </el-button>
         <el-button @click="initData" type="info" round> 取消 </el-button>
@@ -95,6 +86,7 @@ const submit = async () => {
       <AvatarSelector
         ref="refAvatarSelector"
         v-model="selectedAvatar"
+        couldCancel
       ></AvatarSelector>
     </div>
   </div>

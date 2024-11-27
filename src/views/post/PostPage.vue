@@ -140,12 +140,8 @@ const haveMainPostOnSetUp = mainPostGroup.value != null
       <Col1Layout>
         <DataContainerMountedMask>
           <TopBar title="查看推文"></TopBar>
-          <!-- id参数无效 -->
-          <div v-if="routePostId == null">
-            <SakiEmpty description="推文迷路了" type="error"></SakiEmpty>
-          </div>
           <!-- 暂无此贴，显示骨架屏 -->
-          <div v-else-if="mainPostGroup == null">
+          <div v-if="mainPostGroup == null">
             <PostGroup :data="[]"></PostGroup>
           </div>
           <!-- 显示帖子 -->

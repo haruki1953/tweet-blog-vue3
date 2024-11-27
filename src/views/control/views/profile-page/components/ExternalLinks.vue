@@ -502,6 +502,7 @@ const refCompleteMessageContainer = ref<InstanceType<
               v-model="selectedIconList"
               ref="refIconSelector"
               :initUuid="selectedIconInit"
+              couldCancel
             ></IconSelector>
           </div>
         </div>

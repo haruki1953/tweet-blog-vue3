@@ -200,23 +200,23 @@ const shouldDecorationDotHidden = computed(() => {
 <style lang="scss" scoped>
 .logo {
   position: relative;
-  &::after {
-    // 暗黑模式要用的图标蒙版
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 0 0 16px 16px;
-    background-color: var(--color-background);
-    opacity: 0.1; /* 半透明 */
-    pointer-events: none; /* 允许点击穿透蒙版 */
-    z-index: 31;
-    transition: transform 0.5s;
-    // 隐藏
-    transform: translateY(-60px);
-  }
+  // &::after {
+  //   // 暗黑模式要用的图标蒙版
+  //   content: '';
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100%;
+  //   height: 100%;
+  //   border-radius: 0 0 16px 16px;
+  //   background-color: var(--color-background);
+  //   opacity: 0.1; /* 半透明 */
+  //   pointer-events: none; /* 允许点击穿透蒙版 */
+  //   z-index: 31;
+  //   transition: transform 0.5s;
+  //   // 隐藏
+  //   transform: translateY(-60px);
+  // }
 }
 .logo-dark {
   &::after {

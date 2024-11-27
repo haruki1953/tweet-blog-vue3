@@ -102,15 +102,16 @@ export const useListModule = (dependencies: {
     if (resPosts.length < postConfig.postNumInOnceRequest) {
       haveMoreMark.value = false
     }
-    if (resPosts.length === 0) {
-      return false
-    }
     const tempList = postGetByCursorDataHandle(resPosts)
 
     if (cursor.value === '') {
       postList.value = tempList
     } else {
       postList.value.push(...tempList)
+    }
+
+    if (resPosts.length === 0) {
+      return false
     }
     cursor.value = resPosts[resPosts.length - 1].id
     return true

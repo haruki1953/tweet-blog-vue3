@@ -58,7 +58,7 @@ const submit = async () => {
     >
       <div class="form-box">
         <div class="form-row unit-input-box">
-          <div class="input-lable">大图的长边的最大值</div>
+          <div class="input-lable">大图的边长最大值</div>
           <el-input-number
             v-model="imageLargeMaxLength"
             :min="1"
@@ -70,7 +70,7 @@ const submit = async () => {
           <div class="unit-mark">px</div>
         </div>
         <div class="form-row unit-input-box">
-          <div class="input-lable">小图的长边的最大值</div>
+          <div class="input-lable">小图的边长最大值</div>
           <el-input-number
             v-model="imageSmallMaxLength"
             :min="1"

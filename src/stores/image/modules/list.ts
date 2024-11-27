@@ -46,14 +46,15 @@ export const useListModule = (dependencies: {
     if (resImages.length < imageConfig.imageNumInOnceRequest) {
       haveMoreMark.value = false
     }
-    if (resImages.length === 0) {
-      return false
-    }
 
     if (cursor.value === '') {
       imageList.value = resImages
     } else {
       imageList.value.push(...resImages)
+    }
+
+    if (resImages.length === 0) {
+      return false
     }
     cursor.value = resImages[resImages.length - 1].id
     return true
