@@ -74,8 +74,13 @@ const shouldDecorationDotHidden = computed(() => {
         @click="reload"
         :class="{ 'logo-dark': isDark }"
         class="logo"
+        style="border: none"
       >
-        <img style="width: 36px" :src="logoImage" alt="logo" />
+        <img
+          style="width: 36px; border-radius: 18px"
+          :src="profileStore.avatarUrl"
+          alt="logo"
+        />
       </el-menu-item>
 
       <!-- 大屏显示的内容 lg -->

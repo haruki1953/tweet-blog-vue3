@@ -213,14 +213,7 @@ const newPostText = computed(() => {
     ></PostDeleteAllDialog>
     <div class="user">
       <div class="avatar">
-        <el-avatar
-          :size="72"
-          :src="
-            profileStore.avatarItem
-              ? profileAvatarUrl(profileStore.avatarItem)
-              : profileConfig.avatarDefault
-          "
-        />
+        <el-avatar :size="72" :src="profileStore.avatarUrl" />
       </div>
       <div class="name">{{ profileStore.name }}</div>
     </div>

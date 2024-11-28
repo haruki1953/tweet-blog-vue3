@@ -4,7 +4,7 @@ import { useLoadModule } from './modules/load'
 import type { BackendProfileStore } from '@/types'
 import { useSettingModule } from './modules/setting'
 import { useSocialMediasModule } from './modules/social-medias'
-import { profileIconUrl } from '@/utils'
+import { profileAvatarUrl, profileIconUrl } from '@/utils'
 import { profileConfig } from '@/config'
 
 export type ProfileStoreModuleDependencies = {
@@ -34,6 +34,11 @@ export const useProfileStore = defineStore(
       }
       return find
     })
+    const avatarUrl = computed(() =>
+      avatarItem.value
+        ? profileAvatarUrl(avatarItem.value)
+        : profileConfig.avatarDefault
+    )
     const name = computed(() => profile.value?.name || '')
     const bio = computed(() => profile.value?.bio || '')
     const socialMedias = computed(() => profile.value?.socialMedias || [])
@@ -73,6 +78,7 @@ export const useProfileStore = defineStore(
       avatar,
       avatarArray,
       avatarItem,
+      avatarUrl,
       name,
       bio,
       socialMedias,
