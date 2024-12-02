@@ -256,7 +256,7 @@ const { setFavorite, topFavorite, removeFavorite, isFavorite } =
         :deep() {
           .el-badge__content {
             display: flex;
-            padding-bottom: 2px;
+            padding-bottom: 1px;
             font-weight: bold;
             color: var(--color-background);
             border: none;

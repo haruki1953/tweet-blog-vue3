@@ -137,8 +137,8 @@ const haveMainPostOnSetUp = mainPostGroup.value != null
 <template>
   <div :key="String(route.params.id) + String(shouldShow2Col)">
     <div v-if="!shouldShow2Col">
-      <Col1Layout>
-        <DataContainerMountedMask>
+      <DataContainerMountedMask>
+        <Col1Layout>
           <TopBar title="查看推文"></TopBar>
           <!-- 暂无此贴，显示骨架屏 -->
           <div v-if="mainPostGroup == null">
@@ -159,13 +159,13 @@ const haveMainPostOnSetUp = mainPostGroup.value != null
             </DataContainerMountedMask>
           </div>
           <!-- 没有回帖 -->
-        </DataContainerMountedMask>
-      </Col1Layout>
+        </Col1Layout>
+      </DataContainerMountedMask>
     </div>
     <div v-else>
-      <Col2Layout :span="12">
-        <template #colLeftSm>
-          <DataContainerMountedMask>
+      <DataContainerMountedMask>
+        <Col2Layout :span="12">
+          <template #colLeftSm>
             <TopBar title="查看推文"></TopBar>
             <div class="main-post-group-box" v-if="mainPostGroup">
               <PostGroup :data="mainPostGroup"></PostGroup>
@@ -175,10 +175,8 @@ const haveMainPostOnSetUp = mainPostGroup.value != null
                 回 复
               </el-button>
             </div>
-          </DataContainerMountedMask>
-        </template>
-        <template #colLeft>
-          <DataContainerMountedMask>
+          </template>
+          <template #colLeft>
             <TopBar title="查看推文"></TopBar>
             <div class="main-post-group-box" v-if="mainPostGroup">
               <PostGroup :data="mainPostGroup"></PostGroup>
@@ -188,10 +186,8 @@ const haveMainPostOnSetUp = mainPostGroup.value != null
                 回 复
               </el-button>
             </div>
-          </DataContainerMountedMask>
-        </template>
-        <template #colRight>
-          <DataContainerMountedMask>
+          </template>
+          <template #colRight>
             <div class="replies-post-group-box" v-if="postPoolItem">
               <!-- <TransitionGroup name="fade-slide"> -->
               <PostGroup
@@ -203,9 +199,10 @@ const haveMainPostOnSetUp = mainPostGroup.value != null
               <!-- </TransitionGroup> -->
             </div>
             <BottomSkeleton :show="isShowSkeleton"></BottomSkeleton>
-          </DataContainerMountedMask>
-        </template>
-      </Col2Layout>
+            <div style="height: 1px"></div>
+          </template>
+        </Col2Layout>
+      </DataContainerMountedMask>
     </div>
   </div>
 </template>
@@ -231,5 +228,7 @@ const haveMainPostOnSetUp = mainPostGroup.value != null
       }
     }
   }
+}
+.replies-post-group-box {
 }
 </style>

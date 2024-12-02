@@ -336,6 +336,7 @@ const newPostText = computed(() => {
 
 <style lang="scss" scoped>
 .profile-card {
+  margin-top: 40px;
   .user {
     display: flex;
     align-items: center;

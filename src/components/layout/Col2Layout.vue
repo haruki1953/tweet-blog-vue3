@@ -32,38 +32,52 @@ const warpScroll = useScroll(refWrap)
 
 // 在在滚动条置顶时不显示渐变遮罩
 // 在明暗切换时不显示渐变遮罩
-const showGradientMask = computed(
+const showGradientMaskTop = computed(
   () => !statesStore.isDarkTransitioning && !warpScroll.arrivedState.top
+)
+const showGradientMaskBottom = computed(
+  () => !statesStore.isDarkTransitioning && !warpScroll.arrivedState.bottom
 )
 </script>
 <template>
   <div class="col2-page">
     <el-row :gutter="10">
       <el-col :span="smallColSpan" v-if="!reverse && show2Col">
-        <el-affix :offset="61" :z-index="1">
+        <!-- <el-affix :offset="61" :z-index="1"> -->
+        <el-affix :offset="1" :z-index="1">
           <div class="col2-left">
             <el-scrollbar :height="leftHeight" ref="refScroll">
               <slot name="colLeft"></slot>
             </el-scrollbar>
-            <div class="gradient-mask" v-show="showGradientMask"></div>
+            <div class="gradient-mask-top" v-show="showGradientMaskTop"></div>
+            <div
+              class="gradient-mask-bottom"
+              v-show="showGradientMaskBottom"
+            ></div>
           </div>
         </el-affix>
       </el-col>
       <el-col :span="largeColSpan">
-        <div class="col2-left-sm" v-if="!show2Col">
-          <slot name="colLeftSm"></slot>
-        </div>
-        <div class="col2-right">
-          <slot name="colRight"></slot>
+        <div class="col2-right-all">
+          <div class="col2-left-sm" v-if="!show2Col">
+            <slot name="colLeftSm"></slot>
+          </div>
+          <div class="col2-right">
+            <slot name="colRight"></slot>
+          </div>
         </div>
       </el-col>
       <el-col :span="smallColSpan" v-if="reverse && show2Col">
-        <el-affix :offset="61" :z-index="1">
+        <el-affix :offset="1" :z-index="1">
           <div class="col2-left reverse">
             <el-scrollbar :height="leftHeight" ref="refScroll">
               <slot name="colLeft"></slot>
             </el-scrollbar>
-            <div class="gradient-mask" v-show="showGradientMask"></div>
+            <div class="gradient-mask-top" v-show="showGradientMaskTop"></div>
+            <div
+              class="gradient-mask-bottom"
+              v-show="showGradientMaskBottom"
+            ></div>
           </div>
         </el-affix>
       </el-col>
@@ -88,7 +102,7 @@ const showGradientMask = computed(
 
 .col2-left {
   position: relative;
-  .gradient-mask {
+  .gradient-mask-top {
     position: absolute;
     top: 0;
     left: 0;
@@ -101,11 +115,21 @@ const showGradientMask = computed(
     );
     pointer-events: none; /* 允许点击穿透 */
   }
+  .gradient-mask-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: linear-gradient(to top, var(--color-background), transparent);
+    pointer-events: none; /* 允许点击穿透 */
+  }
   .el-scrollbar {
     overflow: visible;
     :deep() {
       .el-scrollbar__view {
-        margin: 20px 10px;
+        // margin: 20px 10px;
+        margin: var(--layout-top) 10px var(--layout-bottom) 10px;
       }
       .el-scrollbar__bar.is-vertical {
         transform: translateX(4px);
@@ -120,6 +144,9 @@ const showGradientMask = computed(
   }
 }
 
+.col2-right-all {
+  margin: var(--layout-top) 0 var(--layout-bottom) 0;
+}
 .col2-right {
   margin: 20px 0;
 }

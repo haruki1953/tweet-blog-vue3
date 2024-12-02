@@ -60,29 +60,31 @@ const menu: IconMenuItem[] = [
 ]
 </script>
 <template>
-  <div>
-    <Col2Layout :span="20">
-      <template #colLeftSm>
-        <div class="horizontal-menu">
-          <IconMenuBox :menu="menu" :modelValue="$route.path"></IconMenuBox>
-        </div>
-      </template>
-      <template #colLeft>
-        <div class="vertical-menu">
-          <IconMenuBox :menu="menu" :modelValue="$route.path"></IconMenuBox>
-        </div>
-      </template>
-      <template #colRight>
-        <div class="contorl-page">
-          <!-- <router-view></router-view> -->
-          <router-view v-slot="{ Component }">
-            <transition name="fade-slide" mode="out-in">
-              <component :is="Component" />
-            </transition>
-          </router-view>
-        </div>
-      </template>
-    </Col2Layout>
+  <div class="control-page">
+    <DataContainerMountedMask>
+      <Col2Layout :span="20">
+        <template #colLeftSm>
+          <div class="horizontal-menu">
+            <IconMenuBox :menu="menu" :modelValue="$route.path"></IconMenuBox>
+          </div>
+        </template>
+        <template #colLeft>
+          <div class="vertical-menu">
+            <IconMenuBox :menu="menu" :modelValue="$route.path"></IconMenuBox>
+          </div>
+        </template>
+        <template #colRight>
+          <div class="contorl-page">
+            <!-- <router-view></router-view> -->
+            <router-view v-slot="{ Component }">
+              <transition name="fade-slide" mode="out-in">
+                <component :is="Component" />
+              </transition>
+            </router-view>
+          </div>
+        </template>
+      </Col2Layout>
+    </DataContainerMountedMask>
   </div>
 </template>
 

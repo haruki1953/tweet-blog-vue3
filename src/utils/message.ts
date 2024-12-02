@@ -8,7 +8,7 @@ export const sakiMessage = ((
   return ElMessage(
     {
       ...options,
-      offset: 66,
+      // offset: 66,
       grouping: true
     },
     appContext
@@ -17,7 +17,7 @@ export const sakiMessage = ((
 
 export const sakiNotification = ((options?: any) => {
   return ElNotification({
-    ...options,
-    offset: 60
+    ...options
+    // offset: 60
   })
 }) as typeof ElNotification

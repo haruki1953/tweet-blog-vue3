@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import MenuBar from './components/MenuBar.vue'
+// import MenuBar from './components/MenuBar.vue'
 import { dataConfirmLoginService, dataFirstLoadService } from '@/services'
 import {
   HomeFilled,
@@ -9,6 +9,7 @@ import {
   Tools
 } from '@element-plus/icons-vue'
 import ImageAltDialog from './components/ImageAltDialog.vue'
+import MenuIsland from './components/MenuIsland.vue'
 
 onMounted(async () => {
   // check login
@@ -16,92 +17,109 @@ onMounted(async () => {
   // 初始化、请求数据
   await dataFirstLoadService()
 })
+
+const menu = [
+  {
+    index: '/',
+    title: '首页',
+    icon: HomeFilled
+  },
+  {
+    index: '/album',
+    title: '相册',
+    icon: PictureFilled
+  },
+  {
+    index: '/control',
+    title: '功能',
+    icon: Tools
+  },
+  {
+    index: '/about',
+    title: '关于',
+    icon: InfoFilled
+  }
+]
 </script>
 <template>
-  <div class="back-top-btn-box">
-    <el-backtop />
-  </div>
-  <ImageAltDialog></ImageAltDialog>
-  <!-- 导航栏 -->
-  <MenuBar
-    :menu="[
-      {
-        index: '/',
-        title: '首页',
-        icon: HomeFilled
-      },
-      {
-        index: '/album',
-        title: '相册',
-        icon: PictureFilled
-      },
-      {
-        index: '/control',
-        title: '功能',
-        icon: Tools
-      },
-      {
-        index: '/about',
-        title: '关于',
-        icon: InfoFilled
-      }
-    ]"
-  ></MenuBar>
-
-  <div class="container">
-    <router-view></router-view>
+  <div class="layout-container">
+    <ImageAltDialog></ImageAltDialog>
+    <div class="back-top-btn-box">
+      <el-backtop :bottom="25" :right="30" />
+    </div>
+    <!-- 导航栏 -->
+    <!-- <MenuBar :menu="menu"></MenuBar> -->
+    <div class="container">
+      <router-view></router-view>
+    </div>
+    <div class="menu">
+      <MenuIsland :menu="menu"></MenuIsland>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.menu {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+// 响应式边距
+.container {
+  --container-padding-12: 120px;
+  --container-padding-14: 200px;
+  --container-padding-16: 300px;
+  --container-padding-shim-12: 100px;
+  --container-padding-shim-14: 150px;
+  --container-padding-shim-16: 200px;
+  --container-padding-top: 0;
+  --container-padding-bottom: 0;
+  // --container-padding-top: 60px;
+  // --container-padding-bottom: 0;
+  --layout-top: 30px;
+  --layout-bottom: 90px;
+  padding: var(--container-padding-top) 20px var(--container-padding-bottom)
+    20px;
+  margin: 0 auto;
+  max-width: 1920px;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    padding: var(--container-padding-top) var(--container-padding-12)
+      var(--container-padding-bottom) var(--container-padding-12);
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    padding: var(--container-padding-top) var(--container-padding-14)
+      var(--container-padding-bottom) var(--container-padding-14);
+  }
+}
+
+@media (min-width: 1600px) {
+  .container {
+    padding: var(--container-padding-top) var(--container-padding-16)
+      var(--container-padding-bottom) var(--container-padding-16);
+  }
+}
+
+/* 小屏时侧边距再小一点 */
+@media (max-width: 500px) {
+  .container {
+    padding: var(--container-padding-top) 10px var(--container-padding-bottom)
+      10px;
+  }
+}
+
 .el-backtop {
   --el-backtop-bg-color: var(--color-background-mute);
   --el-backtop-hover-bg-color: var(--el-color-primary-light-8);
   transition: all 0.5s;
-}
-.page {
-  height: 100vh;
-}
-
-// 响应式边距
-$ref-padding-12: 120px;
-$ref-padding-14: 200px;
-$ref-padding-16: 300px;
-$ref-padding-shim-12: 100px;
-$ref-padding-shim-14: 150px;
-$ref-padding-shim-16: 200px;
-$ref-padding-top: 60px;
-.container {
-  padding: $ref-padding-top 20px 0 20px;
-  margin: 0 auto;
-  max-width: 1920px;
-}
-@media (min-width: 1200px) {
-  .container {
-    padding: $ref-padding-top $ref-padding-12 0 $ref-padding-12;
-  }
-}
-@media (min-width: 1400px) {
-  .container {
-    padding: $ref-padding-top $ref-padding-14 0 $ref-padding-14;
-  }
-}
-@media (min-width: 1600px) {
-  .container {
-    padding: $ref-padding-top $ref-padding-16 0 $ref-padding-16;
-  }
-}
-// 1920px将会以6列显示，所以将padding改小（bangumi-list-vue3）
-// @media (min-width: 1920px) {
-//   .container {
-//     padding: $ref-padding-top 100px 20px 100px;
-//   }
-// }
-
-// 小屏时侧边距再小一点
-@media (max-width: 500px) {
-  .container {
-    padding: $ref-padding-top 10px 0 10px;
-  }
 }
 </style>

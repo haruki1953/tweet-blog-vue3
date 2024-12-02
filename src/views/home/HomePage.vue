@@ -54,17 +54,15 @@ const postMode = computed(() => postStore.postsGetMode)
 </script>
 <template>
   <div>
-    <Col2Layout>
-      <template #colLeftSm>
-        <DataContainerMountedMask :disabled="postStore.isFirstRequest">
+    <DataContainerMountedMask>
+      <Col2Layout>
+        <template #colLeftSm>
           <ProfileCard> </ProfileCard>
-        </DataContainerMountedMask>
-      </template>
-      <template #colLeft>
-        <ProfileCard> </ProfileCard>
-      </template>
-      <template #colRight>
-        <DataContainerMountedMask :disabled="postStore.isFirstRequest">
+        </template>
+        <template #colLeft>
+          <ProfileCard> </ProfileCard>
+        </template>
+        <template #colRight>
           <div class="post-skeleton-container">
             <Transition name="fade-slide">
               <div
@@ -77,7 +75,6 @@ const postMode = computed(() => postStore.postsGetMode)
               </div>
             </Transition>
           </div>
-
           <div
             v-infinite-scroll="postStore.loadLimited"
             :infinite-scroll-distance="200"
@@ -113,9 +110,9 @@ const postMode = computed(() => postStore.postsGetMode)
               </el-button>
             </div>
           </div>
-        </DataContainerMountedMask>
-      </template>
-    </Col2Layout>
+        </template>
+      </Col2Layout>
+    </DataContainerMountedMask>
   </div>
 </template>
 

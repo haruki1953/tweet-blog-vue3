@@ -29,7 +29,6 @@ import ImageAllOriginalDelete from './components/ImageAllOriginalDelete.vue'
         <ImageAllOriginalDelete></ImageAllOriginalDelete>
       </div>
     </div>
-    <PageFooter></PageFooter>
   </div>
 </template>
 

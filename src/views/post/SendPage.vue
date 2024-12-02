@@ -159,21 +159,22 @@ const imageBoxSize = useElementSize(refImageBox)
       notPreview
       imageSelect
     ></ImageEditDialog>
-    <Col2Layout>
-      <template #colLeftSm>
-        <TopBar :title="infoBySendType.topBarTitle">
-          <el-button
-            type="primary"
-            round
-            size="small"
-            @click="infoBySendType.sendFunc"
-            :disabled="imageStore.isImageUploading || couldNotSend"
-            :loading="isSending"
-          >
-            {{ infoBySendType.topBarBtnText }}
-          </el-button>
-        </TopBar>
-        <DataContainerMountedMask>
+    <DataContainerMountedMask>
+      <Col2Layout>
+        <template #colLeftSm>
+          <TopBar :title="infoBySendType.topBarTitle">
+            <el-button
+              type="primary"
+              round
+              size="small"
+              @click="infoBySendType.sendFunc"
+              :disabled="imageStore.isImageUploading || couldNotSend"
+              :loading="isSending"
+            >
+              {{ infoBySendType.topBarBtnText }}
+            </el-button>
+          </TopBar>
+
           <div
             class="post-group-box"
             v-if="
@@ -186,22 +187,21 @@ const imageBoxSize = useElementSize(refImageBox)
               notPreview
             ></PostGroup>
           </div>
-        </DataContainerMountedMask>
-      </template>
-      <template #colLeft>
-        <TopBar :title="infoBySendType.topBarTitle">
-          <el-button
-            type="primary"
-            round
-            size="small"
-            @click="infoBySendType.sendFunc"
-            :disabled="imageStore.isImageUploading || couldNotSend"
-            :loading="isSending"
-          >
-            {{ infoBySendType.topBarBtnText }}
-          </el-button>
-        </TopBar>
-        <DataContainerMountedMask>
+        </template>
+        <template #colLeft>
+          <TopBar :title="infoBySendType.topBarTitle">
+            <el-button
+              type="primary"
+              round
+              size="small"
+              @click="infoBySendType.sendFunc"
+              :disabled="imageStore.isImageUploading || couldNotSend"
+              :loading="isSending"
+            >
+              {{ infoBySendType.topBarBtnText }}
+            </el-button>
+          </TopBar>
+
           <div
             class="post-group-box"
             v-if="
@@ -219,96 +219,94 @@ const imageBoxSize = useElementSize(refImageBox)
             v-model="imagesData"
             :max="postConfig.postMaxImages"
           ></ImageSelector>
-        </DataContainerMountedMask>
-      </template>
-      <template #colRight>
-        <div class="info-bar">
-          <div class="info">
-            <div class="repost" v-if="infoBySendType.repostLableText != null">
-              <el-icon :size="15">
-                <ChatLineSquare />
-              </el-icon>
-              <div class="repost-text">
-                {{ infoBySendType.repostLableText }}
+        </template>
+        <template #colRight>
+          <div class="info-bar">
+            <div class="info">
+              <div class="repost" v-if="infoBySendType.repostLableText != null">
+                <el-icon :size="15">
+                  <ChatLineSquare />
+                </el-icon>
+                <div class="repost-text">
+                  {{ infoBySendType.repostLableText }}
+                </div>
               </div>
             </div>
+            <div class="time">
+              <span>{{ showTime }}</span>
+              <el-button
+                type="info"
+                :icon="EditPen"
+                circle
+                size="small"
+                @click="refInfoEditDialog?.open()"
+              />
+            </div>
           </div>
-          <div class="time">
-            <span>{{ showTime }}</span>
-            <el-button
-              type="info"
-              :icon="EditPen"
-              circle
-              size="small"
-              @click="refInfoEditDialog?.open()"
+          <div class="content-box">
+            <el-input
+              v-model="formModel.content"
+              :placeholder="infoBySendType.textareaPlaceholder"
+              :autosize="{ minRows: 8, maxRows: 20 }"
+              type="textarea"
+              resize="none"
+              class="content-textarea"
             />
+            <div class="char-progress-box">
+              <Transition name="fade-pop">
+                <CharProgress
+                  v-if="formModel.content"
+                  v-model="formModel.content"
+                ></CharProgress>
+              </Transition>
+            </div>
           </div>
-        </div>
-        <div class="content-box">
-          <el-input
-            v-model="formModel.content"
-            :placeholder="infoBySendType.textareaPlaceholder"
-            :autosize="{ minRows: 8, maxRows: 20 }"
-            type="textarea"
-            resize="none"
-            class="content-textarea"
-          />
-          <div class="char-progress-box">
-            <Transition name="fade-pop">
-              <CharProgress
-                v-if="formModel.content"
-                v-model="formModel.content"
-              ></CharProgress>
+          <div class="image-box-container">
+            <Transition name="fade-slide">
+              <div
+                class="image-box"
+                v-if="imagesData.length > 0"
+                ref="refImageBox"
+              >
+                <div class="image-group-transition-container">
+                  <Transition name="fade-slide" mode="out-in">
+                    <ImageGroup
+                      :data="imagesData"
+                      backgroundColor="soft"
+                      aspectRatio169
+                      :key="imagesData.map((i) => i.id).toString()"
+                    ></ImageGroup>
+                  </Transition>
+                </div>
+                <div class="image-edit-button">
+                  <el-button
+                    type="primary"
+                    :icon="Edit"
+                    round
+                    size="small"
+                    @click="refImageEditDialog?.open()"
+                  >
+                    修改图片
+                  </el-button>
+                </div>
+              </div>
             </Transition>
           </div>
-        </div>
-        <div class="image-box-container">
-          <Transition name="fade-slide">
-            <div
-              class="image-box"
-              v-if="imagesData.length > 0"
-              ref="refImageBox"
-            >
-              <div class="image-group-transition-container">
-                <Transition name="fade-slide" mode="out-in">
-                  <ImageGroup
-                    :data="imagesData"
-                    backgroundColor="soft"
-                    aspectRatio169
-                    :key="imagesData.map((i) => i.id).toString()"
-                  ></ImageGroup>
-                </Transition>
-              </div>
-              <div class="image-edit-button">
-                <el-button
-                  type="primary"
-                  :icon="Edit"
-                  round
-                  size="small"
-                  @click="refImageEditDialog?.open()"
-                >
-                  修改图片
-                </el-button>
-              </div>
-            </div>
-          </Transition>
-        </div>
-        <div
-          class="image-upload-select hidden-md-and-up"
-          :style="{ transform: `translateY(${imageBoxSize.height.value}px)` }"
-          :class="{ 'image-box-show': imagesData.length > 0 }"
-        >
-          <ImageUploader :onUploaded="addImage"></ImageUploader>
-          <DataContainerMountedMask>
+          <div
+            class="image-upload-select hidden-md-and-up"
+            :style="{ transform: `translateY(${imageBoxSize.height.value}px)` }"
+            :class="{ 'image-box-show': imagesData.length > 0 }"
+          >
+            <ImageUploader :onUploaded="addImage"></ImageUploader>
             <ImageSelector
               v-model="imagesData"
               :max="postConfig.postMaxImages"
               infiniteScroll
             ></ImageSelector>
-          </DataContainerMountedMask>
-        </div>
-      </template>
-    </Col2Layout>
+          </div>
+        </template>
+      </Col2Layout>
+    </DataContainerMountedMask>
   </div>
 </template>
 

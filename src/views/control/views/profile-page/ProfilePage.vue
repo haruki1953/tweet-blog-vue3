@@ -33,7 +33,6 @@ import AboutMarkdown from './components/AboutMarkdown.vue'
       <!-- <div class="control-divider"></div>
       <div class="control-row decoration"></div> -->
     </div>
-    <PageFooter></PageFooter>
   </div>
 </template>
 

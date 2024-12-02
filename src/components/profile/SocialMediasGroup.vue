@@ -62,6 +62,8 @@ const socialMediasInfo = computed(() => {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  color: var(--color-text);
+  transition: color 0.2s;
 }
 .link-icon-box {
   position: relative;

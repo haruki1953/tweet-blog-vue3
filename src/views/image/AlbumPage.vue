@@ -53,45 +53,43 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div>
-    <Col2Layout reverse>
-      <template #colLeftSm>
-        <DataContainerMountedMask>
+  <div class="album-page">
+    <DataContainerMountedMask>
+      <Col2Layout reverse>
+        <template #colLeftSm>
           <AlbumInfo></AlbumInfo>
           <ImageEditDialog
             v-model="imagesData"
             autoOpen
             cancelOnClose
           ></ImageEditDialog>
-        </DataContainerMountedMask>
-      </template>
-      <template #colLeft>
-        <AlbumInfo></AlbumInfo>
-        <div
-          class="image-edit-card-container"
-          :style="{ height: `${boxSize.height.value}px` }"
-        >
-          <Transition name="fade-down" mode="out-in">
-            <div
-              class="image-edit-card-box"
-              ref="boxRef"
-              :key="imagesData.map((i) => i.id).toString()"
-            >
-              <ImageEditCard v-model="imagesData" notPreview></ImageEditCard>
-            </div>
-          </Transition>
-        </div>
-      </template>
-      <template #colRight>
-        <DataContainerMountedMask>
+        </template>
+        <template #colLeft>
+          <AlbumInfo></AlbumInfo>
+          <div
+            class="image-edit-card-container"
+            :style="{ height: `${boxSize.height.value}px` }"
+          >
+            <Transition name="fade-down" mode="out-in">
+              <div
+                class="image-edit-card-box"
+                ref="boxRef"
+                :key="imagesData.map((i) => i.id).toString()"
+              >
+                <ImageEditCard v-model="imagesData" notPreview></ImageEditCard>
+              </div>
+            </Transition>
+          </div>
+        </template>
+        <template #colRight>
           <ImageSelector
             v-model="imagesData"
             infiniteScroll
             ref="refImageSelecter"
           ></ImageSelector>
-        </DataContainerMountedMask>
-      </template>
-    </Col2Layout>
+        </template>
+      </Col2Layout>
+    </DataContainerMountedMask>
   </div>
 </template>
 

@@ -22,31 +22,37 @@ const friendLinksInfo = computed(() => {
 </script>
 <template>
   <div class="about-page">
-    <div class="height-center-box">
-      <div class="markdown-content">
-        <div v-html="aboutMdHtml" class="md-html"></div>
-        <div
-          class="link-content"
-          v-if="contactLinksInfo.length > 0 || friendLinksInfo.length > 0"
-        >
-          <template v-if="contactLinksInfo.length > 0">
-            <h2>联系方式</h2>
-            <ExternalLinksGroup type="contact"></ExternalLinksGroup>
-          </template>
-          <template v-if="friendLinksInfo.length > 0">
-            <h2>友情链接</h2>
-            <ExternalLinksGroup type="friend"></ExternalLinksGroup>
-          </template>
+    <DataContainerMountedMask>
+      <div class="about-page-box">
+        <div class="height-center-box">
+          <div class="markdown-content">
+            <div v-html="aboutMdHtml" class="md-html"></div>
+            <div
+              class="link-content"
+              v-if="contactLinksInfo.length > 0 || friendLinksInfo.length > 0"
+            >
+              <template v-if="contactLinksInfo.length > 0">
+                <h2>联系方式</h2>
+                <ExternalLinksGroup type="contact"></ExternalLinksGroup>
+              </template>
+              <template v-if="friendLinksInfo.length > 0">
+                <h2>友情链接</h2>
+                <ExternalLinksGroup type="friend"></ExternalLinksGroup>
+              </template>
+            </div>
+            <div class="social-medias-box">
+              <SocialMediasGroup></SocialMediasGroup>
+            </div>
+          </div>
         </div>
       </div>
-      <SocialMediasGroup></SocialMediasGroup>
-    </div>
+    </DataContainerMountedMask>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.about-page {
-  margin-bottom: 20px;
+.about-page-box {
+  margin: var(--layout-top) 0 var(--layout-bottom) 0;
   min-height: calc(100vh - 60px - 20px - 10vh);
   display: flex;
   flex-direction: column;
@@ -59,11 +65,14 @@ const friendLinksInfo = computed(() => {
   }
 }
 
+.social-medias-box {
+  margin-top: 20px;
+}
+
 .markdown-content {
   max-width: 920px;
-  margin: 20px auto;
+  margin: 0 auto;
   padding: 20px 30px;
-  padding-bottom: 20px;
   border-radius: 20px;
   font-family: Arial, sans-serif;
   line-height: 1.6;

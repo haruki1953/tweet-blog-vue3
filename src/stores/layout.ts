@@ -8,7 +8,8 @@ export const useLayoutStore = defineStore(
     const windowSize = useWindowSize()
     const col2IsShow2Col = computed(() => windowSize.width.value >= 992)
     const col2LeftHeight = computed(() => {
-      return windowSize.height.value - 61
+      // return windowSize.height.value - 61
+      return windowSize.height.value - 1
     })
 
     return {
