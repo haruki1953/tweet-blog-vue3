@@ -45,7 +45,7 @@ const menu = [
   <div class="layout-container">
     <ImageAltDialog></ImageAltDialog>
     <div class="back-top-btn-box">
-      <el-backtop :bottom="25" :right="30" />
+      <el-backtop :bottom="20" :right="20" />
     </div>
     <!-- 导航栏 -->
     <!-- <MenuBar :menu="menu"></MenuBar> -->
@@ -66,6 +66,7 @@ const menu = [
   right: 0;
   z-index: 30;
   pointer-events: none;
+  transition: opacity 0.3s;
 }
 
 // 响应式边距
@@ -118,8 +119,13 @@ const menu = [
 }
 
 .el-backtop {
-  --el-backtop-bg-color: var(--color-background-mute);
-  --el-backtop-hover-bg-color: var(--el-color-primary-light-8);
+  --el-backtop-bg-color: var(--color-background-soft);
+  --el-backtop-hover-bg-color: var(--el-color-primary-light-7);
   transition: all 0.5s;
+  width: 50px;
+  height: 50px;
+  &:hover {
+    box-shadow: var(--el-box-shadow-light);
+  }
 }
 </style>

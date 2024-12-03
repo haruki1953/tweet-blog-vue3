@@ -30,7 +30,9 @@ export const useImageViewerOptimization = (dependencies: {
   const enableOnViewerShow = async () => {
     isViewing.value = true
     // 禁用滚动，同时防止抖动
-    optimizationScrollOnOverlayShow()
+    optimizationScrollOnOverlayShow({
+      hiddenMenuBar: true
+    })
 
     // 加载大图
     loadImageOnViewerShow()

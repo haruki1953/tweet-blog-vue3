@@ -194,7 +194,7 @@ const menuDrawerSelect = async (index: string) => {
 .decoration-item {
   padding: 0 20px;
   &.lg {
-    padding-left: 25px;
+    padding: 0 25px;
   }
 }
 
@@ -284,7 +284,7 @@ const menuDrawerSelect = async (index: string) => {
     }
   }
   .dark-link {
-    margin-bottom: 15px;
+    margin: 0 5px 15px 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;

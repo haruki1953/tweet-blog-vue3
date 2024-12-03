@@ -1,12 +1,18 @@
 import { getScrollbarWidth } from '../other'
 
 // 选择器
-const menuBarQuerySelector = '.layout-container .menu'
+const menuBarQuerySelector = '.layout-container>.menu'
 const backtopBtnQuerySelector = '.back-top-btn-box'
 const messagesQuerySelector = '.el-message'
 const notificationsQuerySelector = '.el-notification.right'
 
-export const optimizationScrollOnOverlayShow = () => {
+export const optimizationScrollOnOverlayShow = (
+  option: {
+    hiddenMenuBar?: boolean
+  } = {}
+) => {
+  const { hiddenMenuBar = false } = option
+
   // 禁用滚动，同时防止抖动
   const scrollbarWidth = getScrollbarWidth()
   document.documentElement.style.overflowY = 'hidden'
@@ -17,6 +23,9 @@ export const optimizationScrollOnOverlayShow = () => {
   ) as HTMLElement | null
   if (menuBar) {
     menuBar.style.paddingRight = `${scrollbarWidth}px`
+    if (hiddenMenuBar) {
+      menuBar.style.opacity = `0`
+    }
   }
   // 返回顶部按钮
   const backtopBtn = document.querySelector(
@@ -70,6 +79,7 @@ export const optimizationScrollOnOverlayClose = () => {
   if (menuBar) {
     // menuBar.style.paddingRight = `0`
     menuBar.style.paddingRight = ''
+    menuBar.style.opacity = ``
   }
   // 返回顶部按钮
   const backtopBtn = document.querySelector(

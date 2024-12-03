@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, type Component } from 'vue'
 import { useDark, useToggle, useScroll } from '@vueuse/core'
-import { logoImage } from '@/config'
 import { MoonNight, Sunrise, MoreFilled } from '@element-plus/icons-vue'
 import DecorationDot from './DecorationDot.vue'
 import { webName } from '@/config'
