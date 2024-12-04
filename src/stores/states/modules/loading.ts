@@ -6,7 +6,10 @@ export const useLoadingModule = () => {
   const loadingImageMark = ref(false)
   const loadingPostIds = ref<string[]>([])
   // dataFirstLoadService
+  // 是否正在加载初始化数据
   const loadingFirstDataMark = ref(false)
+  // 是否是第一次加载初始化数据（指的是在此浏览器上第一次访问网站）
+  const isFirstLoadFirstData = ref(true)
 
   const isLoadingData = computed(() => {
     if (
@@ -53,12 +56,14 @@ export const useLoadingModule = () => {
   // dataFirstLoadService
   const setFirstDataLoading = (isLoading: boolean) => {
     loadingFirstDataMark.value = isLoading
+    isFirstLoadFirstData.value = false
   }
 
   return {
     isLoadingData,
     isLoadingImage,
     isLoadingPost,
+    isFirstLoadFirstData,
     setLoading,
     setPostLoading,
     setImageLoading,

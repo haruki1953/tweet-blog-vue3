@@ -71,7 +71,8 @@ useDialogOptimization({
           />
         </div>
       </div>
-      <PostGroup :data="[data]" mini notPreview notAlt></PostGroup>
+      <el-divider border-style="dotted" />
+      <PostCard :data="data" mini notPreview notAlt></PostCard>
       <div class="button-box">
         <el-button round type="danger" size="small" @click="deletePost">
           删 除
@@ -100,9 +101,16 @@ useDialogOptimization({
   align-items: center;
 }
 .button-box {
-  margin-top: 20px;
+  margin-top: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.el-divider {
+  width: 90%;
+  margin: 20px auto 14px auto;
+  transition: all 0.5s;
+  --el-border-color: var(--color-border);
 }
 </style>

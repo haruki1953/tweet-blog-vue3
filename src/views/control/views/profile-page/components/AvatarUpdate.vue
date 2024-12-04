@@ -31,7 +31,7 @@ const initData = () => {
   if (profileStore.avatar === null) {
     return
   }
-  refAvatarSelector.value?.selectImgById(profileStore.avatar)
+  refAvatarSelector.value?.selectImgById(profileStore.avatar, false)
 }
 onMounted(initData)
 // profileStore 加载后，应初始化数据

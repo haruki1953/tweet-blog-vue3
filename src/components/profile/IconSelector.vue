@@ -52,9 +52,16 @@ const isSelected = (img: ImgItem) => {
     return false
   }
 }
-const selectImage = (img: ImgItem) => {
+const selectImage = (img: ImgItem, couldCancel?: boolean) => {
+  let isCouldCancel
+  if (couldCancel != null) {
+    isCouldCancel = couldCancel
+  } else {
+    isCouldCancel = props.couldCancel
+  }
+
   if (isSelected(img)) {
-    if (!props.couldCancel) {
+    if (!isCouldCancel) {
       return
     }
     model.value = model.value.filter(
@@ -68,11 +75,11 @@ const selectImage = (img: ImgItem) => {
   }
 }
 
-const selectImgById = (uuid: string) => {
+const selectImgById = (uuid: string, couldCancel?: boolean) => {
   const findImg = imageArray.value.find((i) => i.uuid === uuid)
   if (findImg) {
     // model.value = [findImg]
-    selectImage(findImg)
+    selectImage(findImg, couldCancel)
   }
   return findImg
 }

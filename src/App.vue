@@ -1,12 +1,32 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { getScrollbarWidth } from './utils'
+import { dataConfirmLoginService, dataFirstLoadService } from './services'
+import { useStatesStore } from './stores'
 
-// 等待加载数据（暂不需要），之后取消在 index.html 中的加载遮罩
+// 检查登录，等待加载数据，之后取消在 index.html 中的加载遮罩
 onMounted(async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  const isLogin = dataConfirmLoginService()
+  if (isLogin) {
+    await dataFirstLoadAwait()
+  }
   indexMaskClose()
 })
+
+const statesStore = useStatesStore()
+
+// 等待加载数据，最多等待3秒或10秒（第一次加载），最少等待1秒
+const dataFirstLoadAwait = async () => {
+  const maxTimeout = statesStore.isFirstLoadFirstData ? 10000 : 3000
+  const minTimeout = 1000
+  await Promise.all([
+    Promise.race([
+      dataFirstLoadService().catch(() => {}),
+      new Promise((resolve) => setTimeout(resolve, maxTimeout))
+    ]),
+    new Promise((resolve) => setTimeout(resolve, minTimeout))
+  ])
+}
 
 // 关闭加载遮罩，恢复滚动条，同时防止抖动
 const indexMaskClose = async () => {
@@ -20,28 +40,6 @@ const indexMaskClose = async () => {
     maskElement.style.display = 'none'
   }
 }
-
-// 取消 index.html 中的遮罩 #index-mask
-// 延迟 有助于确保页面稳定显示
-// 对于遮罩和加载条，可以设置不同的延时
-// onMounted(async () => {
-//   await new Promise((resolve) => setTimeout(resolve, 500))
-//   const loadingElement = document.getElementById('index-loading')
-//   if (loadingElement) {
-//     loadingElement.style.opacity = '0'
-//     await new Promise((resolve) => setTimeout(resolve, 500))
-//     loadingElement.style.display = 'none'
-//   }
-// })
-// onMounted(async () => {
-//   await new Promise((resolve) => setTimeout(resolve, 1000))
-//   const maskElement = document.getElementById('index-mask')
-//   if (maskElement) {
-//     maskElement.style.opacity = '0'
-//     await new Promise((resolve) => setTimeout(resolve, 500))
-//     maskElement.style.display = 'none'
-//   }
-// })
 </script>
 
 <template>

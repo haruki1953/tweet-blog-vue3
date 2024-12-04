@@ -4,6 +4,7 @@ import AuthUpdate from './components/AuthUpdate.vue'
 import ImageConfig from './components/ImageConfig.vue'
 import ImageNotUsedDelete from './components/ImageNotUsedDelete.vue'
 import ImageAllOriginalDelete from './components/ImageAllOriginalDelete.vue'
+import QuitLogin from './components/QuitLogin.vue'
 </script>
 <template>
   <div class="system-page">
@@ -14,6 +15,10 @@ import ImageAllOriginalDelete from './components/ImageAllOriginalDelete.vue'
       <div class="control-divider"></div>
       <div class="control-row">
         <AdminInfo></AdminInfo>
+      </div>
+      <div class="control-divider"></div>
+      <div class="control-row">
+        <QuitLogin></QuitLogin>
       </div>
     </div>
     <div class="control-box">

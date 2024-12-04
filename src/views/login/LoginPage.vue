@@ -8,6 +8,13 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores'
 import { adminLoginApi } from '@/api'
 import { sakiMessage } from '@/utils'
+import { onMounted } from 'vue'
+import DataContainerMountedMask from '@/components/layout/DataContainerMountedMask.vue'
+import { dataConfirmLoginService, dataFirstLoadService } from '@/services'
+
+onMounted(() => {
+  dataConfirmLoginService()
+})
 
 useDark({ disableTransition: false })
 
@@ -32,12 +39,14 @@ const login = async () => {
     const res = await adminLoginApi(formModel.value)
     // save token
     authStore.setToken(res.data.data)
-    // push to home
-    await router.push({ name: 'home' })
     sakiMessage({
       type: 'success',
       message: '登录成功'
     })
+    // init data
+    dataFirstLoadService()
+    // push to home
+    await router.push({ name: 'home' })
   } finally {
     // reset submit states mark
     isSubmitting.value = false
@@ -46,46 +55,50 @@ const login = async () => {
 </script>
 <template>
   <div class="login-page">
-    <div class="login-box">
-      <div class="title">{{ webName }}</div>
-      <el-form :model="formModel" :rules="rules" ref="form" size="large">
-        <el-form-item prop="username">
-          <el-input
-            v-model="formModel.username"
-            :prefix-icon="User"
-            placeholder="请输入用户名"
-            name="username"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            v-model="formModel.password"
-            :prefix-icon="Lock"
-            type="password"
-            placeholder="请输入密码"
-            name="password"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <div class="button-box">
-        <el-button
-          @click="login"
-          :loading="isSubmitting"
-          class="button"
-          type="primary"
-          size="large"
-          round
-          auto-insert-space
-        >
-          登录
-        </el-button>
+    <DataContainerMountedMask>
+      <div class="login-container">
+        <div class="login-box">
+          <div class="title">{{ webName }}</div>
+          <el-form :model="formModel" :rules="rules" ref="form" size="large">
+            <el-form-item prop="username">
+              <el-input
+                v-model="formModel.username"
+                :prefix-icon="User"
+                placeholder="请输入用户名"
+                name="username"
+              ></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input
+                v-model="formModel.password"
+                :prefix-icon="Lock"
+                type="password"
+                placeholder="请输入密码"
+                name="password"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+          <div class="button-box">
+            <el-button
+              @click="login"
+              :loading="isSubmitting"
+              class="button"
+              type="primary"
+              size="large"
+              round
+              auto-insert-space
+            >
+              登录
+            </el-button>
+          </div>
+        </div>
       </div>
-    </div>
+    </DataContainerMountedMask>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.login-page {
+.login-container {
   height: 100vh;
   max-width: 400px;
   margin: 0 auto;

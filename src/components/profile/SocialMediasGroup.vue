@@ -78,5 +78,11 @@ const socialMediasInfo = computed(() => {
   text-decoration: none; /* 去除下划线 */
   color: inherit; /* 使用父元素的颜色 */
   margin: 0 10px;
+  .el-icon {
+    display: flex;
+    &::before {
+      display: flex;
+    }
+  }
 }
 </style>

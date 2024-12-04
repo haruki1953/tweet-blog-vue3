@@ -9,10 +9,10 @@ export const appInfo = {
   }
 }
 
-// const apiBaseUrl = 'http://localhost:3000/api/'
-// const staticBaseUrl = 'http://localhost:3000/'
-const apiBaseUrl = 'http://192.168.2.110:3000/api/'
-const staticBaseUrl = 'http://192.168.2.110:3000/'
+const apiBaseUrl = 'http://localhost:3000/api/'
+const staticBaseUrl = 'http://localhost:3000/'
+// const apiBaseUrl = 'http://192.168.2.110:3000/api/'
+// const staticBaseUrl = 'http://192.168.2.110:3000/'
 // const apiBaseUrl = '/api/'
 // const staticBaseUrl = '/'
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-// import MenuBar from './components/MenuBar.vue'
-import { dataConfirmLoginService, dataFirstLoadService } from '@/services'
+import { dataConfirmLoginService } from '@/services'
 import {
   HomeFilled,
   InfoFilled,
@@ -14,8 +13,6 @@ import MenuIsland from './components/MenuIsland.vue'
 onMounted(async () => {
   // check login
   dataConfirmLoginService()
-  // 初始化、请求数据
-  await dataFirstLoadService()
 })
 
 const menu = [

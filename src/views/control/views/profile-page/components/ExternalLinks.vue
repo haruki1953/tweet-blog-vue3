@@ -95,7 +95,7 @@ const selectEdit = async (info: ExternalLinkItem) => {
   selectedIconList.value = []
   selectedIconInit.value = selectedInfo.value.icon
   await nextTick()
-  refIconSelector.value?.selectImgById(selectedInfo.value.icon)
+  refIconSelector.value?.selectImgById(selectedInfo.value.icon, false)
 }
 const selectAdd = () => {
   if (mode.value === 'add') {

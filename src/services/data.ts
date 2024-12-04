@@ -13,7 +13,9 @@ export const dataConfirmLoginService = () => {
   const authStore = useAuthStore()
   if (authStore.token === '') {
     router.push({ name: 'login' })
+    return false
   }
+  return true
 }
 
 export const dataFirstLoadService = async () => {

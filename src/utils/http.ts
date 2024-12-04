@@ -43,6 +43,8 @@ instance.interceptors.response.use(
     // TODO 5. 处理401错误
     // 错误的特殊情况 => 401 权限不足 或 token 过期 => 拦截到登录
     if (err.response?.status === 401) {
+      const authStore = useAuthStore()
+      authStore.removeToken()
       router.push({ name: 'login' })
     }
 

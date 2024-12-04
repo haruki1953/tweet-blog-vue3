@@ -65,8 +65,12 @@ onMounted(() => {
           ></ImageEditDialog>
         </template>
         <template #colLeft>
-          <AlbumInfo></AlbumInfo>
-          <div
+          <div :key="imagesData.map((i) => i.id).toString()">
+            <DataContainerMountedMask>
+              <AlbumInfo></AlbumInfo>
+
+              <div class="image-edit-card-container">
+                <!-- <div
             class="image-edit-card-container"
             :style="{ height: `${boxSize.height.value}px` }"
           >
@@ -75,10 +79,13 @@ onMounted(() => {
                 class="image-edit-card-box"
                 ref="boxRef"
                 :key="imagesData.map((i) => i.id).toString()"
-              >
+              > -->
                 <ImageEditCard v-model="imagesData" notPreview></ImageEditCard>
-              </div>
+                <!-- </div>
             </Transition>
+          </div> -->
+              </div>
+            </DataContainerMountedMask>
           </div>
         </template>
         <template #colRight>
@@ -95,13 +102,13 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .image-edit-card-container {
-  margin-top: 5px;
-  position: relative;
+  margin-top: 15px;
+  // position: relative;
   // overflow: hidden;
   // transition: height 0.3s;
-  .image-edit-card-box {
-    position: absolute;
-    width: 100%;
-  }
+  // .image-edit-card-box {
+  //   position: absolute;
+  //   width: 100%;
+  // }
 }
 </style>
