@@ -11,7 +11,7 @@ export type ImageGetByCursorRes = ResData<ImageStoreData[]>
 export type ImageUpdateJsonType = {
   id: string
   alt?: string | null | undefined
-  twitterLargeImageLink?: string | null | undefined
+  // twitterLargeImageLink?: string | null | undefined
 }
 export type ImageUpdateRes = ResData<Image>
 

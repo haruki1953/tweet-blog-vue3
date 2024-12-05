@@ -12,8 +12,8 @@ export type PostSendJsonType = {
   images?: string[] | undefined
   createdAt?: Date | undefined
   parentPostId?: string | null | undefined
-  twitterId?: string | null | undefined
-  twitterLink?: string | null | undefined
+  // twitterId?: string | null | undefined
+  // twitterLink?: string | null | undefined
   isDeleted?: boolean | undefined
 }
 export type PostSendRes = ResData<Post>

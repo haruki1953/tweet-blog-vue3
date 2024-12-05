@@ -105,8 +105,8 @@ const initFormModelForUpdate = () => {
     content,
     createdAt,
     parentPostId,
-    twitterId,
-    twitterLink,
+    // twitterId,
+    // twitterLink,
     isDeleted,
     images
   } = infoBySendType.value.data
@@ -114,8 +114,8 @@ const initFormModelForUpdate = () => {
     content,
     createdAt: new Date(createdAt),
     parentPostId,
-    twitterId,
-    twitterLink,
+    // twitterId,
+    // twitterLink,
     isDeleted
   }
   // deep copy, to prevent it change the post in home page

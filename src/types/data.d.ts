@@ -7,7 +7,7 @@ export interface Image {
   largeSize: number
   originalSize: number
   originalPath: string | null
-  twitterLargeImageLink: string | null
+  // twitterLargeImageLink: string | null
 }
 
 export interface PostBase {
@@ -17,8 +17,8 @@ export interface PostBase {
   content: string
   isDeleted: boolean
   parentPostId: string | null
-  twitterId: string | null
-  twitterLink: string | null
+  // twitterId: string | null
+  // twitterLink: string | null
   imagesOrder: string | null
   _count: {
     replies: number

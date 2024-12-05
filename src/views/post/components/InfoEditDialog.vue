@@ -43,8 +43,8 @@ const resetModelData = () => {
   }
   // default reset
   model.value.createdAt = undefined
-  model.value.twitterId = undefined
-  model.value.twitterLink = undefined
+  // model.value.twitterId = undefined
+  // model.value.twitterLink = undefined
 }
 
 const placeholderByType = computed(() => {
@@ -85,7 +85,7 @@ useDialogOptimization({
             />
           </div>
         </div>
-        <div class="row center-box">
+        <!-- <div class="row center-box">
           <div class="lable">X Id</div>
           <div class="input-box">
             <el-input
@@ -95,8 +95,8 @@ useDialogOptimization({
               class="input"
             />
           </div>
-        </div>
-        <div class="row center-box">
+        </div> -->
+        <!-- <div class="row center-box">
           <div class="lable">X Link</div>
           <div class="input-box">
             <el-input
@@ -106,7 +106,7 @@ useDialogOptimization({
               class="input"
             />
           </div>
-        </div>
+        </div> -->
         <div class="button-box">
           <el-button round type="info" size="small" @click="resetModelData">
             重 置
