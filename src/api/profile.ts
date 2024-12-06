@@ -30,10 +30,10 @@ export const profileUpdateNameBioApi = ({
 }
 
 export const profileAddAvatarApi = (imageBlob: Blob): ProfileAddAvatarRes => {
-  let fileType = imageBlob.type.split('/')[1] // 获取文件类型后缀
-  if (fileType === 'jpeg') {
-    fileType = 'jpg' // 将 jpeg 转换为 jpg
-  }
+  const fileType = imageBlob.type.split('/')[1] // 获取文件类型后缀
+  // if (fileType === 'jpeg') {
+  //   fileType = 'jpg' // 将 jpeg 转换为 jpg
+  // }
   const fd = new FormData()
   fd.append('image', imageBlob, `image.${fileType}`)
   return http.post('/profile/avatar', fd)
@@ -63,10 +63,10 @@ export const profileUpdateSocialMediasApi = (
 }
 
 export const profileAddIconApi = (imageBlob: Blob): ProfileAddIconRes => {
-  let fileType = imageBlob.type.split('/')[1] // 获取文件类型后缀
-  if (fileType === 'jpeg') {
-    fileType = 'jpg' // 将 jpeg 转换为 jpg
-  }
+  const fileType = imageBlob.type.split('/')[1] // 获取文件类型后缀
+  // if (fileType === 'jpeg') {
+  //   fileType = 'jpg' // 将 jpeg 转换为 jpg
+  // }
   const fd = new FormData()
   fd.append('image', imageBlob, `image.${fileType}`)
   return http.post('/profile/external-icon', fd)
