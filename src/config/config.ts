@@ -89,39 +89,7 @@ export const postConfig = {
   remainingCharsToWarning: 20
 }
 
-// 海报 占位 失败
+// 占位图片
 import sakiPlaceholder from '@/assets/saki-placeholder.jpg'
 import sakiError from '@/assets/saki-error.jpg'
 export { sakiPlaceholder, sakiError }
-
-interface LinkInfo {
-  [key: string]: {
-    name: string
-    fontawesomeClass: string
-    // logoUrl?: string
-    description: string
-    link: string
-  }
-}
-// 联系方式
-export const contactInfo: LinkInfo = {
-  twitter: {
-    name: 'X / Twitter', // 平台名称
-    fontawesomeClass: 'fa-brands fa-x-twitter', // fontawesome图标的class
-    // logoUrl: '', // 图标地址(有fontawesomeClass则不显示)
-    description: '@harukiO_0', // 描述,简介
-    link: 'https://x.com/harukiO_0' // 链接
-  },
-  discord: {
-    name: 'Discord',
-    fontawesomeClass: 'fa-brands fa-discord',
-    description: '小祥の小窝',
-    link: 'https://discord.gg/nZWpvz2WNW'
-  },
-  github: {
-    name: 'Github',
-    fontawesomeClass: 'fa-brands fa-github',
-    description: 'tweet-blog-vue3',
-    link: 'https://github.com/haruki1953/tweet-blog-vue3'
-  }
-}

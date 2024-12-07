@@ -14,10 +14,9 @@ import AboutPage from '@/views/about/AboutPage.vue'
 
 import SystemPage from '@/views/control/views/system-page/SystemPage.vue'
 import ProfilePage from '@/views/control/views/profile-page/ProfilePage.vue'
-
-import ForwardConfig from '@/views/control/views/ForwardConfig.vue'
-import TweetImport from '@/views/control/views/TweetImport.vue'
-import LogPage from '@/views/control/views/LogPage.vue'
+import ForwardConfig from '@/views/control/views/forward-config/ForwardConfig.vue'
+import TweetImport from '@/views/control/views/tweet-import/TweetImport.vue'
+import LogPage from '@/views/control/views/log-page/LogPage.vue'
 
 import { useImageStore, usePostStore, useProfileStore } from '@/stores'
 

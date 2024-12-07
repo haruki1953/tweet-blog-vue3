@@ -31,21 +31,21 @@ const menu: IconMenuItem[] = [
     }
   },
   {
-    index: '/forward-config',
-    title: `转发设置`,
-    icon: Connection,
-    actionColor: 'primary',
-    onClick() {
-      router.push('/forward-config')
-    }
-  },
-  {
     index: '/tweet-import',
     title: `推文导入`,
     icon: Sell,
     actionColor: 'primary',
     onClick() {
       router.push('/tweet-import')
+    }
+  },
+  {
+    index: '/forward-config',
+    title: `转发设置`,
+    icon: Connection,
+    actionColor: 'primary',
+    onClick() {
+      router.push('/forward-config')
     }
   },
   {
