@@ -1,14 +1,3 @@
-export const appInfo = {
-  copyright: {
-    text: 'Tweblog',
-    link: '/'
-  },
-  version: {
-    text: 'v0.0.0',
-    link: '/'
-  }
-}
-
 const apiBaseUrl = 'http://localhost:3000/api/'
 const staticBaseUrl = 'http://localhost:3000/'
 // const apiBaseUrl = 'http://192.168.2.110:3000/api/'

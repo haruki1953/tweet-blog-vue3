@@ -1,4 +1,5 @@
 export * from './config'
+export * from './info'
 export * from './control'
 export * from './rules'
 export * from './fa-brands'
