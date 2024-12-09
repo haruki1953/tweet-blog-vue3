@@ -69,7 +69,7 @@ const {
             <el-input
               v-model="formModel.alt"
               placeholder="添加描述"
-              :autosize="{ minRows: 2, maxRows: 10 }"
+              :autosize="{ minRows: 1, maxRows: 10 }"
               resize="none"
               type="textarea"
               size="large"
@@ -191,7 +191,7 @@ const {
   .textarea {
     // background-color: var(--color-background-soft);
     // transition: all 0.5s;
-    margin-bottom: -5px;
+    margin-bottom: 8px;
     :deep() {
       .el-textarea__inner {
         // color: var(--color-text);
@@ -208,7 +208,7 @@ const {
         color: var(--color-text-soft);
         transition: all 0.5s;
         left: 10px;
-        bottom: -20px;
+        bottom: -30px;
         user-select: none;
       }
     }
