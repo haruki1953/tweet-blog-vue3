@@ -17,6 +17,9 @@ dependencies:
   element-plus:
     specifier: ^2.7.7
     version: 2.7.7(vue@3.4.33)
+  he:
+    specifier: ^1.2.0
+    version: 1.2.0
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -46,6 +49,9 @@ devDependencies:
   '@tsconfig/node20':
     specifier: ^20.1.4
     version: 20.1.4
+  '@types/he':
+    specifier: ^1.2.3
+    version: 1.2.3
   '@types/lodash':
     specifier: ^4.17.13
     version: 4.17.13
@@ -620,6 +626,10 @@ packages:
 
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+    dev: true
+
+  /@types/he@1.2.3:
+    resolution: {integrity: sha512-q67/qwlxblDzEDvzHhVkwc1gzVWxaNxeyHUBF4xElrvjL11O+Ytze+1fGpBHlr/H9myiBUaUXNnNPmBHxxfAcA==}
     dev: true
 
   /@types/linkify-it@5.0.0:
@@ -1675,7 +1685,6 @@ packages:
   /he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
-    dev: true
 
   /human-signals@5.0.0:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}

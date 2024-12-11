@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { appInfo, platformKeyMap, type PlatformKeyEnumValues } from '@/config'
-import type { PostControlImportJsonType } from '@/types'
+import type { PostControlImportJsonTypeOnDataProcess } from '@/types'
 import {
   ChatSquare,
   Link,
@@ -8,8 +8,13 @@ import {
   Remove
 } from '@element-plus/icons-vue'
 import { ref } from 'vue'
+import { processJsonToImportPostsByPlatform } from '../services'
+import { sakiMessage } from '@/utils'
+import { cloneDeep } from 'lodash'
 
-const model = defineModel<PostControlImportJsonType['importPosts']>({
+const model = defineModel<
+  PostControlImportJsonTypeOnDataProcess['importPosts']
+>({
   required: true
 })
 
@@ -25,15 +30,58 @@ const isJsonProcessing = ref(false)
 const jsonProcess = async () => {
   isJsonProcessing.value = true
   try {
-    // test
-    model.value = [
-      {
-        importImages: []
-      }
-    ]
+    const importPosts = processJsonToImportPostsByPlatform({
+      jsonData: jsonData.value,
+      platform: platform.value
+    })
+    if (importPosts == null) {
+      sakiMessage({
+        type: 'error',
+        message: '解析失败'
+      })
+      return
+    } else if (importPosts.length === 0) {
+      sakiMessage({
+        type: 'warning',
+        message: '未解析到推文'
+      })
+    }
+    importPostsAdd(importPosts)
+    // console.log(importPosts)
+    // console.log(model.value)
+    sakiMessage({
+      type: 'success',
+      message: '解析成功'
+    })
+    jsonCancel()
+  } catch (error) {
+    sakiMessage({
+      type: 'error',
+      message: '解析失败'
+    })
   } finally {
     isJsonProcessing.value = false
   }
+}
+
+// 添加帖子数据至 model，并且不与其重复
+const importPostsAdd = (
+  importPosts: PostControlImportJsonTypeOnDataProcess['importPosts']
+) => {
+  const uniquePosts = []
+  for (const newPost of importPosts) {
+    const find = model.value.find(
+      (existingPost) =>
+        existingPost.platform === newPost.platform &&
+        existingPost.platformId === newPost.platformId
+    )
+    if (find) {
+      continue
+    }
+    uniquePosts.push(newPost)
+  }
+
+  model.value.unshift(...uniquePosts)
 }
 </script>
 <template>
@@ -68,7 +116,7 @@ const jsonProcess = async () => {
               v-model="jsonData"
               placeholder=""
               type="textarea"
-              :autosize="{ minRows: 10, maxRows: 20 }"
+              :rows="10"
               resize="none"
               class="control-textarea"
             ></el-input>

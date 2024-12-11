@@ -8,7 +8,6 @@ const md = markdownit()
 
 const aboutMdHtml = computed(() => {
   const htmlStr = md.render(profileStore.aboutMarkdown)
-  console.log(htmlStr)
   return htmlStr
 })
 
