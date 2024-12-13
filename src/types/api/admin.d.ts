@@ -1,10 +1,14 @@
 import type { Image, ResData } from './base'
 
 export type AdminGetInfoData = {
-  isAuthDefault: boolean
+  imageLargeMaxLength: number
+  imageSmallMaxLength: number
+  imageQuality: number
+  proxyAddressHttp: string
   jwtAdminExpSeconds: number
   loginMaxFailCount: number
   loginLockSeconds: number
+  isAuthDefault: boolean
 }
 export type AdminGetInfoRes = ResData<AdminGetInfoData>
 
@@ -12,6 +16,10 @@ export type AdminUpdateInfoJsonType = {
   jwtAdminExpSeconds: number
   loginMaxFailCount: number
   loginLockSeconds: number
+}
+
+export type AdminUpdateProxyJsonType = {
+  proxyAddressHttp: string
 }
 
 export type AdminGatImageConfigData = {

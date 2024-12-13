@@ -20,9 +20,9 @@ const initData = () => {
 // adminStore 在加载中时，应禁用表单
 // adminStore 加载后，应初始化数据
 watch(
-  () => adminStore.isLoadingImageConfig,
+  () => adminStore.isLoading,
   () => {
-    if (adminStore.isLoadingImageConfig) {
+    if (adminStore.isLoading) {
       return
     }
     initData()
@@ -33,12 +33,13 @@ const isSubmiting = ref(false)
 const submit = async () => {
   isSubmiting.value = true
   try {
-    await adminUpdateImageConfigApi({
+    const res = await adminUpdateImageConfigApi({
       imageLargeMaxLength: imageLargeMaxLength.value,
       imageSmallMaxLength: imageSmallMaxLength.value,
       imageQuality: imageQuality.value
     })
-    await adminStore.loadImageConfig()
+    // await adminStore.loadImageConfig()
+    adminStore.loadInfoByResData(res.data.data)
     sakiMessage({
       type: 'success',
       message: '修改成功'

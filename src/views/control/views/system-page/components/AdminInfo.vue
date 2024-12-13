@@ -33,12 +33,13 @@ const isSubmiting = ref(false)
 const submit = async () => {
   isSubmiting.value = true
   try {
-    await adminUpdateInfoApi({
+    const res = await adminUpdateInfoApi({
       jwtAdminExpSeconds: jwtAdminExpSeconds.value,
       loginMaxFailCount: loginMaxFailCount.value,
       loginLockSeconds: loginLockSeconds.value
     })
-    await adminStore.loadInfo()
+    // await adminStore.loadInfo()
+    adminStore.loadInfoByResData(res.data.data)
     sakiMessage({
       type: 'success',
       message: '修改成功'

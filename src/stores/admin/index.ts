@@ -7,6 +7,7 @@ export type AdminStoreModuleDependencies = {
   jwtAdminExpSeconds: Ref<number | null>
   loginMaxFailCount: Ref<number | null>
   loginLockSeconds: Ref<number | null>
+  proxyAddressHttp: Ref<string>
   imageLargeMaxLength: Ref<number | null>
   imageSmallMaxLength: Ref<number | null>
   imageQuality: Ref<number | null>
@@ -21,6 +22,9 @@ export const useAdminStore = defineStore(
     const loginMaxFailCount = ref<number | null>(null)
     const loginLockSeconds = ref<number | null>(null)
 
+    // 代理配置
+    const proxyAddressHttp = ref<string>('')
+
     // 图片配置
     const imageLargeMaxLength = ref<number | null>(null)
     const imageSmallMaxLength = ref<number | null>(null)
@@ -31,6 +35,7 @@ export const useAdminStore = defineStore(
       jwtAdminExpSeconds,
       loginMaxFailCount,
       loginLockSeconds,
+      proxyAddressHttp,
       imageLargeMaxLength,
       imageSmallMaxLength,
       imageQuality
@@ -44,6 +49,7 @@ export const useAdminStore = defineStore(
       jwtAdminExpSeconds,
       loginMaxFailCount,
       loginLockSeconds,
+      proxyAddressHttp,
       imageLargeMaxLength,
       imageSmallMaxLength,
       imageQuality

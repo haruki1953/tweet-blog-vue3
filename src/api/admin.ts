@@ -5,6 +5,7 @@ import type {
   AdminGetInfoRes,
   AdminUpdateImageConfigJsonType,
   AdminUpdateInfoJsonType,
+  AdminUpdateProxyJsonType,
   ResData
 } from '@/types'
 import { http } from '@/utils'
@@ -31,18 +32,32 @@ export const adminGetInfoApi = (): AdminGetInfoRes => {
   return http.get('/admin/info')
 }
 
-export const adminUpdateInfoApi = (json: AdminUpdateInfoJsonType) => {
+export const adminUpdateInfoApi = (
+  json: AdminUpdateInfoJsonType
+): AdminGetInfoRes => {
   return http.put('/admin/info', json)
 }
 
-export const adminGetImageConfigApi = (): AdminGatImageConfigRes => {
-  return http.get('/image/config')
+export const adminUpdateProxyApi = (
+  json: AdminUpdateProxyJsonType
+): AdminGetInfoRes => {
+  return http.put('/admin/proxy', json)
 }
+
+// export const adminGetImageConfigApi = (): AdminGatImageConfigRes => {
+//   return http.get('/image/config')
+// }
+
+// export const adminUpdateImageConfigApi = (
+//   json: AdminUpdateImageConfigJsonType
+// ) => {
+//   return http.put('/image/config', json)
+// }
 
 export const adminUpdateImageConfigApi = (
   json: AdminUpdateImageConfigJsonType
-) => {
-  return http.put('/image/config', json)
+): AdminGetInfoRes => {
+  return http.put('/admin/image', json)
 }
 
 export const adminDeleteNotUsedImageApi = (): AdminDeleteNotUsedImageRes => {

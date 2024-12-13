@@ -93,11 +93,11 @@ const importPostsAdd = (
           <a
             class="link"
             type="primary"
-            :href="appInfo.tweetImportHelpDocs.link"
+            :href="appInfo.importDocs.link"
             target="_blank"
             rel="noopener noreferrer"
           >
-            {{ appInfo.tweetImportHelpDocs.text }}
+            {{ appInfo.importDocs.text }}
           </a>
         </div>
         <div class="form-box">

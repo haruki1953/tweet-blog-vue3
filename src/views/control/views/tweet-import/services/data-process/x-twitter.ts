@@ -34,7 +34,7 @@ const processContent = (data: {
   })
 
   // 处理转贴和回复的字样
-  processedText = processedText.replace(/^RT @\w+: (@\w+ )?/, '')
+  processedText = processedText.replace(/^(RT @\w+: )?(@\w+ )?/, '')
 
   // 解析HTML字符实体（&gt; &lt;）
   processedText = he.decode(processedText)
@@ -120,24 +120,27 @@ const xtwitterEntriesItemHaveItemsSchema = z.object({
   })
 })
 
-const xtwitterItemContentSchema = z.object({
-  tweet_results: z.object({
-    result: z.object({
-      core: z.any().optional(),
-      legacy: z.object({
-        created_at: z.string(),
-        full_text: z.string(),
-        id_str: z.string(),
-        in_reply_to_status_id_str: z.string().optional(),
-        entities: z
-          .object({
-            media: z.array(z.any()).optional(),
-            urls: z.array(z.any()).optional()
-          })
-          .optional()
-      })
+const xtwitterTweetResultsSchema = z.object({
+  result: z.object({
+    core: z.any().optional(),
+    legacy: z.object({
+      created_at: z.string(),
+      full_text: z.string(),
+      id_str: z.string(),
+      in_reply_to_status_id_str: z.string().optional(),
+      retweeted_status_result: z.any().optional(),
+      entities: z
+        .object({
+          media: z.array(z.any()).optional(),
+          urls: z.array(z.any()).optional()
+        })
+        .optional()
     })
   })
+})
+
+const xtwitterItemContentSchema = z.object({
+  tweet_results: xtwitterTweetResultsSchema
 })
 
 const xtwitterCoreUserSchema = z.object({
@@ -238,7 +241,18 @@ const dataProcessXtwitterService_ProcessPostInItemcontent = (data: {
     return null
   }
   const itemContent = xtwitterItemContentResult.data
-  const result = itemContent.tweet_results.result
+  const result = (() => {
+    const result = itemContent.tweet_results.result
+    // 如果有转贴则以转贴为准
+    const xtwitterTweetResultsResult = xtwitterTweetResultsSchema.safeParse(
+      result.legacy.retweeted_status_result
+    )
+    if (xtwitterTweetResultsResult.success) {
+      const retweeted_status_result = xtwitterTweetResultsResult.data
+      return retweeted_status_result.result
+    }
+    return result
+  })()
   const legacy = result.legacy
 
   // user 用户信息 将用于拼接帖子链接
@@ -248,22 +262,24 @@ const dataProcessXtwitterService_ProcessPostInItemcontent = (data: {
 
   // 媒体信息
   const media = (() => {
-    if (legacy.entities?.media == null) {
-      return []
+    // 尝试使用 legacy.entities?.media
+    if (legacy.entities?.media != null && legacy.entities.media.length > 0) {
+      return dataProcessXtwitterService_ProcessMediaInMediaList({
+        media_list: legacy.entities.media
+      })
     }
-    return dataProcessXtwitterService_ProcessMediaInMediaList({
-      media_list: legacy.entities.media
-    })
+    // 默认返回空数组
+    return []
   })()
 
   // 链接信息
   const urls = (() => {
-    if (legacy.entities?.urls == null) {
-      return []
+    if (legacy.entities?.urls != null && legacy.entities.urls.length > 0) {
+      return dataProcessXtwitterService_ProcessUrlsInUrlsList({
+        urls_list: legacy.entities.urls
+      })
     }
-    return dataProcessXtwitterService_ProcessUrlsInUrlsList({
-      urls_list: legacy.entities.urls
-    })
+    return []
   })()
 
   // 整理帖子信息

@@ -1,7 +1,8 @@
-import { adminGetImageConfigApi, adminGetInfoApi } from '@/api'
+import { adminGetInfoApi } from '@/api'
 import type { AdminStoreModuleDependencies } from '..'
 import { sakiNotification } from '@/utils'
 import { computed, ref } from 'vue'
+import type { AdminGetInfoData } from '@/types'
 
 export const useLoadModule = (dependencies: AdminStoreModuleDependencies) => {
   const {
@@ -9,6 +10,7 @@ export const useLoadModule = (dependencies: AdminStoreModuleDependencies) => {
     jwtAdminExpSeconds,
     loginMaxFailCount,
     loginLockSeconds,
+    proxyAddressHttp,
     imageLargeMaxLength,
     imageSmallMaxLength,
     imageQuality
@@ -20,10 +22,7 @@ export const useLoadModule = (dependencies: AdminStoreModuleDependencies) => {
   const loadInfo = async () => {
     loadingMark.value = true
     const res = await adminGetInfoApi()
-    isAuthDefault.value = res.data.data.isAuthDefault
-    jwtAdminExpSeconds.value = res.data.data.jwtAdminExpSeconds
-    loginMaxFailCount.value = res.data.data.loginMaxFailCount
-    loginLockSeconds.value = res.data.data.loginLockSeconds
+    loadInfoByResData(res.data.data)
     if (isAuthDefault.value === true) {
       sakiNotification({
         type: 'warning',
@@ -34,22 +33,34 @@ export const useLoadModule = (dependencies: AdminStoreModuleDependencies) => {
     loadingMark.value = false
   }
 
-  const loadingMarkImageConfig = ref<boolean>(false)
-  const isLoadingImageConfig = computed(() => loadingMark.value)
-
-  const loadImageConfig = async () => {
-    loadingMarkImageConfig.value = true
-    const res = await adminGetImageConfigApi()
-    imageLargeMaxLength.value = res.data.data.imageLargeMaxLength
-    imageSmallMaxLength.value = res.data.data.imageSmallMaxLength
-    imageQuality.value = res.data.data.imageQuality
-    loadingMarkImageConfig.value = false
+  const loadInfoByResData = (resData: AdminGetInfoData) => {
+    isAuthDefault.value = resData.isAuthDefault
+    jwtAdminExpSeconds.value = resData.jwtAdminExpSeconds
+    loginMaxFailCount.value = resData.loginMaxFailCount
+    loginLockSeconds.value = resData.loginLockSeconds
+    proxyAddressHttp.value = resData.proxyAddressHttp
+    imageLargeMaxLength.value = resData.imageLargeMaxLength
+    imageSmallMaxLength.value = resData.imageSmallMaxLength
+    imageQuality.value = resData.imageQuality
   }
+
+  // const loadingMarkImageConfig = ref<boolean>(false)
+  // const isLoadingImageConfig = computed(() => loadingMark.value)
+
+  // const loadImageConfig = async () => {
+  //   loadingMarkImageConfig.value = true
+  //   const res = await adminGetImageConfigApi()
+  //   imageLargeMaxLength.value = res.data.data.imageLargeMaxLength
+  //   imageSmallMaxLength.value = res.data.data.imageSmallMaxLength
+  //   imageQuality.value = res.data.data.imageQuality
+  //   loadingMarkImageConfig.value = false
+  // }
 
   return {
     isLoading,
     loadInfo,
-    isLoadingImageConfig,
-    loadImageConfig
+    loadInfoByResData
+    // isLoadingImageConfig,
+    // loadImageConfig
   }
 }
