@@ -17,3 +17,7 @@ const platformKeyMapTest: PlatformKeyMapValues[] = [...platformKeyEnum]
 const platformKeyEnumTest: PlatformKeyEnumValues[] = Object.values(
   platformKeyMap
 ).map((i) => i.key)
+
+export const fetchProxyConfig = {
+  testUrlDefault: 'https://www.google.com'
+}

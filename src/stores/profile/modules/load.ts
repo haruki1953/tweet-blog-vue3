@@ -9,13 +9,18 @@ export const useLoadModule = (dependencies: ProfileStoreModuleDependencies) => {
   const loadingMark = ref<boolean>(false)
   const isLoading = computed(() => loadingMark.value)
 
+  // 初始化时调用这个，区别在于设置了loadingMark，控制页面的一些数据将因此重置
   const loadAll = async () => {
     loadingMark.value = true
+    await load()
+    loadingMark.value = false
+  }
+  // 不想让控制页面数据重置时调用这个
+  const load = async () => {
     const res = await profileGetAllApi()
     postNumber.value = res.data.data.data.post
     imageNumber.value = res.data.data.data.image
     profile.value = res.data.data.store
-    loadingMark.value = false
   }
 
   const loadProfileByRes = (resData: ProfileResData) => {
@@ -33,6 +38,7 @@ export const useLoadModule = (dependencies: ProfileStoreModuleDependencies) => {
   return {
     isLoading,
     loadAll,
+    load,
     loadProfileByRes
     // loadAvatarArrayByRes
   }

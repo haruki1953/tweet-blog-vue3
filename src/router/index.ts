@@ -126,14 +126,28 @@ const router = createRouter({
       return savedPosition
     }
     // 跳转至首页或其他包含无限滚动的页面时，重置显示限制
+    // 放在 if savedPosition 之后就是为了不让 resetLimited 打乱滚动位置
     if (to.path === '/') {
       const postStore = usePostStore()
       postStore.resetLimited()
+      // 当在别的地方 setNeedReget 设置需要重新获取时，则在此时重新获取
+      // 如在 导入任务完成时 将会 setNeedReget
+      // 至于为什么不在首页 onMounted 时处理，是为了不打乱首页的滚动位置
+      // （如在帖子页和首页切换时，重新获取就会打乱滚动位置）
+      if (postStore.isNeedReget) {
+        postStore.reGetPosts()
+        postStore.setNeedReget(false)
+      }
       return { top: 0 }
     }
     if (['/album', '/send'].includes(to.path)) {
       const imageStore = useImageStore()
       imageStore.resetLimited()
+      // 这里和上面 postStore.isNeedReget 同理
+      if (imageStore.isNeedReget) {
+        imageStore.reGetImages()
+        imageStore.setNeedReget(false)
+      }
       return { top: 0 }
     }
     // 在控制页 /control 之间切换时，延迟0.3秒回到顶部，以此优化动画

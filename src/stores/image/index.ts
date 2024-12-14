@@ -14,11 +14,11 @@ export const useImageStore = defineStore(
     // data
     const imageList = ref<ImageStoreData[]>([])
 
-    // needRegetMark for when image change
+    // needRegetMark for when data change
     const needRegetMark = ref(false)
     const isNeedReget = computed(() => needRegetMark.value)
-    const setNeedReget = (value?: boolean) => {
-      needRegetMark.value = value !== undefined ? value : true
+    const setNeedReget = (value: boolean = true) => {
+      needRegetMark.value = value
     }
 
     // useModules

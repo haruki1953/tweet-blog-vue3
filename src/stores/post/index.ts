@@ -1,6 +1,6 @@
 import type { PosPoolItem, PostData } from '@/types'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import {
   useControlModule,
   useListModule,
@@ -15,6 +15,13 @@ export const usePostStore = defineStore(
     // 多Module共享数据
     const postList = ref<PostData[][]>([])
     const postPool = ref<PosPoolItem[]>([])
+
+    // needRegetMark for when data change
+    const needRegetMark = ref(false)
+    const isNeedReget = computed(() => needRegetMark.value)
+    const setNeedReget = (value: boolean = true) => {
+      needRegetMark.value = value
+    }
 
     // listModule
     const listModule = useListModule({
@@ -47,7 +54,9 @@ export const usePostStore = defineStore(
       ...manageModule,
       ...readModule,
       postList,
-      postPool
+      postPool,
+      setNeedReget,
+      isNeedReget
     }
   },
   {

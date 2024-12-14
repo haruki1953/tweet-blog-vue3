@@ -26,13 +26,13 @@ const isSubmiting = ref(false)
 const submit = async () => {
   isSubmiting.value = true
   try {
-    await postControlImportApi({
+    const res = await postControlImportApi({
       importPosts: model.value
     })
-    sakiMessage({
-      type: 'success',
-      message: '正在导入'
-    })
+    // sakiMessage({
+    //   type: 'success',
+    //   message: '正在导入'
+    // })
     model.value = []
   } finally {
     isSubmiting.value = false

@@ -1,4 +1,6 @@
 import type { PlatformKeyEnumValues } from '@/config'
+import type { BackendTaskCache } from '../data'
+import type { ResData } from './base'
 
 export type PostControlImportJsonType = {
   importPosts: {
@@ -36,3 +38,9 @@ export type PostControlImportJsonTypeOnDataProcess = {
     isDeleted?: boolean | undefined
   }[]
 }
+
+export type PostControlImportData = {
+  importTask: BackendTaskCache['importTaskList'][number]
+  taskCache: BackendTaskCache
+}
+export type PostControlImportRes = ResData<PostControlImportData>

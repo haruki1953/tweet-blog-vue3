@@ -66,7 +66,7 @@ const submit = async () => {
           <el-input
             v-model="proxyAddressHttp"
             :prefix-icon="Compass"
-            placeholder="http://127.0.0.1: ……"
+            placeholder="http://127.0.0.1: ..."
             size="large"
             class="control-input"
             clearable
@@ -85,4 +85,12 @@ const submit = async () => {
 
 <style lang="scss" scoped>
 @use '../../../styles/control.scss';
+
+.el-input {
+  :deep() {
+    .el-input__inner {
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+  }
+}
 </style>

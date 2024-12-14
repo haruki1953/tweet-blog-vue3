@@ -6,6 +6,7 @@ import ImageNotUsedDelete from './components/ImageNotUsedDelete.vue'
 import ImageAllOriginalDelete from './components/ImageAllOriginalDelete.vue'
 import QuitLogin from './components/QuitLogin.vue'
 import ProxyUpdate from './components/ProxyUpdate.vue'
+import ProxyTest from './components/ProxyTest.vue'
 </script>
 <template>
   <div class="system-page">
@@ -38,6 +39,10 @@ import ProxyUpdate from './components/ProxyUpdate.vue'
     <div class="control-box">
       <div class="control-row">
         <ProxyUpdate></ProxyUpdate>
+      </div>
+      <div class="control-divider"></div>
+      <div class="control-row">
+        <ProxyTest></ProxyTest>
       </div>
     </div>
   </div>

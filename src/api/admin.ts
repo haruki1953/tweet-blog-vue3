@@ -3,6 +3,9 @@ import type {
   AdminDeleteNotUsedImageRes,
   AdminGatImageConfigRes,
   AdminGetInfoRes,
+  AdminGetTaskRes,
+  AdminProxyTestJsonType,
+  AdminProxyTestRes,
   AdminUpdateImageConfigJsonType,
   AdminUpdateInfoJsonType,
   AdminUpdateProxyJsonType,
@@ -44,15 +47,11 @@ export const adminUpdateProxyApi = (
   return http.put('/admin/proxy', json)
 }
 
-// export const adminGetImageConfigApi = (): AdminGatImageConfigRes => {
-//   return http.get('/image/config')
-// }
-
-// export const adminUpdateImageConfigApi = (
-//   json: AdminUpdateImageConfigJsonType
-// ) => {
-//   return http.put('/image/config', json)
-// }
+export const adminProxyTestApi = (
+  json: AdminProxyTestJsonType
+): AdminProxyTestRes => {
+  return http.post('/admin/proxy-test', json)
+}
 
 export const adminUpdateImageConfigApi = (
   json: AdminUpdateImageConfigJsonType
@@ -68,3 +67,7 @@ export const adminDeleteAllOriginalImageApi =
   (): AdminDeleteAllOriginalImageRes => {
     return http.delete('/image/original/all')
   }
+
+export const adminGetTaskApi = (): AdminGetTaskRes => {
+  return http.get('/admin/task')
+}

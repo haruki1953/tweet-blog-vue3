@@ -65,12 +65,15 @@ const infiniteScrollFunc = () => {
   }
 }
 
-onMounted(() => {
-  if (imageStore.isNeedReget) {
-    imageStore.reGetImages()
-    imageStore.setNeedReget(false)
-  }
-})
+// 改为了在 src\router\index.ts 处理
+// 至于为什么不在这里 onMounted 处理，是为了不打乱的滚动位置
+// 如在帖子页和相册页切换时，重新获取就会打乱滚动位置
+// onMounted(() => {
+//   if (imageStore.isNeedReget) {
+//     imageStore.reGetImages()
+//     imageStore.setNeedReget(false)
+//   }
+// })
 
 const selectImgById = (id: string) => {
   const findImg = imageStore.imageList.find((i) => i.id === id)

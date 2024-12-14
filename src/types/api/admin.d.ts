@@ -1,4 +1,4 @@
-import type { Image, ResData } from './base'
+import type { BackendTaskCache, Image, ResData } from './base'
 
 export type AdminGetInfoData = {
   imageLargeMaxLength: number
@@ -22,6 +22,15 @@ export type AdminUpdateProxyJsonType = {
   proxyAddressHttp: string
 }
 
+export type AdminProxyTestJsonType = {
+  testAddress: string
+}
+export type AdminProxyTestData = {
+  address: string
+  latency: number
+}
+export type AdminProxyTestRes = ResData<AdminProxyTestData>
+
 export type AdminGatImageConfigData = {
   imageLargeMaxLength: number
   imageSmallMaxLength: number
@@ -41,3 +50,8 @@ export type AdminDeleteNotUsedImageRes = ResData<AdminDeleteNotUsedImageData>
 export type AdminDeleteAllOriginalImageData = number
 export type AdminDeleteAllOriginalImageRes =
   ResData<AdminDeleteAllOriginalImageData>
+
+export type AdminGetTaskData = {
+  taskCache: BackendTaskCache
+}
+export type AdminGetTaskRes = ResData<AdminGetTaskData>
