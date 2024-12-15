@@ -3,7 +3,7 @@ import { useLoadingModule } from './modules/loading'
 import { useDarkModule } from './modules/dark'
 
 export const useStatesStore = defineStore(
-  'tweet-states',
+  'tweblog-states',
   () => {
     const loadingModule = useLoadingModule()
     const darkModule = useDarkModule()

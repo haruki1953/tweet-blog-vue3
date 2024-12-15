@@ -1,18 +1,39 @@
 import type { BackendTaskCache } from '@/types'
 import { defineStore } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
+import { useLoadModule } from './modules/load'
+import { useManageModule } from './modules/manage'
 
 export type TaskStoreModuleDependencies = {
-  taskCache: Ref<BackendTaskCache | null>
+  taskCache: Ref<BackendTaskCache>
 }
 
-// 鉴权模块
-export const useAuthStore = defineStore(
-  'tweet-auth',
+// 任务模块
+export const useTaskStore = defineStore(
+  'tweblog-task',
   () => {
-    const taskCache = ref<BackendTaskCache | null>(null)
-    const importTaskList = computed(() => taskCache.value?.importTaskList || [])
+    const taskCache = ref<BackendTaskCache>({
+      importTaskList: []
+    })
+    const importTaskList = computed(() => {
+      return taskCache.value.importTaskList
+        .slice()
+        .sort(
+          (a, b) =>
+            new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+        )
+    })
+
+    const dependencies = {
+      taskCache
+    }
+
+    const loadModule = useLoadModule(dependencies)
+    const manageModule = useManageModule(dependencies)
+
     return {
+      ...loadModule,
+      ...manageModule,
       taskCache,
       importTaskList
     }

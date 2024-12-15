@@ -9,8 +9,8 @@ import {
   PictureRounded,
   Remove
 } from '@element-plus/icons-vue'
-import axios from 'axios'
 import { ref } from 'vue'
+import { useTaskStore } from '@/stores'
 
 const model = defineModel<
   PostControlImportJsonTypeOnDataProcess['importPosts']
@@ -22,6 +22,8 @@ const importCancel = () => {
   model.value = []
 }
 
+const taskStore = useTaskStore()
+
 const isSubmiting = ref(false)
 const submit = async () => {
   isSubmiting.value = true
@@ -29,6 +31,8 @@ const submit = async () => {
     const res = await postControlImportApi({
       importPosts: model.value
     })
+    taskStore.pollLoadByData(res.data.data)
+
     // sakiMessage({
     //   type: 'success',
     //   message: '正在导入'

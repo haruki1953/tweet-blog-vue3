@@ -4,12 +4,12 @@ import { useProfileStore } from '@/stores/profile'
 import type { BackendTaskCache } from '@/types'
 import type { Ref } from 'vue'
 
-const postStore = usePostStore()
-const imageStore = useImageStore()
-const profileStore = useProfileStore()
-
 // 在 导入任务完成时，更新数据
 const handleImportTaskComplete = () => {
+  const postStore = usePostStore()
+  const imageStore = useImageStore()
+  const profileStore = useProfileStore()
+
   postStore.setNeedReget(true)
   imageStore.setNeedReget(true)
   profileStore.load()
@@ -45,8 +45,7 @@ export const loadByData_processImportTaskListPart = (
       (i) => i.uuid === valueItem.uuid
     )
     if (findItemIndex === -1) {
-      refTaskCache.value.importTaskList[findItemIndex].completedCount =
-        refTaskCache.value.importTaskList[findItemIndex].totalCount
+      valueItem.completedCount = valueItem.totalCount
       handleImportTaskComplete()
     }
   }

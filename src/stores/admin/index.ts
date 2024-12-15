@@ -14,7 +14,7 @@ export type AdminStoreModuleDependencies = {
 }
 
 export const useAdminStore = defineStore(
-  'tweet-admin',
+  'tweblog-admin',
   () => {
     // 系统配置
     const isAuthDefault = ref<boolean | null>(null)

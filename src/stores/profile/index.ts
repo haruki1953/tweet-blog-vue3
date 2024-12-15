@@ -15,7 +15,7 @@ export type ProfileStoreModuleDependencies = {
 
 // 个人信息模块
 export const useProfileStore = defineStore(
-  'tweet-profile',
+  'tweblog-profile',
   () => {
     const postNumber = ref(0)
     const imageNumber = ref(0)

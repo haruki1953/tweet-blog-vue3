@@ -9,7 +9,7 @@ import {
 import type { ImageStoreData } from '@/types'
 
 export const useImageStore = defineStore(
-  'tweet-image',
+  'tweblog-image',
   () => {
     // data
     const imageList = ref<ImageStoreData[]>([])

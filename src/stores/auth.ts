@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 // 鉴权模块
 export const useAuthStore = defineStore(
-  'tweet-auth',
+  'tweblog-auth',
   () => {
     const token = ref('') // 定义 token
     const setToken = (t: string) => {

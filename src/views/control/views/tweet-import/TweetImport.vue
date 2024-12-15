@@ -9,6 +9,8 @@ import {
 import { ref } from 'vue'
 import ImportProcess from './components/ImportProcess.vue'
 import ImportSubmit from './components/ImportSubmit.vue'
+import ImportTask from './components/ImportTask.vue'
+
 import type { PostControlImportJsonTypeOnDataProcess } from '@/types'
 
 const importPosts = ref<PostControlImportJsonTypeOnDataProcess['importPosts']>(
@@ -18,6 +20,7 @@ const importPosts = ref<PostControlImportJsonTypeOnDataProcess['importPosts']>(
 <template>
   <div class="tweet-import">
     <ImportProcess v-model="importPosts"></ImportProcess>
+    <ImportTask></ImportTask>
     <Transition name="fade">
       <ImportSubmit
         v-model="importPosts"

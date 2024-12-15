@@ -30,7 +30,7 @@ const processContent = (data: {
   // 去掉内容最后的图片链接
   media.forEach((mediaItem) => {
     // processedText = processedText.replace(mediaItem.url, '')
-    processedText = processedText.replace(new RegExp(` ${mediaItem.url}$`), '')
+    processedText = processedText.replace(new RegExp(` ?${mediaItem.url}$`), '')
   })
 
   // 处理转贴和回复的字样
@@ -104,7 +104,7 @@ const xtwitterInstructionsItemSchema = z.object({
 
 const xtwitterEntriesItemHaveItemContentSchema = z.object({
   content: z.object({
-    itemContent: z.any()
+    itemContent: z.record(z.any())
   })
 })
 
@@ -113,7 +113,7 @@ const xtwitterEntriesItemHaveItemsSchema = z.object({
     items: z.array(
       z.object({
         item: z.object({
-          itemContent: z.any()
+          itemContent: z.record(z.any())
         })
       })
     )

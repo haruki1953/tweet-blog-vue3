@@ -10,7 +10,7 @@ import {
 } from './modules'
 
 export const usePostStore = defineStore(
-  'tweet-post',
+  'tweblog-post',
   () => {
     // 多Module共享数据
     const postList = ref<PostData[][]>([])
