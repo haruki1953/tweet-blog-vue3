@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { usePostStore } from '@/stores'
-import type { PosPoolItem, PostData } from '@/types'
+import type { PostPoolItem, PostData } from '@/types'
 import { onMounted } from 'vue'
 import { ref, watch } from 'vue'
 import { computed } from 'vue'
@@ -21,7 +21,7 @@ const routePostId = computed(() => {
     return userId[0]
   }
 })
-const postPoolItem = computed((): PosPoolItem | undefined => {
+const postPoolItem = computed((): PostPoolItem | undefined => {
   if (routePostId.value == null) {
     return undefined
   }

@@ -1,6 +1,6 @@
 import type {
   Post,
-  PosPoolItem,
+  PostPoolItem,
   PostData,
   PostGetByCursorData,
   PostGetByIdData,
@@ -152,7 +152,7 @@ function isStringArray(arr: any[]): arr is string[] {
   return arr.every((item) => typeof item === 'string')
 }
 // 利用 imagesOrder 对 images 排序
-const handlePostImagesOrder = (post: PostData): PostData => {
+const handlePostImagesOrder = <T extends PostData>(post: T): T => {
   let newImages: Image[] = []
   try {
     if (post.imagesOrder == null) {
@@ -180,8 +180,12 @@ const handlePostImagesOrder = (post: PostData): PostData => {
   }
 }
 
-export const postGetByIdDataHandle = (data: PostGetByIdData): PosPoolItem => {
-  const mainPost = handlePostWithNotReplies(data)
+export const postGetByIdDataHandle = (data: PostGetByIdData): PostPoolItem => {
+  const mainPost = {
+    ...handlePostWithNotReplies(data),
+    postForwards: data.postForwards,
+    postImports: data.postImports
+  }
 
   const parentPost = data.parentPost
     ? handlePostWithNotReplies(data.parentPost)

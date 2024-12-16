@@ -47,6 +47,7 @@ const showGradientMaskBottom = computed(
         <el-affix :offset="1" :z-index="1">
           <div class="col2-left">
             <el-scrollbar :height="leftHeight" ref="refScroll">
+              <slot name="colLeftAndSm"></slot>
               <slot name="colLeft"></slot>
             </el-scrollbar>
             <div class="gradient-mask-top" v-show="showGradientMaskTop"></div>
@@ -60,6 +61,7 @@ const showGradientMaskBottom = computed(
       <el-col :span="largeColSpan">
         <div class="col2-right-all">
           <div class="col2-left-sm" v-if="!show2Col">
+            <slot name="colLeftAndSm"></slot>
             <slot name="colLeftSm"></slot>
           </div>
           <div class="col2-right">
@@ -71,6 +73,7 @@ const showGradientMaskBottom = computed(
         <el-affix :offset="1" :z-index="1">
           <div class="col2-left reverse">
             <el-scrollbar :height="leftHeight" ref="refScroll">
+              <slot name="colLeftAndSm"></slot>
               <slot name="colLeft"></slot>
             </el-scrollbar>
             <div class="gradient-mask-top" v-show="showGradientMaskTop"></div>

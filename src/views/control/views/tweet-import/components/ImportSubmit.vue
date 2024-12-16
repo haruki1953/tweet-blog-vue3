@@ -56,7 +56,7 @@ const removeByIndex = (index: number) => {
           <el-button
             @click="submit"
             :loading="isSubmiting"
-            type="success"
+            type="primary"
             round
           >
             导入

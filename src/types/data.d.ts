@@ -1,3 +1,5 @@
+import type { PlatformKeyEnumValues } from '@/config'
+
 export interface Image {
   id: string
   alt: string | null
@@ -40,11 +42,33 @@ export interface ImageStoreData extends Image {
   }
 }
 
-export interface PosPoolItem {
+export interface PostForwardData {
+  id: string
+  platform: PlatformKeyEnumValues
+  platformPostId: string
+  link: string
+  forwardAt: Date
+  forwardConfigId: string
+  postId: string
+}
+
+export interface PostImportData {
+  id: string
+  platform: PlatformKeyEnumValues
+  platformPostId: string
+  link: string
+  importedAt: Date
+  postId: string
+}
+
+export interface PostPoolItem {
   id: string
   pushAt: string // Date
   updateAt: string // Date
-  mainPost: PostData
+  mainPost: PostData & {
+    postForwards: PostForwardData[]
+    postImports: PostImportData[]
+  }
   parentPost: PostData | null
   replies: PostData[][]
 }

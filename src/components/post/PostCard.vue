@@ -29,12 +29,15 @@ const props = withDefaults(
     notPreview?: boolean
     notAlt?: boolean
     postMode?: PostsGetMode
+    // post-control 页面
+    forward?: boolean
   }>(),
   {
     mini: false,
     notPreview: false,
     notAlt: false,
-    postMode: 'normal'
+    postMode: 'normal',
+    forward: false
   }
 )
 
@@ -43,6 +46,10 @@ const router = useRouter()
 
 const lookPost = () => {
   router.push({ name: 'post', params: { id: props.data.id } })
+}
+
+const forwardPost = () => {
+  router.push({ name: 'post-forward', params: { id: props.data.id } })
 }
 
 const editPost = () => {
@@ -121,6 +128,23 @@ const { setFavorite, topFavorite, removeFavorite, isFavorite } =
       ></ImageGroup>
     </div>
     <template v-if="mini"></template>
+    <template v-else-if="forward">
+      <div class="trans-button-container">
+        <div class="button-box">
+          <div class="button-center">
+            <el-button
+              type="primary"
+              :icon="ChatSquare"
+              round
+              size="small"
+              @click="lookPost"
+            >
+              查看推文
+            </el-button>
+          </div>
+        </div>
+      </div>
+    </template>
     <template v-else>
       <div class="trans-button-container">
         <Transition name="fade-down">
@@ -234,6 +258,7 @@ const { setFavorite, topFavorite, removeFavorite, isFavorite } =
                   :icon="Connection"
                   circle
                   size="small"
+                  @click="forwardPost"
                 />
               </div>
             </div>

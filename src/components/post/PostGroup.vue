@@ -9,12 +9,14 @@ withDefaults(
     notPreview?: boolean
     notAlt?: boolean
     postMode?: PostsGetMode
+    forward?: boolean
   }>(),
   {
     mini: false,
     notPreview: false,
     notAlt: false,
-    postMode: 'normal'
+    postMode: 'normal',
+    forward: false
   }
 )
 
@@ -39,6 +41,7 @@ const statesStore = useStatesStore()
         :notPreview="notPreview"
         :notAlt="notAlt"
         :postMode="postMode"
+        :forward="forward"
       ></PostCard>
       <el-divider v-if="index < data.length - 1" border-style="dotted" />
     </template>

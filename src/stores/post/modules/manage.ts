@@ -1,9 +1,9 @@
-import type { PosPoolItem, PostData } from '@/types'
+import type { PostPoolItem, PostData } from '@/types'
 import type { Ref } from 'vue'
 
 export const useManageModule = (dependencies: {
   postList: Ref<PostData[][]>
-  postPool: Ref<PosPoolItem[]>
+  postPool: Ref<PostPoolItem[]>
 }) => {
   // data
   const { postList } = dependencies

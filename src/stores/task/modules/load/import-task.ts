@@ -39,15 +39,22 @@ export const loadByData_processImportTaskListPart = (
     // 请求中的 importTask 可以在本地中找到，进行更新
     refTaskCache.value.importTaskList[findItemIndex] = dataItem
   }
+  let isHaveCompleted = false
   // 遍历 处理本地中有，而请求中没有的。即为已完成
   for (const valueItem of refTaskCache.value.importTaskList) {
     const findItemIndex = dataTaskCache.importTaskList.findIndex(
       (i) => i.uuid === valueItem.uuid
     )
     if (findItemIndex === -1) {
+      if (valueItem.completedCount < valueItem.totalCount) {
+        isHaveCompleted = true
+      }
       valueItem.completedCount = valueItem.totalCount
-      handleImportTaskComplete()
     }
+  }
+  // 有刚完成的，则调用 handleImportTaskComplete
+  if (isHaveCompleted) {
+    handleImportTaskComplete()
   }
 
   // 判断请求中是否有importTask

@@ -8,6 +8,7 @@ import HomePage from '@/views/home/HomePage.vue'
 import LoginPage from '@/views/login/LoginPage.vue'
 import SendPage from '@/views/post/SendPage.vue'
 import PostPage from '@/views/post/PostPage.vue'
+import PostForward from '@/views/post/PostForward.vue'
 import AlbumPage from '@/views/image/AlbumPage.vue'
 import ControlPage from '@/views/control/ControlPage.vue'
 import AboutPage from '@/views/about/AboutPage.vue'
@@ -52,6 +53,12 @@ const router = createRouter({
           meta: { title: `` }
         },
         {
+          name: 'post-forward',
+          path: '/post-forward/:id',
+          component: PostForward,
+          meta: { title: `` }
+        },
+        {
           name: 'send',
           path: '/send',
           component: SendPage,
@@ -83,7 +90,7 @@ const router = createRouter({
               name: 'forward-config',
               path: '/forward-config',
               component: ForwardConfig,
-              meta: { title: `转发设置` }
+              meta: { title: `推文转发` }
             },
             {
               name: 'tweet-import',

@@ -1,4 +1,11 @@
-import type { ResData, Post, PostData, Image } from './base'
+import type {
+  ResData,
+  Post,
+  PostData,
+  Image,
+  PostForwardData,
+  PostImportData
+} from './base'
 
 export type PostGetByCursorQueryType = {
   content?: string | undefined
@@ -27,6 +34,8 @@ export type PostGetByIdQueryType = {
   keepIsDetele?: 'true' | 'false' | undefined
 }
 export type PostGetByIdData = Post & {
+  postForwards: PostForwardData[]
+  postImports: PostImportData[]
   parentPost: Post | null
   replies: Array<
     Post & {

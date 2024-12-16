@@ -1,16 +1,16 @@
 import { postGetByIdApi } from '@/api'
 import { useStatesStore } from '@/stores'
-import type { PosPoolItem } from '@/types'
+import type { PostPoolItem } from '@/types'
 import { postGetByIdDataHandle } from '@/utils'
 import { ref, type Ref } from 'vue'
 
 export const usePoolModule = (dependencies: {
-  postPool: Ref<PosPoolItem[]>
+  postPool: Ref<PostPoolItem[]>
 }) => {
   const { postPool } = dependencies
 
   // data
-  const getPostPoolItem = (id: string): PosPoolItem | undefined => {
+  const getPostPoolItem = (id: string): PostPoolItem | undefined => {
     return postPool.value.find((i) => i.id === id)
   }
 
