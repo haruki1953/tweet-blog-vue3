@@ -36,5 +36,5 @@ const refConfirmContainer = ref<InstanceType<typeof ConfirmContainer> | null>(
 </template>
 
 <style lang="scss" scoped>
-@use '../../../styles/control.scss';
+// @use '../../../styles/control.scss';
 </style>

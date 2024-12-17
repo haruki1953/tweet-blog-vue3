@@ -139,7 +139,7 @@ const importPostsAdd = (
 </template>
 
 <style lang="scss" scoped>
-@use '../../../styles/control.scss';
+// @use '../../../styles/control.scss';
 
 .form-box {
   max-width: 700px;

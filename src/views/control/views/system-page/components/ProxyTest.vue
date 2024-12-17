@@ -88,7 +88,7 @@ useDialogOptimization({
 </template>
 
 <style lang="scss" scoped>
-@use '../../../styles/control.scss';
+// @use '../../../styles/control.scss';
 
 .el-input {
   :deep() {

@@ -60,21 +60,16 @@ const menu: IconMenuItem[] = [
 ]
 </script>
 <template>
-  <div class="control-page">
+  <div class="control-page use-control-styles">
     <DataContainerMountedMask>
       <Col2Layout :span="20">
-        <template #colLeftSm>
-          <div class="horizontal-menu">
-            <IconMenuBox :menu="menu" :modelValue="$route.path"></IconMenuBox>
-          </div>
-        </template>
-        <template #colLeft>
-          <div class="vertical-menu">
+        <template #colLeftAndSm>
+          <div>
             <IconMenuBox :menu="menu" :modelValue="$route.path"></IconMenuBox>
           </div>
         </template>
         <template #colRight>
-          <div class="contorl-page">
+          <div>
             <!-- <router-view></router-view> -->
             <router-view v-slot="{ Component }">
               <transition name="fade-slide" mode="out-in">

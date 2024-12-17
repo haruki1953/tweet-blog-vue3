@@ -31,5 +31,5 @@ const importPosts = ref<PostControlImportJsonTypeOnDataProcess['importPosts']>(
 </template>
 
 <style lang="scss" scoped>
-@use '../../styles/control.scss';
+// @use '../../styles/control.scss';
 </style>

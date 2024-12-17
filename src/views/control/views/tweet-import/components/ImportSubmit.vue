@@ -136,7 +136,7 @@ const removeByIndex = (index: number) => {
 </template>
 
 <style lang="scss" scoped>
-@use '../../../styles/control.scss';
+// @use '../../../styles/control.scss';
 
 .tweet-list {
   position: relative;

@@ -45,6 +45,10 @@ onMounted(() => {
 watch(routePostId, () => {
   loadPostPoolItemData()
 })
+
+// 优化从骨架屏到帖子的过渡
+// 当在初始化（setup）时就有数据，禁用过渡（避免重复过渡）
+const havePostOnSetUp = postPoolItem.value != null
 </script>
 <template>
   <div :key="String(route.params.id)">
@@ -58,7 +62,7 @@ watch(routePostId, () => {
           </div>
           <!-- 显示帖子 -->
           <div v-else>
-            <DataContainerMountedMask>
+            <DataContainerMountedMask :disabled="havePostOnSetUp">
               <div class="main-post-group-box">
                 <PostGroup :data="[postPoolItem.mainPost]" forward></PostGroup>
               </div>

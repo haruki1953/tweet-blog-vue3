@@ -37,5 +37,5 @@ import AboutMarkdown from './components/AboutMarkdown.vue'
 </template>
 
 <style lang="scss" scoped>
-@use '../../styles/control.scss';
+// @use '../../styles/control.scss';
 </style>

@@ -106,7 +106,7 @@ const tryDelete = (importTaskItem: ImageTaskItem) => {
 </template>
 
 <style lang="scss" scoped>
-@use '../../../styles/control.scss';
+// @use '../../../styles/control.scss';
 
 .task-list {
   position: relative;

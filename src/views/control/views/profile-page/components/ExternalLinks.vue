@@ -511,7 +511,7 @@ const refCompleteMessageContainer = ref<InstanceType<
   </div>
 </template>
 <style lang="scss" scoped>
-@use '../../../styles/control.scss';
+// @use '../../../styles/control.scss';
 
 .el-avatar {
   background-color: transparent;
