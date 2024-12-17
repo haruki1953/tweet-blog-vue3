@@ -9,7 +9,7 @@ const model = defineModel<string>({ required: true })
 // }>()
 
 const charNum = computed(() => {
-  console.log(textToPostContentPartCalcCharNumber(model.value))
+  // console.log(textToPostContentPartCalcCharNumber(model.value))
   return textToPostContentPartCalcCharNumber(model.value)
 })
 

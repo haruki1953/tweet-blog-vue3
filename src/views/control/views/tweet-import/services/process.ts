@@ -7,7 +7,7 @@ export const processJsonToImportPostsByPlatform = (data: {
 }) => {
   const { jsonData, platform } = data
   let importPosts
-  if (platform === platformKeyMap.x.key) {
+  if (platform === platformKeyMap.X.key) {
     importPosts = dataProcessXtwitterService(jsonData)
   }
 

@@ -70,6 +70,7 @@ declare module 'vue' {
     TestBox: typeof import('./src/components/TestBox.vue')['default']
     TextWithLink: typeof import('./src/components/post/TextWithLink.vue')['default']
     TopBar: typeof import('./src/components/layout/TopBar.vue')['default']
+    TweetEmpty: typeof import('./src/components/layout/TweetEmpty.vue')['default']
   }
   export interface ComponentCustomProperties {
     vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']

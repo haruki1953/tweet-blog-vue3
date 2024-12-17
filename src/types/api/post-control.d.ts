@@ -44,3 +44,14 @@ export type PostControlImportData = {
   taskCache: BackendTaskCache
 }
 export type PostControlImportRes = ResData<PostControlImportData>
+
+export type PostControlDeleteImportDataData = {
+  id: string
+  platform: string
+  platformPostId: string
+  link: string
+  importedAt: Date
+  postId: string
+}
+export type PostControlDeleteImportDataRes =
+  ResData<PostControlDeleteImportDataData>

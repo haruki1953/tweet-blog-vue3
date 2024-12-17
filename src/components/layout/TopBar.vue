@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { ArrowLeft } from '@element-plus/icons-vue'
+import { ArrowLeft, Loading } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { House } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+import { nextTick } from 'vue'
 
 defineProps<{
   title: string
 }>()
 
 const router = useRouter()
-const goBack = () => {
+const goBack = async () => {
+  isBacking.value = true
+  await nextTick()
+  await new Promise((resolve) => setTimeout(resolve, 10))
   // console.log(window.history.length)
   if (window.history.length > 2) {
     router.back()
@@ -17,6 +22,8 @@ const goBack = () => {
     router.push({ name: 'home' })
   }
 }
+
+const isBacking = ref(false)
 </script>
 <template>
   <div class="top-bar">
@@ -24,7 +31,20 @@ const goBack = () => {
       <div class="title">{{ title }}</div>
     </div>
     <div class="back" @click="goBack">
-      <el-icon size="16"><ArrowLeft /></el-icon>
+      <div class="back-icon">
+        <el-icon size="16"><ArrowLeft /></el-icon>
+        <div
+          class="mask"
+          :class="{
+            show: isBacking
+          }"
+        >
+          <el-icon size="16" class="is-loading">
+            <Loading />
+          </el-icon>
+        </div>
+      </div>
+
       <span>返 回</span>
     </div>
     <div class="button">
@@ -44,6 +64,29 @@ const goBack = () => {
 </template>
 
 <style lang="scss" scoped>
+.back-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  .mask {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    background-color: var(--color-background-soft);
+    transition:
+      background-color 0.5s,
+      opacity 0.5s ease-in;
+    &.show {
+      opacity: 1;
+    }
+  }
+}
+
 .top-bar {
   height: 48px;
   padding: 12px;
@@ -54,6 +97,13 @@ const goBack = () => {
   justify-content: space-between;
   align-items: center;
   position: relative;
+  transition:
+    background-color 0.5s,
+    box-shadow 0.5s;
+  &:hover {
+    box-shadow: var(--el-box-shadow-lighter);
+    // background-color: var(--color-background-mute);
+  }
   .back {
     min-width: 60px;
     display: flex;

@@ -48,6 +48,7 @@ const externalLinksInfo = computed(() => {
 }
 
 .external-links-item {
+  max-width: 80%;
   margin: 8px;
   padding: 8px 10px;
   border-radius: 10px;
@@ -91,6 +92,9 @@ const externalLinksInfo = computed(() => {
       .name {
         margin: 0 0 0 10px;
         transition: all 0.5s;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }

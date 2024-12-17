@@ -5,7 +5,7 @@ import type { PostControlImportJsonTypeOnDataProcess } from '@/types'
 import { z } from 'zod'
 import he from 'he'
 
-const platform = platformKeyMap.x.key
+const platform = platformKeyMap.X.key
 
 // 处理推文文字内容，
 // 1 将短链接替换为正常的链接
@@ -286,7 +286,7 @@ const dataProcessXtwitterService_ProcessPostInItemcontent = (data: {
   const { created_at, full_text, id_str, in_reply_to_status_id_str } = legacy
   const content = processContent({ full_text, media, urls })
   const createdAt = processCreatedAt({ created_at })
-  // const platform = platformKeyMap.x.key
+  // const platform = platformKeyMap.X.key
   const platformId = id_str
   const platformLink = processPlatformLink({ id_str, user })
   const platformParentId = in_reply_to_status_id_str || null
@@ -296,7 +296,7 @@ const dataProcessXtwitterService_ProcessPostInItemcontent = (data: {
     const { id_str, ext_alt_text, media_url_https } = i
     const link = processImageLink({ media_url_https })
     const alt = ext_alt_text
-    // const platform = platformKeyMap.x.key
+    // const platform = platformKeyMap.X.key
     const platformId = id_str
     return {
       link,

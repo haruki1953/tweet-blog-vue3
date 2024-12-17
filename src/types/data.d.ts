@@ -47,7 +47,8 @@ export interface PostForwardData {
   platform: PlatformKeyEnumValues
   platformPostId: string
   link: string
-  forwardAt: Date
+  // forwardAt: Date
+  forwardAt: string
   forwardConfigId: string
   postId: string
 }
@@ -57,7 +58,8 @@ export interface PostImportData {
   platform: PlatformKeyEnumValues
   platformPostId: string
   link: string
-  importedAt: Date
+  // importedAt: Date
+  importedAt: string
   postId: string
 }
 

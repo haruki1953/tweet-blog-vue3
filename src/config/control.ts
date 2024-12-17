@@ -1,8 +1,9 @@
 // 关于导入与导出，平台所代表字段
 export const platformKeyMap = {
-  x: {
+  X: {
     key: 'X',
-    name: 'X / Twitter'
+    name: 'X / Twitter',
+    fontawesomeClass: 'fa-brands fa-x-twitter'
   }
 } as const
 export const platformKeyEnum = ['X'] as const

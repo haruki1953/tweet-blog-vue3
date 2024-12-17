@@ -18,7 +18,7 @@ const model = defineModel<
   required: true
 })
 
-const platform = ref<PlatformKeyEnumValues>(platformKeyMap.x.key)
+const platform = ref<PlatformKeyEnumValues>(platformKeyMap.X.key)
 
 const jsonData = ref('')
 
@@ -92,7 +92,6 @@ const importPostsAdd = (
           <div class="lable">推文导入</div>
           <a
             class="link"
-            type="primary"
             :href="appInfo.importDocs.link"
             target="_blank"
             rel="noopener noreferrer"
@@ -104,8 +103,8 @@ const importPostsAdd = (
           <div class="form-row">
             <div class="control-radio">
               <el-radio-group v-model="platform">
-                <el-radio :value="platformKeyMap.x.key">
-                  {{ platformKeyMap.x.name }}
+                <el-radio :value="platformKeyMap.X.key">
+                  {{ platformKeyMap.X.name }}
                 </el-radio>
               </el-radio-group>
             </div>

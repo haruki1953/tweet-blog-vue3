@@ -217,7 +217,7 @@ const haveMainPostOnSetUp = mainPostGroup.value != null
   flex-direction: column;
   align-items: center;
   .el-button {
-    display: block;
+    display: flex;
     width: 50%;
     :deep() {
       span {

@@ -103,7 +103,7 @@ defineExpose({
     <el-row :gutter="6">
       <TransitionGroup name="fade-slide-list">
         <el-col :span="24" v-if="imageStore.limitedList.length === 0">
-          <SakiEmpty description="暂无图片"></SakiEmpty>
+          <TweetEmpty description="暂无图片"></TweetEmpty>
         </el-col>
         <el-col
           :span="imageSpan"
