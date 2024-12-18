@@ -55,3 +55,14 @@ export type PostControlDeleteImportDataData = {
 }
 export type PostControlDeleteImportDataRes =
   ResData<PostControlDeleteImportDataData>
+
+export type PostControlDeleteImportExcessData = {
+  postImport: {
+    count: number
+  }
+  imageImport: {
+    count: number
+  }
+}
+export type PostControlDeleteImportExcessRes =
+  ResData<PostControlDeleteImportExcessData>

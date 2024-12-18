@@ -1,5 +1,6 @@
 import type {
   PostControlDeleteImportDataRes,
+  PostControlDeleteImportExcessRes,
   PostControlImportJsonType,
   PostControlImportRes
 } from '@/types'
@@ -16,3 +17,8 @@ export const postControlDeleteImportDataApi = (
 ): PostControlDeleteImportDataRes => {
   return http.delete(`/post-control/import-data/id/${id}`)
 }
+
+export const postControlDeleteImportExcessApi =
+  (): PostControlDeleteImportExcessRes => {
+    return http.delete('/post-control/import-data/excess')
+  }

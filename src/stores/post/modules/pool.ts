@@ -1,4 +1,5 @@
 import { postGetByIdApi } from '@/api'
+import { postConfig } from '@/config'
 import { useStatesStore } from '@/stores'
 import type { PostPoolItem } from '@/types'
 import { postGetByIdDataHandle } from '@/utils'
@@ -59,14 +60,21 @@ export const usePoolModule = (dependencies: {
   }
   const tryLimitPostPoolSize = () => {
     // limit postPool size
-    if (postPool.value.length > 50) {
+    if (postPool.value.length > postConfig.postPoolSizeLimit) {
       // Sort the postPool by updateAt date in ascending order
       postPool.value.sort(
         (a, b) =>
           new Date(a.updateAt).getTime() - new Date(b.updateAt).getTime()
       )
       // Remove the oldest items
-      postPool.value.splice(0, 30)
+      const removedList = postPool.value.splice(
+        0,
+        postConfig.postPoolSizeRemove
+      )
+      // 注意requestedPostIds
+      requestedPostIds.value = requestedPostIds.value.filter(
+        (i) => !removedList.find((item) => item.id === i)
+      )
     }
   }
 

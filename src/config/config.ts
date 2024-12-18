@@ -75,7 +75,11 @@ export const postConfig = {
   // 发推时的最大字数（只是提示，不会约束）
   maxPostCharactersOnSend: 280,
   // 开始警告的剩余字数
-  remainingCharsToWarning: 20
+  remainingCharsToWarning: 20,
+  // 持久化保存的帖子数据的最大数量
+  postPoolSizeLimit: 100,
+  // 超过限制时移除的数量
+  postPoolSizeRemove: 50
 }
 
 // 占位图片
