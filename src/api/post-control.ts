@@ -1,6 +1,7 @@
 import type {
   PostControlDeleteImportDataRes,
   PostControlDeleteImportExcessRes,
+  PostControlGetForwardRes,
   PostControlImportJsonType,
   PostControlImportRes
 } from '@/types'
@@ -22,3 +23,7 @@ export const postControlDeleteImportExcessApi =
   (): PostControlDeleteImportExcessRes => {
     return http.delete('/post-control/import-data/excess')
   }
+
+export const postControlGetForwardApi = (): PostControlGetForwardRes => {
+  return http.get('/post-control/forward')
+}

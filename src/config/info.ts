@@ -19,5 +19,10 @@ export const appInfo = {
   proxyDocs: {
     text: '代理说明',
     link: '/'
+  },
+  // 转发配置
+  forwardSettingDocs: {
+    text: '配置说明',
+    link: '/'
   }
 } as const

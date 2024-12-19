@@ -1,4 +1,4 @@
-import type { PlatformKeyEnumValues } from '@/config'
+import type { PlatformKeyEnumValues, platformKeyMap } from '@/config'
 
 export interface Image {
   id: string
@@ -120,3 +120,42 @@ export type BackendTaskCache = {
     completedCount: number
   }[]
 }
+
+// BackendForwardStore ForwardSetting 转发配置
+export type ForwardSettingBase = {
+  uuid: string
+  name: string
+}
+export type ForwardSettingX = {
+  platform: typeof platformKeyMap.X.key
+  data: {
+    token1: string
+  }
+} & ForwardSettingBase
+export type ForwardSettingT = {
+  platform: typeof platformKeyMap.T.key
+  data: {
+    token2: string
+  }
+} & ForwardSettingBase
+export type ForwardSettingItem = ForwardSettingX | ForwardSettingT
+export type ForwardSettingList = ForwardSettingItem[]
+// BackendForwardStore
+export type BackendForwardStore = {
+  forwardSettingList: ForwardSettingList
+}
+
+// 在转发配置设置页面的表单中
+// export type ForwardSettingBaseInForm = {
+//   isDeleted: boolean
+// } & ForwardSettingBase
+// export type ForwardSettingXInForm = ForwardSettingX & ForwardSettingBaseInForm
+// export type ForwardSettingTInForm = ForwardSettingT & ForwardSettingBaseInForm
+// export type ForwardSettingItemInForm =
+//   | ForwardSettingXInForm
+//   | ForwardSettingTInForm
+// 试试这样行不行
+export type ForwardSettingItemInForm = ForwardSettingItem & {
+  isDeleted: boolean
+}
+export type ForwardSettingListInForm = ForwardSettingItemInForm

@@ -1,5 +1,5 @@
 import type { PlatformKeyEnumValues } from '@/config'
-import type { BackendTaskCache } from '../data'
+import type { BackendForwardStore, BackendTaskCache } from '../data'
 import type { ResData } from './base'
 
 export type PostControlImportJsonType = {
@@ -66,3 +66,8 @@ export type PostControlDeleteImportExcessData = {
 }
 export type PostControlDeleteImportExcessRes =
   ResData<PostControlDeleteImportExcessData>
+
+export type PostControlGetForwardData = {
+  forwardStore: BackendForwardStore
+}
+export type PostControlGetForwardRes = ResData<PostControlGetForwardData>

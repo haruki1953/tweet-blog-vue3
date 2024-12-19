@@ -4,9 +4,14 @@ export const platformKeyMap = {
     key: 'X',
     name: 'X / Twitter',
     fontawesomeClass: 'fa-brands fa-x-twitter'
+  },
+  T: {
+    key: 'T',
+    name: 'Test',
+    fontawesomeClass: 'fa-brands fa-font-awesome'
   }
 } as const
-export const platformKeyEnum = ['X'] as const
+export const platformKeyEnum = ['X', 'T'] as const
 
 // 类型检查以确保 platformKeyEnum 与 platformKeyMap 的值是同步的
 export type PlatformKeyMapValues =

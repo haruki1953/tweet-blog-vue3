@@ -13,7 +13,15 @@ const props = defineProps<{
   isSubmitting: (id: string) => boolean
 }>()
 
-const postImports = computed(() => props.postPoolItem.mainPost.postImports)
+// 降序排序
+const postImports = computed(() => {
+  return props.postPoolItem.mainPost.postImports
+    .slice()
+    .sort(
+      (a, b) =>
+        new Date(b.importedAt).getTime() - new Date(a.importedAt).getTime()
+    )
+})
 
 const isEditMode = ref(false)
 const toggleEditMode = () => {
