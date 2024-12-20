@@ -6,6 +6,8 @@ import { cloneDeep } from 'lodash'
 import { watch } from 'vue'
 import { computed } from 'vue'
 import { ref } from 'vue'
+import ForwardSettingItem from './ForwardSettingItem.vue'
+import { createForwardSettingListInFormControl } from './dependencies'
 
 const forwardStore = useForwardStore()
 
@@ -59,6 +61,11 @@ const submit = async () => {
     isSubmiting.value = false
   }
 }
+
+const useForwardSettingListInFormControl =
+  createForwardSettingListInFormControl({
+    forwardSettingListInForm
+  })
 </script>
 <template>
   <div class="forward-setting-page">
@@ -90,7 +97,26 @@ const submit = async () => {
         </div>
       </div>
     </div>
-    <div class="forward-list"></div>
+    <div class="forward-list">
+      <div
+        class="forward-item"
+        v-for="item in forwardSettingListInForm"
+        :key="item.uuid"
+      >
+        <ForwardSettingItem
+          :itemInForm="item"
+          :itemInStore="
+            forwardSettingListInStore.find((i) => i.uuid === item.uuid)
+          "
+          :useForwardSettingListInFormControl="
+            useForwardSettingListInFormControl
+          "
+        ></ForwardSettingItem>
+      </div>
+      <!-- <div class="forward-item">
+        <ForwardSettingItem add></ForwardSettingItem>
+      </div> -->
+    </div>
   </div>
 </template>
 

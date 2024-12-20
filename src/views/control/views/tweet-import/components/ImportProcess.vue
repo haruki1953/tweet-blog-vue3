@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { appInfo, platformKeyMap, type PlatformKeyEnumValues } from '@/config'
+import {
+  appInfo,
+  platformKeyEnum,
+  platformKeyMap,
+  type PlatformKeyEnumValues
+} from '@/config'
 import type { PostControlImportJsonTypeOnDataProcess } from '@/types'
 import {
   ChatSquare,
@@ -103,8 +108,12 @@ const importPostsAdd = (
           <div class="form-row">
             <div class="control-radio">
               <el-radio-group v-model="platform">
-                <el-radio :value="platformKeyMap.X.key">
-                  {{ platformKeyMap.X.name }}
+                <el-radio
+                  v-for="key in platformKeyEnum"
+                  :value="key"
+                  :key="key"
+                >
+                  {{ platformKeyMap[key].name }}
                 </el-radio>
               </el-radio-group>
             </div>
