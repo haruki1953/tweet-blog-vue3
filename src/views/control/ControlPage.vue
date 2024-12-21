@@ -41,7 +41,7 @@ const menu: IconMenuItem[] = [
   },
   {
     index: '/forward-config',
-    title: `转发设置`,
+    title: `推文转发`,
     icon: Connection,
     actionColor: 'primary',
     onClick() {

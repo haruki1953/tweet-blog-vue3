@@ -108,13 +108,11 @@ const importPostsAdd = (
           <div class="form-row">
             <div class="control-radio">
               <el-radio-group v-model="platform">
-                <el-radio
-                  v-for="key in platformKeyEnum"
-                  :value="key"
-                  :key="key"
-                >
-                  {{ platformKeyMap[key].name }}
-                </el-radio>
+                <template v-for="key in platformKeyEnum" :key="key">
+                  <el-radio :value="key" v-if="platformKeyMap[key].couldImport">
+                    {{ platformKeyMap[key].name }}
+                  </el-radio>
+                </template>
               </el-radio-group>
             </div>
           </div>

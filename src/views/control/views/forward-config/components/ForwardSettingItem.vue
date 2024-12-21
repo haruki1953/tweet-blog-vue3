@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { platformKeyMap } from '@/config'
-import { CircleCheckFilled, Plus } from '@element-plus/icons-vue'
+import {
+  CircleCheckFilled,
+  CirclePlusFilled,
+  InfoFilled,
+  Plus,
+  RemoveFilled,
+  WarningFilled
+} from '@element-plus/icons-vue'
 import { useElementSize } from '@vueuse/core'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import type { UseForwardSettingListInFormControl } from './dependencies'
 import type { ForwardSettingItem, ForwardSettingItemInForm } from '@/types'
 import ForwardSettingForm from './ForwardSettingForm.vue'
-
-// const model = defineModel<ForwardSettingItemInForm>({ required: true })
+import type { Component } from 'vue'
 
 const props = defineProps<{
   // add: boolean
@@ -23,11 +29,92 @@ const toggleEdit = () => {
   isEditing.value = !isEditing.value
 }
 
-// const dataPreview = computed(() => {
-//   let dataStr
-//   // for (const key in )
-// })
+const dataDefault = computed(
+  () => platformKeyMap[props.itemInForm.platform].forwardSettingDataDefault
+)
 
+const dataPreview = computed(() => {
+  let dataStr = ''
+  // 默认显示 form 中的数据
+  for (const key in dataDefault.value) {
+    dataStr += ' ' + (props.itemInForm.data as any)[key]
+  }
+  dataStr = dataStr.trim()
+  // 如果没有，显示 store 中的数据
+  if (dataStr === '' && props.itemInStore != null) {
+    for (const key in dataDefault.value) {
+      dataStr += ' ' + (props.itemInStore.data as any)[key]
+    }
+    dataStr = dataStr.trim()
+  }
+  return dataStr
+})
+
+const itemState = computed(
+  (): {
+    key: string
+    text: string
+    color: string
+    icon: Component
+  } => {
+    if (props.itemInForm.isDeleted) {
+      return {
+        key: 'deleted',
+        text: '删除',
+        color: 'var(--el-color-danger)',
+        icon: RemoveFilled
+      }
+    }
+    if (props.itemInStore == null) {
+      return {
+        key: 'added',
+        text: '添加',
+        color: 'var(--el-color-success)',
+        icon: CirclePlusFilled
+      }
+    }
+    for (const key in dataDefault.value) {
+      if ((props.itemInForm.data as any)[key] !== '') {
+        return {
+          key: 'data-updated',
+          text: '数据修改',
+          color: 'var(--el-color-warning)',
+          icon: WarningFilled
+        }
+      }
+    }
+    // 虽然platform和uuid不允许修改，姑且判断一下
+    const {
+      platform: platformInForm,
+      uuid: uuidInForm,
+      name: nameInForm
+    } = props.itemInForm
+    const {
+      platform: platformInStore,
+      uuid: uuidInStore,
+      name: nameInStore
+    } = props.itemInStore
+    if (
+      platformInForm !== platformInStore ||
+      uuidInForm !== uuidInStore ||
+      nameInForm !== nameInStore
+    ) {
+      return {
+        key: 'info-updated',
+        text: '信息修改',
+        color: 'var(--el-color-info)',
+        icon: InfoFilled
+      }
+    }
+
+    return {
+      key: 'saved',
+      text: '已保存',
+      color: 'var(--el-color-primary)',
+      icon: CircleCheckFilled
+    }
+  }
+)
 const boxRef = ref<HTMLElement | null>(null)
 const boxSize = useElementSize(boxRef)
 const boxStyleHeight = computed(() => {
@@ -36,44 +123,41 @@ const boxStyleHeight = computed(() => {
 </script>
 <template>
   <div class="forward-setting-item">
-    <div
-      class="info-box"
-      :class="{
-        // add,
-        // adding: isEditing
-      }"
-    >
-      <!-- <div class="info-row top-line add" @click="toggleEdit" v-if="add">
-        <div class="mask">
-          <el-icon class="icon"><Plus /></el-icon>
-          <span class="text">添加转发配置</span>
-        </div>
-      </div> -->
-      <div class="info-row top-line" @click="toggleEdit">
-        <div class="info-col left">
-          <div class="icon-text">
-            <el-icon
-              :class="platformKeyMap[itemInForm.platform].fontawesomeClass"
-              size="25"
-            ></el-icon>
-            <div class="text">
-              {{ itemInForm.name }}
+    <div class="info-box">
+      <div @click="toggleEdit" class="top-line">
+        <div class="info-row">
+          <div class="info-col left">
+            <div class="icon-text">
+              <el-icon
+                :class="platformKeyMap[itemInForm.platform].fontawesomeClass"
+                size="25"
+              ></el-icon>
+              <Transition name="fade" mode="out-in">
+                <div class="text" :key="itemInForm.name">
+                  {{ itemInForm.name }}
+                </div>
+              </Transition>
             </div>
+            <div></div>
           </div>
-          <div></div>
-        </div>
-        <div class="info-col right">
-          <div></div>
-          <div class="content-flag">
-            <div class="content">****aabbcc ****ssddxx</div>
-            <div class="flag">
-              <el-icon :color="`var(--el-color-primary)`">
-                <CircleCheckFilled />
-              </el-icon>
+          <div class="info-col right">
+            <div></div>
+            <div class="content-flag">
+              <Transition name="fade" mode="out-in">
+                <div class="content" :key="dataPreview">{{ dataPreview }}</div>
+              </Transition>
+              <Transition name="fade-pop" mode="out-in">
+                <div class="flag" :key="itemState.key">
+                  <el-icon :color="itemState.color">
+                    <component :is="itemState.icon"></component>
+                  </el-icon>
+                </div>
+              </Transition>
             </div>
           </div>
         </div>
       </div>
+
       <div
         class="style-box"
         :style="{
@@ -83,10 +167,11 @@ const boxStyleHeight = computed(() => {
         <div class="info-divider"></div>
         <Transition name="fade05">
           <div v-if="isEditing" ref="boxRef">
-            <div class="info-row">
+            <div class="info-row form">
               <ForwardSettingForm
                 :itemInForm="itemInForm"
                 :itemInStore="itemInStore"
+                :itemState="itemState"
                 :useForwardSettingListInFormControl="
                   useForwardSettingListInFormControl
                 "
@@ -119,45 +204,6 @@ const boxStyleHeight = computed(() => {
     box-shadow: var(--el-box-shadow-lighter);
     // background-color: var(--color-background-mute);
   }
-  // &.add {
-  //   background-color: var(--color-background);
-  //   border: 2px dashed var(--el-border-color);
-  //   transition:
-  //     border var(--el-transition-duration),
-  //     background-color 0.5s,
-  //     box-shadow 0.5s;
-  //   &:hover {
-  //     background-color: var(--color-background-soft);
-  //     border-color: var(--el-color-primary);
-  //   }
-  //   &.adding {
-  //     background-color: var(--color-background-soft);
-  //     border-color: var(--el-color-primary);
-  //   }
-  //   .top-line {
-  //     position: relative;
-  //     .mask {
-  //       position: absolute;
-  //       top: 0;
-  //       right: 0;
-  //       bottom: 0;
-  //       left: 0;
-  //       display: flex;
-  //       justify-content: center;
-  //       align-items: center;
-  //       color: #8c939d;
-  //       user-select: none;
-  //       pointer-events: none; /* 允许点击穿透 */
-  //       .icon {
-  //         font-size: 25px;
-  //       }
-  //       .text {
-  //         font-weight: bold;
-  //         margin-left: 10px;
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 .info-divider {
@@ -166,16 +212,20 @@ const boxStyleHeight = computed(() => {
   transition: background-color 0.5s;
 }
 
+.top-line {
+  height: 45px;
+  cursor: pointer;
+  user-select: none;
+}
 .info-row {
   margin: 0 20px;
   padding: 10px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  &.top-line {
-    height: 45px;
-    cursor: pointer;
-    user-select: none;
+  &.form {
+    display: block;
+    padding: 20px 0;
   }
 }
 .info-col {

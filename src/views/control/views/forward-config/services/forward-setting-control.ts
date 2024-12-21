@@ -1,4 +1,5 @@
 import type { ForwardSettingItemInForm } from '@/types'
+import { cloneDeep } from 'lodash'
 import type { Ref } from 'vue'
 
 export const createForwardSettingListInFormControl = (dependencies: {
@@ -7,7 +8,7 @@ export const createForwardSettingListInFormControl = (dependencies: {
   const { forwardSettingListInForm } = dependencies
   const useForwardSettingListInFormControl = () => {
     const couldMoveSetting = (uuid: string, move: 'up' | 'down') => {
-      let couldMove
+      let couldMove = true
       const findIndex = forwardSettingListInForm.value.findIndex(
         (i) => i.uuid === uuid
       )
@@ -64,7 +65,7 @@ export const createForwardSettingListInFormControl = (dependencies: {
     }
 
     const addSetting = (item: ForwardSettingItemInForm) => {
-      forwardSettingListInForm.value.push(item)
+      forwardSettingListInForm.value.push(cloneDeep(item))
     }
 
     const updateSetting = (item: ForwardSettingItemInForm) => {
@@ -74,7 +75,7 @@ export const createForwardSettingListInFormControl = (dependencies: {
       if (findIndex === -1) {
         return
       }
-      forwardSettingListInForm.value[findIndex] = item
+      forwardSettingListInForm.value[findIndex] = cloneDeep(item)
     }
 
     const findSetting = (uuid: string) => {

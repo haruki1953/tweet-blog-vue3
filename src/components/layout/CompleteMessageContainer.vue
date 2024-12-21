@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {
   CircleCloseFilled,
+  DeleteFilled,
+  RemoveFilled,
   SuccessFilled,
   WarningFilled
 } from '@element-plus/icons-vue'
@@ -23,7 +25,7 @@ const props = withDefaults(
 )
 
 const show = ref(false)
-const icon = ref<'success' | 'warning' | 'error'>('success')
+const icon = ref<'success' | 'warning' | 'error' | 'remove'>('success')
 
 const success = async () => {
   if (show.value) {
@@ -52,11 +54,21 @@ const error = async () => {
   await new Promise((resolve) => setTimeout(resolve, props.duration))
   show.value = false
 }
+const remove = async () => {
+  if (show.value) {
+    return
+  }
+  icon.value = 'remove'
+  show.value = true
+  await new Promise((resolve) => setTimeout(resolve, props.duration))
+  show.value = false
+}
 
 defineExpose({
   success,
   warning,
-  error
+  error,
+  remove
 })
 </script>
 <template>
@@ -82,6 +94,9 @@ defineExpose({
           </el-icon>
           <el-icon :size="size" v-show="icon === 'error'" class="error">
             <CircleCloseFilled />
+          </el-icon>
+          <el-icon :size="size" v-show="icon === 'remove'" class="error">
+            <DeleteFilled />
           </el-icon>
         </div>
       </Transition>

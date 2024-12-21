@@ -16,7 +16,7 @@ import {
   User
 } from '@element-plus/icons-vue'
 import { cloneDeep } from 'lodash'
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 import { ref } from 'vue'
 import type { UseForwardSettingListInFormControl } from './dependencies'
 
@@ -24,6 +24,12 @@ import type { UseForwardSettingListInFormControl } from './dependencies'
 const props = defineProps<{
   itemInForm: ForwardSettingItemInForm
   itemInStore?: ForwardSettingItem
+  itemState: {
+    key: string
+    text: string
+    color: string
+    icon: Component
+  }
   useForwardSettingListInFormControl: UseForwardSettingListInFormControl
   toggleEdit: () => void
 }>()
@@ -31,45 +37,61 @@ const props = defineProps<{
 // 表单中的数据
 const item = ref(cloneDeep(props.itemInForm))
 
-// 将可选的值赋值到data
-const assigningValuesToData = (
-  data: typeof dataDefault,
-  value?: Partial<typeof dataDefault> | '' | null | undefined
-) => {
-  for (const key in data) {
-    if (value && (value as any)[key]) {
-      ;(data as any)[key] = (value as any)[key]
-    } else {
-      ;(data as any)[key] = ''
-    }
-  }
+const initData = () => {
+  item.value = cloneDeep(props.itemInForm)
 }
-// 默认数据，为空字符串
-const dataDefault = {
-  ...props.itemInForm.data
-}
-assigningValuesToData(dataDefault)
+initData()
+
+// const parsedItemData = computed(() => {
+//   return platformKeyMap[item.value.platform].forwardSettingDataSchema.parse(
+//     item.value.data
+//   )
+// })
+
+// // 将可选的值赋值到data
+// const assigningValuesToData = (
+//   data: typeof dataDefault,
+//   value?: Partial<typeof dataDefault> | '' | null | undefined
+// ) => {
+//   for (const key in data) {
+//     if (value && (value as any)[key]) {
+//       ;(data as any)[key] = (value as any)[key]
+//     } else {
+//       ;(data as any)[key] = ''
+//     }
+//   }
+// }
+// // 默认数据，为空字符串
+// const dataDefault = {
+//   ...props.itemInForm.data
+// }
+// assigningValuesToData(dataDefault)
+
+const dataDefault = computed(
+  () => platformKeyMap[item.value.platform].forwardSettingDataDefault
+)
 
 // 令牌数据的 placeholder，默认显示itemInStore中的数据
 const dataPlaceholder = computed(() => {
-  const dataValueTemp = {
-    ...dataDefault
-  }
+  const dataValueTemp = cloneDeep(dataDefault.value)
+
   // 一旦有值被输入，则都显示为空
   for (const key in item.value.data) {
     if ((item.value.data as any)[key] !== '') {
       return dataValueTemp
     }
   }
+  // 无 itemInStore 时也显示为空
+  if (props.itemInStore == null) {
+    return dataValueTemp
+  }
   // 未输入时，显示store中的数据
-  assigningValuesToData(dataValueTemp, props.itemInStore?.data)
+  // assigningValuesToData(dataValueTemp, props.itemInStore?.data)
+  for (const key in dataDefault.value) {
+    ;(dataValueTemp as any)[key] = (props.itemInStore.data as any)[key]
+  }
   return dataValueTemp
 })
-
-const initData = () => {
-  item.value = cloneDeep(props.itemInForm)
-}
-initData()
 
 const closeSetting = () => {
   props.toggleEdit()
@@ -79,20 +101,20 @@ const forwardSettingListInFormControl =
   props.useForwardSettingListInFormControl()
 
 const updateSetting = () => {
-  // model.value = item.value
   forwardSettingListInFormControl.updateSetting(item.value)
   refCompleteMessageContainer.value?.success()
-  // await new Promise((resolve) => setTimeout(resolve, 300))
 }
 
 const deleteSetting = () => {
   item.value.isDeleted = true
-  updateSetting()
+  forwardSettingListInFormControl.updateSetting(item.value)
+  refCompleteMessageContainer.value?.remove()
 }
 
 const restoreSetting = () => {
   item.value.isDeleted = false
-  updateSetting()
+  forwardSettingListInFormControl.updateSetting(item.value)
+  refCompleteMessageContainer.value?.success()
 }
 
 const couldUp = computed(() => {
@@ -122,6 +144,19 @@ const refCompleteMessageContainer = ref<InstanceType<
 </script>
 <template>
   <div class="forward-setting-form">
+    <div class="item-state">
+      <Transition name="fade" mode="out-in">
+        <div
+          class="text"
+          :key="itemState.key"
+          :style="{
+            color: itemState.color
+          }"
+        >
+          {{ itemState.text }}
+        </div>
+      </Transition>
+    </div>
     <CompleteMessageContainer
       ref="refCompleteMessageContainer"
       backgroundColor="var(--color-background-soft)"
@@ -152,26 +187,29 @@ const refCompleteMessageContainer = ref<InstanceType<
             </div>
           </div>
         </div>
-        <div class="form-row">
+        <!-- <div class="form-row">
           <div class="control-radio">
-            <el-radio-group v-model="item.platform">
-              <el-radio v-for="key in platformKeyEnum" :value="key" :key="key">
+            <el-radio-group v-model="item.platform" disabled>
+              <el-radio
+                v-for="key in platformKeyEnum"
+                :value="key"
+                :key="key"
+                :disabled="!platformKeyMap[key].couldForward"
+              >
                 {{ platformKeyMap[key].name }}
               </el-radio>
             </el-radio-group>
           </div>
-        </div>
+        </div> -->
         <div class="form-row">
-          <div class="input-lable">
-            uuid
-            <a href="javascript:;">生成</a>
-          </div>
+          <div class="input-lable">uuid</div>
           <el-input
             v-model="item.uuid"
             :prefix-icon="Aim"
-            placeholder="uuid"
             size="large"
-            class="control-input"
+            class="control-input consolas"
+            readonly
+            :disabled="item.isDeleted"
           ></el-input>
         </div>
         <div class="form-row">
@@ -179,12 +217,12 @@ const refCompleteMessageContainer = ref<InstanceType<
           <el-input
             v-model="item.name"
             :prefix-icon="User"
-            placeholder="名称"
             size="large"
-            class="control-input"
+            class="control-input bold"
+            :disabled="item.isDeleted"
           ></el-input>
         </div>
-        <template v-for="key in Object.keys(item.data)" :key="key">
+        <template v-for="key in Object.keys(dataDefault)" :key="key">
           <div class="form-row">
             <div class="input-lable">{{ key }}</div>
             <el-input
@@ -192,42 +230,52 @@ const refCompleteMessageContainer = ref<InstanceType<
               :placeholder="(dataPlaceholder as any)[key]"
               :prefix-icon="Key"
               size="large"
-              class="control-input"
+              class="control-input consolas"
+              :disabled="item.isDeleted"
             ></el-input>
           </div>
         </template>
-        <Transition mode="out-in" name="fade">
-          <div class="button-box edit" v-if="item.isDeleted">
-            <el-button
-              @click="restoreSetting"
-              type="primary"
-              round
-              size="small"
-            >
-              恢复
-            </el-button>
-            <el-button @click="closeSetting" type="info" round size="small">
-              关闭
-            </el-button>
-          </div>
-          <div class="button-box edit" v-else>
-            <el-button @click="updateSetting" type="warning" round size="small">
-              修改
-            </el-button>
-            <el-button @click="deleteSetting" type="danger" round size="small">
-              移除
-            </el-button>
-            <el-button @click="closeSetting" type="info" round size="small">
-              关闭
-            </el-button>
-          </div>
-        </Transition>
       </div>
+      <Transition mode="out-in" name="fade">
+        <div class="button-box edit" v-if="item.isDeleted">
+          <el-button @click="restoreSetting" type="success" round size="small">
+            恢复
+          </el-button>
+          <el-button @click="closeSetting" type="info" round size="small">
+            关闭
+          </el-button>
+        </div>
+        <div class="button-box edit" v-else>
+          <el-button @click="updateSetting" type="warning" round size="small">
+            修改
+          </el-button>
+          <el-button @click="deleteSetting" type="danger" round size="small">
+            删除
+          </el-button>
+          <el-button @click="closeSetting" type="info" round size="small">
+            关闭
+          </el-button>
+        </div>
+      </Transition>
     </CompleteMessageContainer>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.forward-setting-form {
+  position: relative;
+  .item-state {
+    position: absolute;
+    top: -10px;
+    right: 0;
+    z-index: 3;
+    .text {
+      user-select: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+}
 .form-fa-brand {
   display: flex;
   align-items: center;
@@ -263,6 +311,21 @@ const refCompleteMessageContainer = ref<InstanceType<
   &.add,
   &.edit {
     margin-top: 18px;
+  }
+}
+
+.el-input.consolas {
+  :deep() {
+    .el-input__inner {
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+  }
+}
+.el-input.bold {
+  :deep() {
+    .el-input__inner {
+      font-weight: bold;
+    }
   }
 }
 </style>

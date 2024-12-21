@@ -8,6 +8,9 @@ import { computed } from 'vue'
 import { ref } from 'vue'
 import ForwardSettingItem from './ForwardSettingItem.vue'
 import { createForwardSettingListInFormControl } from './dependencies'
+import ForwardSettingItemAdd from './ForwardSettingItemAdd.vue'
+import { postControlForwardSettingSetApi } from '@/api'
+import { sakiMessage } from '@/utils'
 
 const forwardStore = useForwardStore()
 
@@ -21,10 +24,10 @@ const forwardSettingListInForm = ref<ForwardSettingItemInForm[]>([])
 const initData = () => {
   const tempList = cloneDeep(forwardSettingListInStore.value)
   forwardSettingListInForm.value = tempList.map((item) => {
-    // 将data中的数据设为空字符串
-    for (const key in item.data) {
-      ;(item.data as Record<string, string>)[key] = ''
-    }
+    // 将data中的数据设为默认空字符串
+    item.data = cloneDeep(
+      platformKeyMap[item.platform].forwardSettingDataDefault
+    )
     // 添加 isDeleted: false
     return {
       ...item,
@@ -49,14 +52,15 @@ const isSubmiting = ref(false)
 const submit = async () => {
   isSubmiting.value = true
   try {
-    // const res = await postControlImportApi({
-    //   importPosts: model.value
-    // })
-    // taskStore.pollLoadByData(res.data.data)
-    // sakiMessage({
-    //   type: 'success',
-    //   message: '正在导入'
-    // })
+    const res = await postControlForwardSettingSetApi(
+      forwardSettingListInForm.value
+    )
+    forwardStore.loadByData(res.data.data)
+    initData()
+    sakiMessage({
+      type: 'success',
+      message: '设置成功'
+    })
   } finally {
     isSubmiting.value = false
   }
@@ -98,26 +102,39 @@ const useForwardSettingListInFormControl =
       </div>
     </div>
     <div class="forward-list">
-      <div
-        class="forward-item"
-        v-for="item in forwardSettingListInForm"
-        :key="item.uuid"
-      >
-        <ForwardSettingItem
-          :itemInForm="item"
-          :itemInStore="
-            forwardSettingListInStore.find((i) => i.uuid === item.uuid)
-          "
-          :useForwardSettingListInFormControl="
-            useForwardSettingListInFormControl
-          "
-        ></ForwardSettingItem>
-      </div>
-      <!-- <div class="forward-item">
-        <ForwardSettingItem add></ForwardSettingItem>
-      </div> -->
+      <TransitionGroup name="fade-slide-list">
+        <div
+          class="forward-item"
+          v-for="item in forwardSettingListInForm"
+          :key="item.uuid"
+        >
+          <ForwardSettingItem
+            :itemInForm="item"
+            :itemInStore="
+              forwardSettingListInStore.find((i) => i.uuid === item.uuid)
+            "
+            :useForwardSettingListInFormControl="
+              useForwardSettingListInFormControl
+            "
+          ></ForwardSettingItem>
+        </div>
+        <div class="forward-item" key="forward-item-add">
+          <ForwardSettingItemAdd
+            :useForwardSettingListInFormControl="
+              useForwardSettingListInFormControl
+            "
+          ></ForwardSettingItemAdd>
+        </div>
+      </TransitionGroup>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.forward-list {
+  position: relative;
+  .forward-item {
+    width: 100%;
+  }
+}
+</style>
