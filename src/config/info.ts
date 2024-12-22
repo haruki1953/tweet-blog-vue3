@@ -11,8 +11,8 @@ export const appInfo = {
     text: '导入说明',
     link: '/'
   },
-  // 删除重复的导入记录
-  importExcessDocs: {
+  // 删除导入记录
+  importDeleteDocs: {
     text: '说明',
     link: '/'
   },

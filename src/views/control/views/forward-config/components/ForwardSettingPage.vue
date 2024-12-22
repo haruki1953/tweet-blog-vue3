@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { appInfo, platformKeyMap } from '@/config'
-import { useForwardStore } from '@/stores/forward'
+import { useForwardStore } from '@/stores'
 import type { ForwardSettingItemInForm } from '@/types'
 import { cloneDeep } from 'lodash'
 import { watch } from 'vue'

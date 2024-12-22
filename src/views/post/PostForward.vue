@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { usePostStore } from '@/stores'
+import { useForwardStore, usePostStore } from '@/stores'
 import type { PostPoolItem, PostData } from '@/types'
 import { onMounted } from 'vue'
 import { ref, watch } from 'vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import ForwardSubmit from './components/ForwardSubmit.vue'
 import ForwardInfo from './components/ForwardInfo.vue'
 import ImportInfo from './components/ImportInfo.vue'
+import ForwardSubmitList from './components/ForwardSubmitList.vue'
+import { useElementSize } from '@vueuse/core'
 
 const route = useRoute()
 const postStore = usePostStore()
@@ -80,6 +81,8 @@ const submitControl = async (id: string, callback: () => Promise<any>) => {
 const isSubmitting = (id: string) => {
   return submittingShowList.value.includes(id)
 }
+
+const forwardStore = useForwardStore()
 </script>
 <template>
   <div :key="String(route.params.id)">
@@ -101,18 +104,27 @@ const isSubmitting = (id: string) => {
           </div>
         </template>
         <template #colRight>
-          <ForwardSubmit></ForwardSubmit>
           <div
             v-if="
               postPoolItem == null ||
               (postPoolItem.mainPost.postForwards.length === 0 &&
-                postPoolItem.mainPost.postImports.length === 0)
+                postPoolItem.mainPost.postImports.length === 0 &&
+                forwardStore.forwardSettingList.length === 0)
             "
           >
             <TweetEmpty description="暂无转发记录"></TweetEmpty>
           </div>
           <div v-else>
-            <ForwardInfo></ForwardInfo>
+            <ForwardSubmitList
+              :postPoolItem="postPoolItem"
+              :isSubmitting="isSubmitting"
+              :submitControl="submitControl"
+            ></ForwardSubmitList>
+            <ForwardInfo
+              :postPoolItem="postPoolItem"
+              :isSubmitting="isSubmitting"
+              :submitControl="submitControl"
+            ></ForwardInfo>
             <ImportInfo
               :postPoolItem="postPoolItem"
               :isSubmitting="isSubmitting"
@@ -128,23 +140,5 @@ const isSubmitting = (id: string) => {
 <style lang="scss" scoped>
 .top-bar {
   margin-bottom: 20px;
-}
-.bottom-button-box {
-  margin: 20px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .el-button {
-    display: block;
-    width: 50%;
-    :deep() {
-      span {
-        color: var(--color-background);
-        font-weight: bold;
-        transition: all 0.2s;
-        // letter-spacing: 6px;
-      }
-    }
-  }
 }
 </style>

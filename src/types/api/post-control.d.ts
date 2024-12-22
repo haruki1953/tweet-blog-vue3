@@ -1,5 +1,10 @@
 import type { PlatformKeyEnumValues } from '@/config'
-import type { BackendForwardStore, BackendTaskCache } from '../data'
+import type {
+  BackendForwardStore,
+  BackendTaskCache,
+  PostForwardData,
+  PostImportData
+} from '../data'
 import type { ResData } from './base'
 
 export type PostControlImportJsonType = {
@@ -45,14 +50,8 @@ export type PostControlImportData = {
 }
 export type PostControlImportRes = ResData<PostControlImportData>
 
-export type PostControlDeleteImportDataData = {
-  id: string
-  platform: string
-  platformPostId: string
-  link: string
-  importedAt: Date
-  postId: string
-}
+export type PostControlDeleteImportDataData = PostImportData
+
 export type PostControlDeleteImportDataRes =
   ResData<PostControlDeleteImportDataData>
 
@@ -67,7 +66,33 @@ export type PostControlDeleteImportExcessData = {
 export type PostControlDeleteImportExcessRes =
   ResData<PostControlDeleteImportExcessData>
 
+export type PostControlDeleteImportAllPostData =
+  PostControlDeleteImportExcessData
+export type PostControlDeleteImportAllPostRes =
+  ResData<PostControlDeleteImportAllPostData>
+export type PostControlDeleteImportAllImageData =
+  PostControlDeleteImportExcessData
+export type PostControlDeleteImportAllImageRes =
+  ResData<PostControlDeleteImportAllImageData>
+
 export type PostControlGetForwardData = {
   forwardStore: BackendForwardStore
 }
 export type PostControlGetForwardRes = ResData<PostControlGetForwardData>
+
+export type PostControlDeleteForwardDataData = PostForwardData
+
+export type PostControlDeleteForwardDataRes =
+  ResData<PostControlDeleteForwardDataData>
+
+export type PostControlForwardManualLinkingJsonType = {
+  postId: string
+  forwardConfigId: string
+  platformPostId: string
+  platformPostLink: string
+  forwardAt?: string | undefined
+}
+export type PostControlForwardManualLinkingData = PostForwardData
+
+export type PostControlForwardManualLinkingRes =
+  ResData<PostControlForwardManualLinkingData>

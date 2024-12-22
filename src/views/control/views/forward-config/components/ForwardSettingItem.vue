@@ -202,7 +202,6 @@ const boxStyleHeight = computed(() => {
     box-shadow 0.5s;
   &:hover {
     box-shadow: var(--el-box-shadow-lighter);
-    // background-color: var(--color-background-mute);
   }
 }
 

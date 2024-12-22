@@ -40,9 +40,9 @@ watch(
       :lock-scroll="false"
       :modal-class="overlayClass"
     >
-      <div class="row center-box">
+      <!-- <div class="row center-box">
         <div class="lable">图片描述</div>
-      </div>
+      </div> -->
       <template v-if="imageStore.altDialogImageData">
         <div class="content-box">
           <div class="content">

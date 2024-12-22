@@ -13,6 +13,8 @@ import ImportTask from './components/ImportTask.vue'
 
 import type { PostControlImportJsonTypeOnDataProcess } from '@/types'
 import SettingExcessImportDelete from './components/SettingExcessImportDelete.vue'
+import SettingAllPostImportDelete from './components/SettingAllPostImportDelete.vue'
+import SettingAllImageImportDelete from './components/SettingAllImageImportDelete.vue'
 
 const importPosts = ref<PostControlImportJsonTypeOnDataProcess['importPosts']>(
   []
@@ -56,6 +58,14 @@ const segmentedValue = ref<(typeof options)[number]['value']>(options[0].value)
           <div class="control-row">
             <SettingExcessImportDelete></SettingExcessImportDelete>
           </div>
+          <div class="control-divider"></div>
+          <div class="control-row">
+            <SettingAllPostImportDelete></SettingAllPostImportDelete>
+          </div>
+          <div class="control-divider"></div>
+          <div class="control-row">
+            <SettingAllImageImportDelete></SettingAllImageImportDelete>
+          </div>
         </div>
       </div>
     </Transition>
@@ -76,6 +86,9 @@ const segmentedValue = ref<(typeof options)[number]['value']>(options[0].value)
       color: var(--color-text);
       background-color: var(--color-background-soft);
       transition: background-color 0.5s;
+    }
+    .el-segmented__item {
+      transition: background-color 0.2s;
     }
     .el-segmented__item-label {
       font-weight: bold;

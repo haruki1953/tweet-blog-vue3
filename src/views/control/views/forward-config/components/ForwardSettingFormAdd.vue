@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUp,
+  Connection,
   Key,
   User
 } from '@element-plus/icons-vue'
@@ -157,7 +158,7 @@ const refCompleteMessageContainer = ref<InstanceType<
           </div>
           <el-input
             v-model="item.uuid"
-            :prefix-icon="Aim"
+            :prefix-icon="Connection"
             size="large"
             class="control-input consolas"
           ></el-input>

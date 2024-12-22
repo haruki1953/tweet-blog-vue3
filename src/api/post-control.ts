@@ -1,8 +1,13 @@
 import { platformKeyMap } from '@/config'
 import type {
   ForwardSettingListInForm,
+  PostControlDeleteForwardDataRes,
+  PostControlDeleteImportAllImageRes,
+  PostControlDeleteImportAllPostRes,
   PostControlDeleteImportDataRes,
   PostControlDeleteImportExcessRes,
+  PostControlForwardManualLinkingJsonType,
+  PostControlForwardManualLinkingRes,
   PostControlGetForwardRes,
   PostControlImportJsonType,
   PostControlImportRes
@@ -25,6 +30,16 @@ export const postControlDeleteImportDataApi = (
 export const postControlDeleteImportExcessApi =
   (): PostControlDeleteImportExcessRes => {
     return http.delete('/post-control/import-data/excess')
+  }
+
+export const postControlDeleteImportAllPostApi =
+  (): PostControlDeleteImportAllPostRes => {
+    return http.delete('/post-control/import-data/all/post')
+  }
+
+export const postControlDeleteImportAllImageApi =
+  (): PostControlDeleteImportAllImageRes => {
+    return http.delete('/post-control/import-data/all/image')
   }
 
 export const postControlGetForwardApi = (): PostControlGetForwardRes => {
@@ -66,4 +81,16 @@ export const postControlForwardSettingSetApi = (
   }
 
   return http.put('/post-control/forward-setting', { forwardSettingList })
+}
+
+export const postControlDeleteForwardDataApi = (
+  id: string
+): PostControlDeleteForwardDataRes => {
+  return http.delete(`/post-control/forward-data/id/${id}`)
+}
+
+export const postControlForwardManualLinkingApi = (
+  json: PostControlForwardManualLinkingJsonType
+): PostControlForwardManualLinkingRes => {
+  return http.post(`/post-control/forward-data/manual-linking`, json)
 }

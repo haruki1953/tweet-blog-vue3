@@ -7,11 +7,9 @@ import {
 } from '@/config'
 import type { ForwardSettingItem, ForwardSettingItemInForm } from '@/types'
 import {
-  Aim,
   ArrowDown,
-  ArrowLeft,
-  ArrowRight,
   ArrowUp,
+  Connection,
   Key,
   User
 } from '@element-plus/icons-vue'
@@ -205,7 +203,7 @@ const refCompleteMessageContainer = ref<InstanceType<
           <div class="input-lable">uuid</div>
           <el-input
             v-model="item.uuid"
-            :prefix-icon="Aim"
+            :prefix-icon="Connection"
             size="large"
             class="control-input consolas"
             readonly

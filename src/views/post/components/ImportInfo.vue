@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { platformKeyMap } from '@/config'
 import type { PostImportData, PostPoolItem } from '@/types'
-import { formatTimeAgoChs } from '@/utils'
-import { Delete, Link } from '@element-plus/icons-vue'
+import { formatTimeAgoChs, sakiNotification } from '@/utils'
+import { Aim, Delete, Link } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { postControlDeleteImportDataApi } from '@/api'
 import { computed } from 'vue'
@@ -35,6 +35,14 @@ const deleteSubmit = async (item: PostImportData) => {
 }
 const isDeleting = (item: PostImportData) => {
   return props.isSubmitting(item.id)
+}
+
+const showPlatformPostId = async (item: PostImportData) => {
+  sakiNotification({
+    type: 'info',
+    title: `${platformKeyMap[item.platform].name} 中的 id :`,
+    message: `${item.platformPostId}`
+  })
 }
 </script>
 <template>
@@ -86,9 +94,16 @@ const isDeleting = (item: PostImportData) => {
                   </div>
                 </div>
                 <div class="info-col right">
-                  <div class="date-button">
-                    <Transition name="fade" mode="out-in">
-                      <div class="button" v-if="isEditMode">
+                  <Transition name="fade" mode="out-in">
+                    <div class="date-button" v-if="isEditMode">
+                      <div class="button">
+                        <el-button
+                          type="warning"
+                          circle
+                          size="small"
+                          :icon="Aim"
+                          @click="showPlatformPostId(item)"
+                        />
                         <el-button
                           type="danger"
                           circle
@@ -98,25 +113,27 @@ const isDeleting = (item: PostImportData) => {
                           @click="deleteSubmit(item)"
                         />
                       </div>
-                      <div class="date" v-else>
+                    </div>
+                    <div class="date-button" v-else>
+                      <div class="date">
                         <div class="text">
                           {{ formatTimeAgoChs(item.importedAt) }}
                         </div>
                       </div>
-                    </Transition>
-                    <div class="button">
-                      <el-button
-                        type="primary"
-                        circle
-                        size="small"
-                        :icon="Link"
-                        tag="a"
-                        :href="item.link"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />
+                      <div class="button">
+                        <el-button
+                          type="primary"
+                          circle
+                          size="small"
+                          :icon="Link"
+                          tag="a"
+                          :href="item.link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  </Transition>
                 </div>
               </div>
             </div>
