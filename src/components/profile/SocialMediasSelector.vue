@@ -91,6 +91,7 @@ const faBandsGroupListShowLimitButton = computed(() => {
           :prefix-icon="Search"
           placeholder="搜索标志"
           class="control-input"
+          clearable
         ></el-input>
       </div>
       <div class="selector-image-row">

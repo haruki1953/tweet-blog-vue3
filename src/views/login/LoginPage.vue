@@ -159,7 +159,8 @@ const login = async () => {
     .button {
       width: 100%;
       :deep() {
-        .el-button__text--expand {
+        .el-button__text--expand,
+        .el-icon {
           color: var(--color-background);
           font-weight: bold;
         }

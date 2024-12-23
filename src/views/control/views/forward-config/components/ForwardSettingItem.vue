@@ -4,7 +4,6 @@ import {
   CircleCheckFilled,
   CirclePlusFilled,
   InfoFilled,
-  Plus,
   RemoveFilled,
   WarningFilled
 } from '@element-plus/icons-vue'

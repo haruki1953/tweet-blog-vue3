@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { platformKeyMap } from '@/config'
-import { useForwardStore } from '@/stores/forward'
 import type { ForwardSettingItem, PostPoolItem } from '@/types'
 import { sakiMessage } from '@/utils'
-import { Aim, Connection, Link, Notification } from '@element-plus/icons-vue'
-import { useElementSize } from '@vueuse/core'
+import { Aim, Link } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { computed } from 'vue'
 import { postControlForwardManualLinkingApi } from '@/api'

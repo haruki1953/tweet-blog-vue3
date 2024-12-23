@@ -7,6 +7,21 @@
 
     .el-button {
       margin-bottom: 4px;
+
+      span,
+      .el-icon {
+        // color: var(--color-background);
+        font-weight: bold;
+      }
+
+      &.el-button--small {
+
+        span,
+        .el-icon {
+          // color: var(--color-background);
+          font-weight: normal;
+        }
+      }
     }
   }
 

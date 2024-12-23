@@ -6,17 +6,7 @@ import {
   platformKeyMap,
   type PlatformKeyEnumValues
 } from '@/config'
-import type { ForwardSettingItem, ForwardSettingItemInForm } from '@/types'
-import {
-  Aim,
-  ArrowDown,
-  ArrowLeft,
-  ArrowRight,
-  ArrowUp,
-  Connection,
-  Key,
-  User
-} from '@element-plus/icons-vue'
+import { Connection, Key, User } from '@element-plus/icons-vue'
 import { cloneDeep } from 'lodash'
 import { computed } from 'vue'
 import { ref } from 'vue'

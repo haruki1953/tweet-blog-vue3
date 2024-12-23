@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { platformKeyMap } from '@/config'
-import { CircleCheckFilled, Plus } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 import { useElementSize } from '@vueuse/core'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import type { UseForwardSettingListInFormControl } from './dependencies'
-import type { ForwardSettingItem, ForwardSettingItemInForm } from '@/types'
-import ForwardSettingForm from './ForwardSettingForm.vue'
 import ForwardSettingFormAdd from './ForwardSettingFormAdd.vue'
 
 const props = defineProps<{

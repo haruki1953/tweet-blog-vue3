@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import type CompleteMessageContainer from '@/components/layout/CompleteMessageContainer.vue'
-import {
-  platformKeyEnum,
-  platformKeyMap,
-  type PlatformKeyEnumValues
-} from '@/config'
+import { platformKeyMap } from '@/config'
 import type { ForwardSettingItem, ForwardSettingItemInForm } from '@/types'
 import {
   ArrowDown,

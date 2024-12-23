@@ -44,7 +44,13 @@ const showGradientMaskBottom = computed(
     <el-row :gutter="10">
       <el-col :span="smallColSpan" v-if="!reverse && show2Col">
         <!-- <el-affix :offset="61" :z-index="1"> -->
-        <el-affix :offset="1" :z-index="1">
+        <el-affix
+          :offset="1"
+          :z-index="1"
+          :style="{
+            height: '0'
+          }"
+        >
           <div class="col2-left">
             <el-scrollbar :height="leftHeight" ref="refScroll">
               <slot name="colLeftAndSm"></slot>
@@ -70,7 +76,13 @@ const showGradientMaskBottom = computed(
         </div>
       </el-col>
       <el-col :span="smallColSpan" v-if="reverse && show2Col">
-        <el-affix :offset="1" :z-index="1">
+        <el-affix
+          :offset="1"
+          :z-index="1"
+          :style="{
+            height: '0'
+          }"
+        >
           <div class="col2-left reverse">
             <el-scrollbar :height="leftHeight" ref="refScroll">
               <slot name="colLeftAndSm"></slot>
@@ -91,6 +103,7 @@ const showGradientMaskBottom = computed(
 <style lang="scss" scoped>
 .col2-page {
   max-width: 950px;
+  min-height: 100vh;
   margin: 0 auto;
 }
 @media (max-width: 991px) {

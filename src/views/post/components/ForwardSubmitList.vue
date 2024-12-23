@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { platformKeyMap } from '@/config'
 import { useForwardStore } from '@/stores/forward'
 import type { PostPoolItem } from '@/types'
 import { computed } from 'vue'

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { platformKeyMap } from '@/config'
-import { useForwardStore } from '@/stores/forward'
 import type { ForwardSettingItem, PostPoolItem } from '@/types'
 import { Connection, Loading, Notification } from '@element-plus/icons-vue'
 import { useElementSize } from '@vueuse/core'
@@ -14,8 +13,6 @@ const props = defineProps<{
   submitControl: (id: string, callback: () => Promise<any>) => Promise<void>
   isSubmitting: (id: string) => boolean
 }>()
-
-const forwardStore = useForwardStore()
 
 const isEditing = ref(false)
 

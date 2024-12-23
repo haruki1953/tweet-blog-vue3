@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useForwardStore, usePostStore } from '@/stores'
-import type { PostPoolItem, PostData } from '@/types'
 import { onMounted } from 'vue'
 import { ref, watch } from 'vue'
 import { computed } from 'vue'
@@ -8,7 +7,6 @@ import { useRoute } from 'vue-router'
 import ForwardInfo from './components/ForwardInfo.vue'
 import ImportInfo from './components/ImportInfo.vue'
 import ForwardSubmitList from './components/ForwardSubmitList.vue'
-import { useElementSize } from '@vueuse/core'
 
 const route = useRoute()
 const postStore = usePostStore()
