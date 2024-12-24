@@ -223,107 +223,109 @@ const newPostText = computed(() => {
       </div>
     </div>
 
-    <div class="blog-info" :class="{ normal: postsGetModeMark === 'normal' }">
-      <div class="info-box">
-        <div class="info-val">{{ profileStore.postNumber }}</div>
-        <div class="info-text">推文</div>
+    <div class="shadow-box">
+      <div class="blog-info" :class="{ normal: postsGetModeMark === 'normal' }">
+        <div class="info-box">
+          <div class="info-val">{{ profileStore.postNumber }}</div>
+          <div class="info-text">推文</div>
+        </div>
+        <el-divider direction="vertical" />
+        <div class="info-box">
+          <div class="info-val">{{ profileStore.imageNumber }}</div>
+          <div class="info-text">图片</div>
+        </div>
       </div>
-      <el-divider direction="vertical" />
-      <div class="info-box">
-        <div class="info-val">{{ profileStore.imageNumber }}</div>
-        <div class="info-text">图片</div>
+      <div class="shadow-divider"></div>
+      <div class="button-menu-box">
+        <IconMenuBox
+          v-model:model-value="postsGetModeMark"
+          :menu="buttonMenu"
+          :boxSize="65"
+          notBackgroundColor
+          dontSetIndex
+        ></IconMenuBox>
       </div>
-    </div>
-
-    <div class="button-menu-box">
-      <IconMenuBox
-        v-model:model-value="postsGetModeMark"
-        :menu="buttonMenu"
-        :boxSize="65"
-        notBackgroundColor
-        dontSetIndex
-      ></IconMenuBox>
-    </div>
-
-    <div class="block-part-container">
-      <Transition name="fade">
-        <div
-          class="block-part-box search-input-box"
-          v-if="postsGetModeMark === 'search'"
-          key="search-input-box"
-        >
-          <el-input
-            v-model="searchVal"
-            placeholder="搜索推文"
-            clearable
-            :prefix-icon="Search"
-            size="large"
-            @change="handleSearch"
-          />
-          <el-button
-            type="info"
-            :icon="Search"
-            circle
-            @click="handleSearch"
-            :loading="isLoading"
-            :disabled="shouldDisableSearchButton"
-          />
-        </div>
-        <div
-          class="block-part-box delete-mode-box"
-          v-else-if="postsGetModeMark === 'delete'"
-          key="delete-mode-box"
-        >
-          <div class="info-lable">回收站</div>
-          <div class="button-row">
-            <el-button
-              round
-              type="danger"
-              :icon="Delete"
-              size="small"
-              :loading="isDeleteAlling"
-              @click="deleteAll"
-            >
-              清空回收站
-            </el-button>
-          </div>
-        </div>
-        <div
-          class="block-part-box favorite-mode-box"
-          v-else-if="postsGetModeMark === 'favorite'"
-          key="favorite-mode-box"
-        >
-          <div class="info-lable">收藏夹</div>
-          <div class="button-row">
-            <el-button
-              round
-              type="warning"
-              :icon="Delete"
-              size="small"
-              @click="clearFavorite"
-            >
-              清空收藏夹
-            </el-button>
-          </div>
-        </div>
-        <div v-else class="block-part-box normal-mode-box">
-          <div class="info-lable">
-            全部推文
-            <span v-if="newPostText" class="blinking-2s">
-              {{ newPostText }}
-            </span>
-          </div>
-          <el-button
-            round
-            type="success"
-            :icon="Finished"
-            size="small"
-            @click="postStore.readSetAllRead()"
+      <div class="shadow-divider"></div>
+      <div class="block-part-container">
+        <Transition name="fade">
+          <div
+            class="block-part-box search-input-box"
+            v-if="postsGetModeMark === 'search'"
+            key="search-input-box"
           >
-            全部已读
-          </el-button>
-        </div>
-      </Transition>
+            <el-input
+              v-model="searchVal"
+              placeholder="搜索推文"
+              clearable
+              :prefix-icon="Search"
+              size="large"
+              @change="handleSearch"
+            />
+            <el-button
+              type="info"
+              :icon="Search"
+              circle
+              @click="handleSearch"
+              :loading="isLoading"
+              :disabled="shouldDisableSearchButton"
+            />
+          </div>
+          <div
+            class="block-part-box delete-mode-box"
+            v-else-if="postsGetModeMark === 'delete'"
+            key="delete-mode-box"
+          >
+            <div class="info-lable">回收站</div>
+            <div class="button-row">
+              <el-button
+                round
+                type="danger"
+                :icon="Delete"
+                size="small"
+                :loading="isDeleteAlling"
+                @click="deleteAll"
+              >
+                清空回收站
+              </el-button>
+            </div>
+          </div>
+          <div
+            class="block-part-box favorite-mode-box"
+            v-else-if="postsGetModeMark === 'favorite'"
+            key="favorite-mode-box"
+          >
+            <div class="info-lable">收藏夹</div>
+            <div class="button-row">
+              <el-button
+                round
+                type="warning"
+                :icon="Delete"
+                size="small"
+                @click="clearFavorite"
+              >
+                清空收藏夹
+              </el-button>
+            </div>
+          </div>
+          <div v-else class="block-part-box normal-mode-box">
+            <div class="info-lable">
+              全部推文
+              <span v-if="newPostText" class="blinking-2s">
+                {{ newPostText }}
+              </span>
+            </div>
+            <el-button
+              round
+              type="success"
+              :icon="Finished"
+              size="small"
+              @click="postStore.readSetAllRead()"
+            >
+              全部已读
+            </el-button>
+          </div>
+        </Transition>
+      </div>
     </div>
 
     <div class="send-button-box">
@@ -368,17 +370,31 @@ const newPostText = computed(() => {
     }
   }
 
+  .shadow-box {
+    background-color: var(--color-background-soft);
+    border-radius: 20px;
+    transition:
+      background-color 0.5s,
+      box-shadow 0.5s;
+    &:hover {
+      box-shadow: var(--el-box-shadow-lighter);
+    }
+  }
+  .shadow-divider {
+    height: 2px;
+    background-color: var(--color-background);
+    transition: background-color 0.5s;
+  }
+
   .blog-info {
     height: 80px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: var(--color-background-soft);
-    transition: all 0.5s;
-    border-radius: 20px 20px 0 0;
-    // &.normal {
-    //   border-radius: 20px;
-    // }
+    // background-color: var(--color-background-soft);
+    // transition: all 0.5s;
+    // border-radius: 20px 20px 0 0;
+
     .info-box {
       min-width: 100px;
       display: flex;
@@ -404,16 +420,16 @@ const newPostText = computed(() => {
   }
   .button-menu-box {
     position: relative;
-    margin-top: 2px;
+    // margin-top: 2px;
     padding-bottom: 5px;
-    background-color: var(--color-background-soft);
-    transition: background-color 0.5s;
+    // background-color: var(--color-background-soft);
+    // transition: background-color 0.5s;
     z-index: 1;
   }
   .block-part-container {
     position: relative;
     height: 40px;
-    margin-top: 2px;
+    // margin-top: 2px;
   }
   .block-part-box {
     position: absolute;
@@ -468,15 +484,15 @@ const newPostText = computed(() => {
       margin-right: 4px;
     }
   }
-  .small-button-bar {
-    display: flex;
-    align-items: center;
-    // justify-content: center;
-    margin: 5px 0 20px 0;
-    .el-button {
-      margin-left: 10px;
-    }
-  }
+  // .small-button-bar {
+  //   display: flex;
+  //   align-items: center;
+  //   // justify-content: center;
+  //   margin: 5px 0 20px 0;
+  //   .el-button {
+  //     margin-left: 10px;
+  //   }
+  // }
 
   .solt-box {
     display: flex;

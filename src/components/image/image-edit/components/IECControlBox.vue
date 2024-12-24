@@ -229,8 +229,13 @@ const {
 }
 .control-box {
   background-color: var(--color-background-soft);
-  transition: background-color 0.5s;
   border-radius: 20px;
+  transition:
+    background-color 0.5s,
+    box-shadow 0.5s;
+  &:hover {
+    box-shadow: var(--el-box-shadow-lighter);
+  }
 }
 .control-row {
   padding: 8px;

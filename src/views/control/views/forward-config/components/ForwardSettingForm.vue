@@ -260,8 +260,8 @@ const refCompleteMessageContainer = ref<InstanceType<
   position: relative;
   .item-state {
     position: absolute;
-    top: -10px;
-    right: 0;
+    top: -12px;
+    right: -3px;
     z-index: 3;
     .text {
       user-select: none;

@@ -4,6 +4,9 @@ import type {
   AdminGatImageConfigRes,
   AdminGetInfoRes,
   AdminGetTaskRes,
+  AdminLogDeleteRes,
+  AdminLogGetByCursorQueryType,
+  AdminLogGetByCursorRes,
   AdminProxyTestJsonType,
   AdminProxyTestRes,
   AdminUpdateImageConfigJsonType,
@@ -70,4 +73,18 @@ export const adminDeleteAllOriginalImageApi =
 
 export const adminGetTaskApi = (): AdminGetTaskRes => {
   return http.get('/admin/task')
+}
+
+export const adminLogGetByCursorApi = (
+  cursorId: string,
+  query: AdminLogGetByCursorQueryType
+): AdminLogGetByCursorRes => {
+  const slash = cursorId === '' ? '' : '/'
+  return http.get(`/admin/log/cursor${slash}${cursorId}`, {
+    params: query
+  })
+}
+
+export const adminLogDeleteApi = (num: number): AdminLogDeleteRes => {
+  return http.delete(`/admin/log/keep/${num}`)
 }

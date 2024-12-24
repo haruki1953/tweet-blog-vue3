@@ -7,6 +7,14 @@ export const appInfo = {
     text: 'v0.0.0',
     link: '/'
   },
+  officialWebsite: {
+    text: 'tweblog.com',
+    link: '/'
+  },
+  officialDocs: {
+    text: '网站 | 文档',
+    link: '/'
+  },
   importDocs: {
     text: '导入说明',
     link: '/'

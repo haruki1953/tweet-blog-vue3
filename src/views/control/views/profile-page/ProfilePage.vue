@@ -8,14 +8,12 @@ import AboutMarkdown from './components/AboutMarkdown.vue'
 <template>
   <div class="profile-page">
     <div class="control-box">
+      <AvatarUpdate></AvatarUpdate>
+    </div>
+    <div class="control-box">
       <div class="control-row">
         <NameBio></NameBio>
       </div>
-      <!-- <div class="control-divider"></div>
-      <div class="control-row decoration"></div> -->
-    </div>
-    <div class="control-box">
-      <AvatarUpdate></AvatarUpdate>
     </div>
     <div class="control-box">
       <SocialMedias></SocialMedias>

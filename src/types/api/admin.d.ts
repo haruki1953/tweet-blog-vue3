@@ -1,4 +1,4 @@
-import type { BackendTaskCache, Image, ResData } from './base'
+import type { BackendTaskCache, Image, LogData, ResData } from './base'
 
 export type AdminGetInfoData = {
   imageLargeMaxLength: number
@@ -55,3 +55,17 @@ export type AdminGetTaskData = {
   taskCache: BackendTaskCache
 }
 export type AdminGetTaskRes = ResData<AdminGetTaskData>
+
+export type AdminLogGetByCursorQueryType = {
+  error?: 'true' | 'false' | undefined
+  warning?: 'true' | 'false' | undefined
+  success?: 'true' | 'false' | undefined
+  info?: 'true' | 'false' | undefined
+}
+export type AdminLogGetByCursorData = LogData[]
+export type AdminLogGetByCursorRes = ResData<AdminLogGetByCursorData>
+
+export type AdminLogDeleteData = {
+  count: number
+}
+export type AdminLogDeleteRes = ResData<AdminLogDeleteData>

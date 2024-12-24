@@ -29,7 +29,9 @@ export const useListModule = (dependencies: {
       return limitedList.value.length < favoriteModule.favoriteList.value.length
     } else {
       return (
-        isHaveMore.value || limitedList.value.length > postList.value.length
+        // 241224：应该是写错了，将大于号改为了小于号
+        // isHaveMore.value || limitedList.value.length > postList.value.length
+        isHaveMore.value || limitedList.value.length < postList.value.length
       )
     }
   })

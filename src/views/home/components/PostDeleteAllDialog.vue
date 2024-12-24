@@ -98,9 +98,9 @@ useDialogOptimization({
         <el-button round type="danger" size="small" @click="deletePost">
           确 认
         </el-button>
-        <el-button round type="info" size="small" @click="close">
+        <!-- <el-button round type="info" size="small" @click="close">
           取 消
-        </el-button>
+        </el-button> -->
       </div>
     </el-dialog>
   </div>

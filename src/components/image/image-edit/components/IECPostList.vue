@@ -78,11 +78,12 @@ const { imageByIndex } = useImageEditCardController({
     transition:
       background-color 0.5s,
       color 0.2s,
-      transform 0.2s;
+      transform 0.2s,
+      box-shadow 0.5s;
     cursor: pointer;
     &:hover {
       transform: scale(1.04, 1.04);
-      background-color: var(--color-background-mute);
+      box-shadow: var(--el-box-shadow-lighter);
     }
     .content {
       width: 60%;

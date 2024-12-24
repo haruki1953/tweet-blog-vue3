@@ -5,7 +5,9 @@ import {
   useStatesStore,
   useAdminStore,
   useProfileStore,
-  useTaskStore
+  useTaskStore,
+  useLogStore,
+  useForwardStore
 } from '@/stores'
 import { useRouter } from 'vue-router'
 
@@ -25,6 +27,8 @@ export const dataFirstLoadService = async () => {
   const profileStore = useProfileStore()
   const adminStore = useAdminStore()
   const taskStore = useTaskStore()
+  const forwardStore = useForwardStore()
+  const logStore = useLogStore()
 
   const statesStore = useStatesStore()
   statesStore.setFirstDataLoading(true)
@@ -33,7 +37,9 @@ export const dataFirstLoadService = async () => {
     imageStore.reGetImages(),
     profileStore.loadAll(),
     adminStore.loadInfo(),
-    taskStore.pollLoad()
+    taskStore.pollLoad(),
+    forwardStore.loadFirst(),
+    logStore.reGetData()
   ])
   statesStore.setFirstDataLoading(false)
 }

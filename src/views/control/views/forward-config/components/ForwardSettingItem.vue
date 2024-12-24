@@ -147,7 +147,7 @@ const boxStyleHeight = computed(() => {
               </Transition>
               <Transition name="fade-pop" mode="out-in">
                 <div class="flag" :key="itemState.key">
-                  <el-icon :color="itemState.color">
+                  <el-icon :color="itemState.color" size="20">
                     <component :is="itemState.icon"></component>
                   </el-icon>
                 </div>
@@ -194,7 +194,6 @@ const boxStyleHeight = computed(() => {
 .info-box {
   margin-bottom: 10px;
   background-color: var(--color-background-soft);
-  transition: background-color 0.5s;
   border-radius: 20px;
   transition:
     background-color 0.5s,
@@ -216,13 +215,14 @@ const boxStyleHeight = computed(() => {
   user-select: none;
 }
 .info-row {
-  margin: 0 20px;
+  margin: 0 16px 0 20px;
   padding: 10px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   &.form {
     display: block;
+    margin: 0 20px;
     padding: 20px 0;
   }
 }

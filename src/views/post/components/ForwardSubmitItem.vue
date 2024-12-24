@@ -197,7 +197,6 @@ const boxStyleHeight = computed(() => {
 }
 
 .content-flag {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -205,9 +204,6 @@ const boxStyleHeight = computed(() => {
     user-select: none;
     font-size: 14px;
     font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .flag {
