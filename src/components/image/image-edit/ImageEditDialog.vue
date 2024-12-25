@@ -102,6 +102,11 @@ useDialogOptimization({
     .el-dialog {
       border-radius: 20px;
     }
+    .i-e-c-control-box {
+      .control-divider {
+        background-color: var(--el-bg-color);
+      }
+    }
   }
 }
 </style>

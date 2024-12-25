@@ -259,8 +259,13 @@ useDialogOptimization({
 }
 .edit-control-box {
   background-color: var(--color-background-soft);
-  transition: background-color 0.5s;
   border-radius: 20px;
+  transition:
+    background-color 0.5s,
+    box-shadow 0.5s;
+  &:hover {
+    box-shadow: var(--el-box-shadow-lighter);
+  }
 }
 .edit-control-row {
   padding: 8px;
@@ -272,7 +277,8 @@ useDialogOptimization({
 }
 .edit-control-divider {
   height: 2px;
-  background-color: var(--color-background);
+  // background-color: var(--color-background);
+  background-color: var(--el-bg-color);
   transition: background-color 0.5s;
 }
 </style>

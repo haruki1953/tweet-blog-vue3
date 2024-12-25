@@ -124,7 +124,14 @@ const boxStyleHeight = computed(() => {
           <el-button @click="closeEdit" type="info" round> 取消 </el-button>
         </div>
         <div class="button-box" v-else>
-          <el-button @click="submitNull" type="success" round> 重置 </el-button>
+          <el-button
+            @click="submitNull"
+            :loading="isSubmiting"
+            type="success"
+            round
+          >
+            重置
+          </el-button>
           <el-button @click="openEdit" type="info" round> 修改 </el-button>
         </div>
       </Transition>

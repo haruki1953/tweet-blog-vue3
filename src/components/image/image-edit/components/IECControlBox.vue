@@ -65,40 +65,44 @@ const {
         <!-- 修改alt -->
         <div class="update-alt-box">
           <div class="control-lable">修改alt</div>
-          <div class="input-box">
-            <el-input
-              v-model="formModel.alt"
-              placeholder="添加描述"
-              :autosize="{ minRows: 1, maxRows: 10 }"
-              resize="none"
-              type="textarea"
-              size="large"
-              class="textarea"
-              :maxlength="imageConfig.maxAltCharactersOnSend"
-              show-word-limit
-              suffix-icon="Calendar"
-            />
-          </div>
-          <div class="button-box">
-            <el-button
-              round
-              type="primary"
-              size="small"
-              @click="updateImage"
-              :loading="isSending"
-            >
-              保存
-            </el-button>
-            <el-button
-              round
-              type="info"
-              size="small"
-              @click="initFormModel"
-              :disabled="isSending"
-            >
-              取消
-            </el-button>
-          </div>
+          <Transition name="fade" mode="out-in">
+            <div class="input-box" :key="imageByIndex.id">
+              <el-input
+                v-model="formModel.alt"
+                placeholder="添加描述"
+                :autosize="{ minRows: 1, maxRows: 10 }"
+                resize="none"
+                type="textarea"
+                size="large"
+                class="textarea"
+                :maxlength="imageConfig.maxAltCharactersOnSend"
+                show-word-limit
+                suffix-icon="Calendar"
+              />
+            </div>
+          </Transition>
+          <Transition name="fade" mode="out-in">
+            <div class="button-box" :key="imageByIndex.id">
+              <el-button
+                round
+                type="primary"
+                size="small"
+                @click="updateImage"
+                :loading="isSending"
+              >
+                保存
+              </el-button>
+              <el-button
+                round
+                type="info"
+                size="small"
+                @click="initFormModel"
+                :disabled="isSending"
+              >
+                取消
+              </el-button>
+            </div>
+          </Transition>
         </div>
       </div>
       <!-- <template v-if="!imageSelect"> -->
@@ -106,80 +110,84 @@ const {
       <!-- 各版本图片 -->
       <div class="control-row">
         <div class="control-lable">各版本图片</div>
-        <div class="button-box">
-          <el-button
-            round
-            type="info"
-            size="small"
-            :disabled="imageByIndex.smallSize === 0"
-            :tag="imageByIndex.smallSize === 0 ? 'button' : 'a'"
-            :href="imgSamllUrl(imageByIndex)"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            小图 {{ formatFileSize(imageByIndex.smallSize) }}
-          </el-button>
-          <el-button
-            round
-            type="success"
-            size="small"
-            :disabled="imageByIndex.largeSize === 0"
-            :tag="imageByIndex.largeSize === 0 ? 'button' : 'a'"
-            :href="imgLargeUrl(imageByIndex)"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            大图 {{ formatFileSize(imageByIndex.largeSize) }}
-          </el-button>
-          <el-button
-            round
-            type="warning"
-            size="small"
-            :disabled="imageByIndex.originalSize === 0"
-            :tag="imageByIndex.originalSize === 0 ? 'button' : 'a'"
-            :href="imgOriginalUrl(imageByIndex)"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            原图 {{ formatFileSize(imageByIndex.originalSize) }}
-          </el-button>
-        </div>
+        <Transition name="fade" mode="out-in">
+          <div class="button-box" :key="imageByIndex.id">
+            <el-button
+              round
+              type="info"
+              size="small"
+              :disabled="imageByIndex.smallSize === 0"
+              :tag="imageByIndex.smallSize === 0 ? 'button' : 'a'"
+              :href="imgSamllUrl(imageByIndex)"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              小图 {{ formatFileSize(imageByIndex.smallSize) }}
+            </el-button>
+            <el-button
+              round
+              type="success"
+              size="small"
+              :disabled="imageByIndex.largeSize === 0"
+              :tag="imageByIndex.largeSize === 0 ? 'button' : 'a'"
+              :href="imgLargeUrl(imageByIndex)"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              大图 {{ formatFileSize(imageByIndex.largeSize) }}
+            </el-button>
+            <el-button
+              round
+              type="warning"
+              size="small"
+              :disabled="imageByIndex.originalSize === 0"
+              :tag="imageByIndex.originalSize === 0 ? 'button' : 'a'"
+              :href="imgOriginalUrl(imageByIndex)"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              原图 {{ formatFileSize(imageByIndex.originalSize) }}
+            </el-button>
+          </div>
+        </Transition>
       </div>
       <div class="control-divider"></div>
       <!-- 删除图片 -->
       <div class="control-row">
         <div class="control-lable">删除图片</div>
-        <div class="button-box">
-          <el-button
-            round
-            type="danger"
-            size="small"
-            disabled
-            v-if="disableDeleteImage"
-          >
-            图片使用中
-          </el-button>
-          <el-button
-            round
-            type="danger"
-            size="small"
-            :loading="isImageDeleting"
-            @click="deleteImage"
-            v-else
-          >
-            删除图片
-          </el-button>
-          <el-button
-            round
-            type="warning"
-            size="small"
-            :disabled="disableDeleteOriginal"
-            :loading="isOriginalDeleting"
-            @click="deleteOriginal"
-          >
-            删除原图
-          </el-button>
-        </div>
+        <Transition name="fade" mode="out-in">
+          <div class="button-box" :key="imageByIndex.id">
+            <el-button
+              round
+              type="danger"
+              size="small"
+              disabled
+              v-if="disableDeleteImage"
+            >
+              图片使用中
+            </el-button>
+            <el-button
+              round
+              type="danger"
+              size="small"
+              :loading="isImageDeleting"
+              @click="deleteImage"
+              v-else
+            >
+              删除图片
+            </el-button>
+            <el-button
+              round
+              type="warning"
+              size="small"
+              :disabled="disableDeleteOriginal"
+              :loading="isOriginalDeleting"
+              @click="deleteOriginal"
+            >
+              删除原图
+            </el-button>
+          </div>
+        </Transition>
       </div>
       <!-- </template> -->
     </div>
@@ -248,6 +256,7 @@ const {
 .control-divider {
   height: 2px;
   background-color: var(--color-background);
+  // background-color: var(--el-bg-color);
   transition: background-color 0.5s;
 }
 </style>
