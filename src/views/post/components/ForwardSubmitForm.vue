@@ -5,7 +5,11 @@ import { sakiMessage } from '@/utils'
 import { Aim, Link } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { computed } from 'vue'
-import { postControlForwardManualLinkingApi } from '@/api'
+import {
+  postControlForwardManualLinkingApi,
+  postControlForwardPostApi
+} from '@/api'
+import { useLogStore } from '@/stores'
 
 const props = defineProps<{
   item: ForwardSettingItem
@@ -28,14 +32,24 @@ const options = [
 const segmentedOptions = [...options] // el-segmented直接传options会有类型错误
 const segmentedValue = ref<(typeof options)[number]['value']>(options[0].value)
 
+const logStore = useLogStore()
+
 const submitForward = async () => {
   await props.submitControl(props.item.uuid, async () => {
     props.closeEdit()
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-    sakiMessage({
-      type: 'success',
-      message: '转发成功'
-    })
+    // await new Promise((resolve) => setTimeout(resolve, 3000))
+    try {
+      await postControlForwardPostApi({
+        postId: props.postPoolItem.mainPost.id,
+        forwardConfigId: props.item.uuid
+      })
+      sakiMessage({
+        type: 'success',
+        message: '转发成功'
+      })
+    } finally {
+      logStore.setNeedReget()
+    }
   })
 }
 

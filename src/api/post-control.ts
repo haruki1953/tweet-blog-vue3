@@ -8,6 +8,8 @@ import type {
   PostControlDeleteImportExcessRes,
   PostControlForwardManualLinkingJsonType,
   PostControlForwardManualLinkingRes,
+  PostControlForwardPostJsonType,
+  PostControlForwardPostRes,
   PostControlGetForwardRes,
   PostControlImportJsonType,
   PostControlImportRes
@@ -93,4 +95,10 @@ export const postControlForwardManualLinkingApi = (
   json: PostControlForwardManualLinkingJsonType
 ): PostControlForwardManualLinkingRes => {
   return http.post(`/post-control/forward-data/manual-linking`, json)
+}
+
+export const postControlForwardPostApi = (
+  json: PostControlForwardPostJsonType
+): PostControlForwardPostRes => {
+  return http.post(`/post-control/forward-post`, json)
 }

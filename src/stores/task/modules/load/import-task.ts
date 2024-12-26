@@ -1,4 +1,5 @@
 import { useImageStore } from '@/stores/image'
+import { useLogStore } from '@/stores/log'
 import { usePostStore } from '@/stores/post'
 import { useProfileStore } from '@/stores/profile'
 import type { BackendTaskCache } from '@/types'
@@ -9,7 +10,9 @@ const handleImportTaskComplete = () => {
   const postStore = usePostStore()
   const imageStore = useImageStore()
   const profileStore = useProfileStore()
+  const logStore = useLogStore()
 
+  logStore.setNeedReget(true)
   postStore.setNeedReget(true)
   imageStore.setNeedReget(true)
   profileStore.load()

@@ -2,6 +2,7 @@ import type { PlatformKeyEnumValues } from '@/config'
 import type {
   BackendForwardStore,
   BackendTaskCache,
+  ImageForwardData,
   PostForwardData,
   PostImportData
 } from '../data'
@@ -81,7 +82,6 @@ export type PostControlGetForwardData = {
 export type PostControlGetForwardRes = ResData<PostControlGetForwardData>
 
 export type PostControlDeleteForwardDataData = PostForwardData
-
 export type PostControlDeleteForwardDataRes =
   ResData<PostControlDeleteForwardDataData>
 
@@ -92,7 +92,17 @@ export type PostControlForwardManualLinkingJsonType = {
   platformPostLink: string
   forwardAt?: string | undefined
 }
-export type PostControlForwardManualLinkingData = PostForwardData
 
+export type PostControlForwardManualLinkingData = PostForwardData
 export type PostControlForwardManualLinkingRes =
   ResData<PostControlForwardManualLinkingData>
+
+export type PostControlForwardPostJsonType = {
+  postId: string
+  forwardConfigId: string
+}
+export type PostControlForwardPostData = {
+  postForward: PostForwardData
+  ImageForwardData: ImageForwardData
+}
+export type PostControlForwardPostRes = ResData<PostControlForwardPostData>

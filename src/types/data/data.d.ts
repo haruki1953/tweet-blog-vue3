@@ -42,6 +42,17 @@ export interface ImageStoreData extends Image {
   }
 }
 
+export interface ImageForwardData {
+  id: string
+  platform: PlatformKeyEnumValues
+  platformImageId: string
+  link: string
+  // forwardAt: Date;
+  forwardAt: string
+  forwardConfigId: string
+  imageId: string
+}
+
 export interface PostForwardData {
   id: string
   platform: PlatformKeyEnumValues

@@ -64,7 +64,7 @@ const {
       <div class="control-row">
         <!-- 修改alt -->
         <div class="update-alt-box">
-          <div class="control-lable">修改alt</div>
+          <div class="control-lable">ALT</div>
           <Transition name="fade" mode="out-in">
             <div class="input-box" :key="imageByIndex.id">
               <el-input

@@ -4,7 +4,7 @@
   后端：src\configs\platform.ts
 
   如果添加平台，以下地方需要再次修改
-  前端：src\types\data\forward.d.ts
+  前端：src\types\data\forward.d.ts （241226尝试了类型体操自动生成）
   后端：src\schemas\types\forward.ts
 
   如果只是修改 data 数据，只在本文件修改即可
