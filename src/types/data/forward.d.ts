@@ -1,33 +1,35 @@
 import type { platformKeyMap } from '@/config'
 
+// 【已废弃】手动根据platformKeyMap设置了ForwardSettingItem的类型
 // BackendForwardStore ForwardSetting 转发配置
-export type ForwardSettingBase = {
-  uuid: string
-  name: string
-}
-
-// 手动根据platformKeyMap设置了ForwardSettingItem的类型
 // export type ForwardSettingX = {
+//   uuid: string
+//   name: string
 //   platform: typeof platformKeyMap.X.key
 //   data: typeof platformKeyMap.X.forwardSettingDataDefault
-// } & ForwardSettingBase
+// }
 // export type ForwardSettingT = {
+//   uuid: string
+//   name: string
 //   platform: typeof platformKeyMap.T.key
 //   data: typeof platformKeyMap.T.forwardSettingDataDefault
-// } & ForwardSettingBase
+// }
 // export type ForwardSettingItem = ForwardSettingX | ForwardSettingT
 
-// 241226 类型体操自动生成ForwardSettingItem的类型
+// 【241226】实现自动生成 类型体操自动生成ForwardSettingItem的类型
+// BackendForwardStore ForwardSetting 转发配置
 // 提取 platformKeyMap 的键
 type PlatformKeys = keyof typeof platformKeyMap
 // 动态生成 ForwardSetting 类型
-type ForwardSetting<K extends PlatformKeys> = {
+type ForwardSettingPlatform<K extends PlatformKeys> = {
+  uuid: string
+  name: string
   platform: (typeof platformKeyMap)[K]['key']
   data: (typeof platformKeyMap)[K]['forwardSettingDataDefault']
-} & ForwardSettingBase
+}
 // 生成所有可能的 ForwardSettingItem 类型
 type ForwardSettingItem = {
-  [K in PlatformKeys]: ForwardSetting<K>
+  [K in PlatformKeys]: ForwardSettingPlatform<K>
 }[PlatformKeys]
 
 export type ForwardSettingList = ForwardSettingItem[]
