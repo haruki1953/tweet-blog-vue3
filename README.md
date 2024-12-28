@@ -1,4 +1,8 @@
-# sakiko-utils-vue3
+# Tweblog
+
+- 后端 https://github.com/haruki1953/tweet-blog-hono
+- 前端1（管理） https://github.com/haruki1953/tweet-blog-vue3
+- 前端2（公开） https://github.com/haruki1953/tweet-blog-public-vue3
 
 This template should help get you started developing with Vue 3 in Vite.
 

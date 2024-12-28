@@ -1,13 +1,15 @@
-const apiBaseUrl = 'http://localhost:3000/api/'
-const staticBaseUrl = 'http://localhost:3000/'
+// const apiBaseUrl = 'http://localhost:3000/api/'
+// const staticBaseUrl = 'http://localhost:3000/'
 // const apiBaseUrl = 'http://192.168.2.110:3000/api/'
 // const staticBaseUrl = 'http://192.168.2.110:3000/'
-// const apiBaseUrl = '/api/'
-// const staticBaseUrl = '/'
+const apiBaseUrl = '/api/'
+const staticBaseUrl = '/'
 
 export const axiosConfig = {
   baseUrl: apiBaseUrl,
-  timeout: 20000
+  // timeout: 20000
+  // 推文转发操作需要的时间可能比较长，所以timeout尽量长一点
+  timeout: 50000
 }
 
 export const webName = 'Tweblog'
