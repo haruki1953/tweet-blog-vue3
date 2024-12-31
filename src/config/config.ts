@@ -17,7 +17,7 @@ export const webName = 'Tweblog'
 // logo图标
 // import logoImage from '@/assets/logo.png'
 // import logoImage from '@/assets/icon2x.png'
-import logoImage from '@/assets/tweet.png'
+import logoImage from '@/assets/tweet.svg'
 export { logoImage }
 
 export const profileConfig = {

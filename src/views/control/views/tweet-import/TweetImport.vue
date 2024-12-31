@@ -1,24 +1,15 @@
 <script setup lang="ts">
-import { appInfo } from '@/config'
-import {
-  ChatSquare,
-  Link,
-  PictureRounded,
-  Remove
-} from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import ImportProcess from './components/ImportProcess.vue'
 import ImportSubmit from './components/ImportSubmit.vue'
 import ImportTask from './components/ImportTask.vue'
 
-import type { PostControlImportJsonTypeOnDataProcess } from '@/types'
+import type { ImportPostList } from '@/types'
 import SettingExcessImportDelete from './components/SettingExcessImportDelete.vue'
 import SettingAllPostImportDelete from './components/SettingAllPostImportDelete.vue'
 import SettingAllImageImportDelete from './components/SettingAllImageImportDelete.vue'
 
-const importPosts = ref<PostControlImportJsonTypeOnDataProcess['importPosts']>(
-  []
-)
+const importPosts = ref<ImportPostList>([])
 
 const options = [
   {

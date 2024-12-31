@@ -5,21 +5,12 @@ import {
   platformKeyMap,
   type PlatformKeyEnumValues
 } from '@/config'
-import type { PostControlImportJsonTypeOnDataProcess } from '@/types'
-import {
-  ChatSquare,
-  Link,
-  PictureRounded,
-  Remove
-} from '@element-plus/icons-vue'
+import type { ImportPostList } from '@/types'
 import { ref } from 'vue'
 import { processJsonToImportPostsByPlatform } from '../services'
 import { sakiMessage } from '@/utils'
-import { cloneDeep } from 'lodash'
 
-const model = defineModel<
-  PostControlImportJsonTypeOnDataProcess['importPosts']
->({
+const model = defineModel<ImportPostList>({
   required: true
 })
 
@@ -70,9 +61,7 @@ const jsonProcess = async () => {
 }
 
 // 添加帖子数据至 model，并且不与其重复
-const importPostsAdd = (
-  importPosts: PostControlImportJsonTypeOnDataProcess['importPosts']
-) => {
+const importPostsAdd = (importPosts: ImportPostList) => {
   const uniquePosts = []
   for (const newPost of importPosts) {
     const find = model.value.find(

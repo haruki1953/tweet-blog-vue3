@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { postControlImportApi } from '@/api'
 import { appInfo } from '@/config'
-import type { PostControlImportJsonTypeOnDataProcess } from '@/types'
+import type { ImportPostList } from '@/types'
 import { formatTimeAgoChs, sakiMessage } from '@/utils'
 import {
   ChatSquare,
@@ -12,9 +12,7 @@ import {
 import { ref } from 'vue'
 import { useTaskStore } from '@/stores'
 
-const model = defineModel<
-  PostControlImportJsonTypeOnDataProcess['importPosts']
->({
+const model = defineModel<ImportPostList>({
   required: true
 })
 
