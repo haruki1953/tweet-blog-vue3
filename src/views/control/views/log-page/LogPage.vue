@@ -81,6 +81,13 @@ const switchClick = (type: LogTypeEnumValues) => {
 const refLogDeleteDialog = ref<InstanceType<typeof LogDeleteDialog> | null>(
   null
 )
+
+const scrollLoad = () => {
+  if (isRefreshing.value) {
+    return
+  }
+  logStore.loadLimited()
+}
 </script>
 <template>
   <div class="log-page">
@@ -154,7 +161,7 @@ const refLogDeleteDialog = ref<InstanceType<typeof LogDeleteDialog> | null>(
 
     <div
       class="log-list"
-      v-infinite-scroll="logStore.loadLimited"
+      v-infinite-scroll="scrollLoad"
       :infinite-scroll-distance="200"
       :infinite-scroll-delay="0"
       :infinite-scroll-immediate="false"

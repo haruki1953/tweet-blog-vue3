@@ -26,8 +26,8 @@ export const useLoadModule = (dependencies: AdminStoreModuleDependencies) => {
     if (isAuthDefault.value === true) {
       sakiNotification({
         type: 'warning',
-        title: '请修改账号密码',
-        message: '当前账号密码为默认值，请尽快修改'
+        title: '请修改用户名与密码',
+        message: '当前用户名与密码为默认值，请尽快修改'
       })
     }
     loadingMark.value = false

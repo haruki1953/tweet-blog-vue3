@@ -63,7 +63,7 @@ const refConfirmContainer = ref<InstanceType<typeof ConfirmContainer> | null>(
       confirmText="修改"
       size="small"
     >
-      <div class="control-lable">修改账号密码</div>
+      <div class="control-lable">修改用户名与密码</div>
       <div class="form-box">
         <el-form
           :model="formModel"

@@ -234,6 +234,9 @@ const {
     margin-bottom: 2px;
     text-decoration: none; /* 去除下划线 */
   }
+  .el-button + .el-button {
+    margin-left: 8px;
+  }
 }
 .control-box {
   background-color: var(--color-background-soft);

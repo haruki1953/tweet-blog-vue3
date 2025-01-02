@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref, type Component } from 'vue'
-import { useDark, useToggle, useScroll } from '@vueuse/core'
+import { useDark, useToggle, useWindowSize } from '@vueuse/core'
 import { MoonNight, Sunrise } from '@element-plus/icons-vue'
 import DecorationDot from './DecorationDot.vue'
 import { useProfileStore } from '@/stores'
 import { computed } from 'vue'
-import { generateRandomClassName, useDrawerOptimization } from '@/utils'
+import { generateRandomClassName, useMenuDrawerOptimization } from '@/utils'
 import router from '@/router'
 import { nextTick } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   menu: {
     index: string
     title: string
@@ -23,8 +23,6 @@ const profileStore = useProfileStore()
 const isDark = useDark({ disableTransition: false })
 const toggleDark = useToggle(isDark)
 
-const { arrivedState } = useScroll(document)
-
 // const reload = () => {
 //   window.location.href = '/'
 // }
@@ -36,7 +34,7 @@ const showMenuBoxToggle = () => {
 }
 // 优化
 const overlayClass = generateRandomClassName()
-useDrawerOptimization({
+useMenuDrawerOptimization({
   drawerVisible: showMenuBox,
   overlayClass
 })
@@ -48,6 +46,19 @@ const menuDrawerSelect = async (index: string) => {
   await new Promise((resolve) => setTimeout(resolve, 10))
   router.push(index)
 }
+
+const drawerHeight = computed(() => {
+  return props.menu.length * 56 + 165
+})
+
+const windowSize = useWindowSize()
+
+const scrollbarHeight = computed(() => {
+  if (windowSize.height.value < drawerHeight.value) {
+    return windowSize.height.value
+  }
+  return drawerHeight.value
+})
 </script>
 <template>
   <div class="menu-island">
@@ -114,40 +125,51 @@ const menuDrawerSelect = async (index: string) => {
         :show-close="false"
         :with-header="false"
         :lock-scroll="false"
-        :size="menu.length * 56 + 165"
+        :size="drawerHeight"
         :z-index="29"
         :modal-class="overlayClass"
       >
-        <div class="menu-drawer-content">
-          <div
-            class="dark-link"
-            :class="{
-              center: profileStore.socialMedias.length === 0
-            }"
-          >
-            <el-switch
-              class="switch-dark"
-              size="large"
-              :modelValue="isDark"
-              inline-prompt
-              :active-icon="MoonNight"
-              :inactive-icon="Sunrise"
-              @click="toggleDark()"
-            />
-            <SocialMediasGroup limit></SocialMediasGroup>
+        <div class="scrollbar-relative-box">
+          <div class="scrollbar-absolute-box">
+            <el-scrollbar :height="scrollbarHeight">
+              <div class="menu-drawer-box">
+                <div class="menu-drawer-content">
+                  <div
+                    class="dark-link"
+                    :class="{
+                      center: profileStore.socialMedias.length === 0
+                    }"
+                  >
+                    <el-switch
+                      class="switch-dark"
+                      size="large"
+                      :modelValue="isDark"
+                      inline-prompt
+                      :active-icon="MoonNight"
+                      :inactive-icon="Sunrise"
+                      @click="toggleDark()"
+                    />
+                    <SocialMediasGroup limit></SocialMediasGroup>
+                  </div>
+                  <el-menu
+                    :default-active="$route.path"
+                    @select="menuDrawerSelect"
+                  >
+                    <el-menu-item
+                      v-for="item in menu"
+                      :key="item.index"
+                      :index="item.index"
+                    >
+                      <el-icon :size="item.size">
+                        <component :is="item.icon"></component>
+                      </el-icon>
+                      <span>{{ item.title }}</span>
+                    </el-menu-item>
+                  </el-menu>
+                </div>
+              </div>
+            </el-scrollbar>
           </div>
-          <el-menu :default-active="$route.path" @select="menuDrawerSelect">
-            <el-menu-item
-              v-for="item in menu"
-              :key="item.index"
-              :index="item.index"
-            >
-              <el-icon :size="item.size">
-                <component :is="item.icon"></component>
-              </el-icon>
-              <span>{{ item.title }}</span>
-            </el-menu-item>
-          </el-menu>
         </div>
       </el-drawer>
     </div>
@@ -258,11 +280,22 @@ const menuDrawerSelect = async (index: string) => {
     .el-drawer__body {
       background-color: var(--color-background);
       transition: background-color 0.5s;
+      padding: 0;
+    }
+  }
+  .scrollbar-relative-box {
+    position: relative;
+    height: 100%;
+    .scrollbar-absolute-box {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
     }
   }
   .menu-drawer-content {
     width: 250px;
-    margin: 0 auto;
+    margin: 20px auto 88px auto;
   }
   .el-menu {
     position: static;
