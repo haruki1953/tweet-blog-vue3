@@ -44,17 +44,21 @@ instance.interceptors.response.use(
     // 错误的特殊情况 => 401 权限不足 或 token 过期 => 拦截到登录
     if (err.response?.status === 401) {
       const authStore = useAuthStore()
-      if (authStore.token === '') {
-        sakiMessage({
-          type: 'error',
-          message: '请登录'
-        })
-      } else {
-        sakiMessage({
-          type: 'error',
-          message: '请重新登录'
-        })
-      }
+      // if (authStore.token === '') {
+      //   sakiMessage({
+      //     type: 'error',
+      //     message: '请登录'
+      //   })
+      // } else {
+      //   sakiMessage({
+      //     type: 'error',
+      //     message: '请重新登录'
+      //   })
+      // }
+      sakiMessage({
+        type: 'error',
+        message: '请登录'
+      })
       authStore.removeToken()
       router.push({ name: 'login' })
       return Promise.reject(err)
