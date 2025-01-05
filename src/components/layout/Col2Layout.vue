@@ -53,8 +53,8 @@ const showGradientMaskBottom = computed(
         >
           <div class="col2-left">
             <el-scrollbar :height="leftHeight" ref="refScroll">
-              <slot name="colLeftAndSm"></slot>
-              <slot name="colLeft"></slot>
+              <slot :warpScroll="warpScroll" name="colLeftAndSm"></slot>
+              <slot :warpScroll="warpScroll" name="colLeft"></slot>
             </el-scrollbar>
             <div class="gradient-mask-top" v-show="showGradientMaskTop"></div>
             <div
@@ -67,11 +67,11 @@ const showGradientMaskBottom = computed(
       <el-col :span="largeColSpan">
         <div class="col2-right-all">
           <div class="col2-left-sm" v-if="!show2Col">
-            <slot name="colLeftAndSm"></slot>
-            <slot name="colLeftSm"></slot>
+            <slot :warpScroll="warpScroll" name="colLeftAndSm"></slot>
+            <slot :warpScroll="warpScroll" name="colLeftSm"></slot>
           </div>
           <div class="col2-right">
-            <slot name="colRight"></slot>
+            <slot :warpScroll="warpScroll" name="colRight"></slot>
           </div>
         </div>
       </el-col>
@@ -85,8 +85,8 @@ const showGradientMaskBottom = computed(
         >
           <div class="col2-left reverse">
             <el-scrollbar :height="leftHeight" ref="refScroll">
-              <slot name="colLeftAndSm"></slot>
-              <slot name="colLeft"></slot>
+              <slot :warpScroll="warpScroll" name="colLeftAndSm"></slot>
+              <slot :warpScroll="warpScroll" name="colLeft"></slot>
             </el-scrollbar>
             <div class="gradient-mask-top" v-show="showGradientMaskTop"></div>
             <div
@@ -106,7 +106,7 @@ const showGradientMaskBottom = computed(
   min-height: 100vh;
   margin: 0 auto;
 }
-@media (max-width: 991px) {
+@media (max-width: 992px) {
   .col2-page {
     max-width: 550px;
   }

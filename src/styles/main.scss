@@ -55,6 +55,18 @@ $dark-steps: 1, 2, 3, 4, 5, 6, 7, 8, 9;
   }
 }
 
+:root {
+  // 基础颜色
+  $my-neutral: rgba(140, 147, 157, 1);
+  --my-neutral: #{$my-neutral};
+
+  // 使用循环生成不同透明度的颜色
+  @for $i from 1 through 9 {
+    $opacity: $i * 0.1; // 透明度从 0.1 到 0.9
+    --my-neutral-a#{$i}: rgba(140, 147, 157, #{$opacity});
+  }
+}
+
 .el-dialog.el-dialog {
   border-radius: 20px;
 }
@@ -92,37 +104,54 @@ $dark-steps: 1, 2, 3, 4, 5, 6, 7, 8, 9;
     // right var(--el-transition-duration), 
     top .4s,
     bottom var(--el-transition-duration);
-    @media (max-width: 360px) {
-      width: 280px;
-    }
-}
 
-.el-image-viewer__btn.el-image-viewer__btn {
-  background-color: var(--color-background);
-  color: var(--color-text);
-  border-color: var(--color-border);
-  &.el-image-viewer__actions {
-    border-radius: 25px;
-    bottom: 20px;
-    height: 50px;
-    .el-image-viewer__actions__inner{
-      color: var(--color-text);
-    }
+  @media (max-width: 360px) {
+    width: 280px;
   }
 }
 
-.el-image-viewer__wrapper.viewer-fade-enter-active {
-  animation: viewer-fade-in-only-fade var(--el-transition-duration);
+.el-image-viewer__wrapper {
+  // 原来是因为这个导致了白边问题
+  // :focus-visible {
+  //   outline: -webkit-focus-ring-color auto 1px;
+  // }
+  outline: none;
+
+  .el-image-viewer__btn.el-image-viewer__btn {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    border-color: var(--color-border);
+
+    &.el-image-viewer__actions {
+      border-radius: 25px;
+      bottom: 20px;
+      height: 50px;
+
+      .el-image-viewer__actions__inner {
+        color: var(--color-text);
+      }
+    }
+  }
+
+  &.viewer-fade-enter-active {
+    animation: viewer-fade-in-only-fade 0.5s;
+  }
 }
+
 
 @keyframes viewer-fade-in-only-fade {
   0% {
     opacity: 0;
     // transform: translate3d(0,-20px,0);
   }
+
+  // 延迟，避免闪烁
+  40% {
+    opacity: 0;
+  }
+
   100% {
     opacity: 1;
     // transform: translateZ(0);
   }
 }
-

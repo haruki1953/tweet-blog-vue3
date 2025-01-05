@@ -133,7 +133,6 @@
 
   .control-textarea {
     overflow: hidden;
-    border-radius: 12px;
 
     // :deep() {
     .el-textarea__inner {
@@ -147,7 +146,6 @@
 
     // }
   }
-
 
   .control-radio {
     display: flex;

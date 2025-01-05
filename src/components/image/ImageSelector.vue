@@ -4,7 +4,8 @@ import { computed, onMounted, ref } from 'vue'
 import { imgSamllUrl } from '@/utils'
 import type { ImageStoreData } from '@/types'
 import { CircleCheckFilled } from '@element-plus/icons-vue'
-import { useElementSize } from '@vueuse/core'
+import { useElementSize, useScroll } from '@vueuse/core'
+import { watch } from 'vue'
 
 const model = defineModel<ImageStoreData[]>({ required: true })
 
@@ -13,6 +14,7 @@ const props = withDefaults(
     max?: number
     span?: number
     infiniteScroll?: boolean
+    warpScroll?: ReturnType<typeof useScroll>
   }>(),
   {
     max: 1,
@@ -86,6 +88,15 @@ const selectImgById = (id: string) => {
 defineExpose({
   selectImgById
 })
+
+watch(
+  () => props.warpScroll?.arrivedState.bottom,
+  () => {
+    if (props.warpScroll?.arrivedState.bottom) {
+      imageStore.loadLimited()
+    }
+  }
+)
 </script>
 <template>
   <div

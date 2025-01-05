@@ -35,23 +35,33 @@ const statesStore = useStatesStore()
   </div>
   <div class="post-group" :class="{ 'card-mini': mini }" v-else>
     <template v-for="(post, index) in data" :key="post.id">
-      <PostCard
-        :data="post"
-        :mini="mini"
-        :notPreview="notPreview"
-        :notAlt="notAlt"
-        :postMode="postMode"
-        :forward="forward"
-      ></PostCard>
-      <el-divider v-if="index < data.length - 1" border-style="dotted" />
+      <div class="post-row">
+        <PostCard
+          :data="post"
+          :mini="mini"
+          :notPreview="notPreview"
+          :notAlt="notAlt"
+          :postMode="postMode"
+          :forward="forward"
+        ></PostCard>
+      </div>
+      <!-- <el-divider v-if="index < data.length - 1" border-style="dotted" /> -->
+      <div class="post-divider" v-if="index < data.length - 1"></div>
     </template>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.post-row {
+  padding: 12px 18px 14px 18px;
+}
+.post-divider {
+  height: 2px;
+  background-color: var(--color-background);
+  transition: background-color 0.5s;
+}
 .post-group {
   margin-bottom: 15px;
-  padding: 12px 18px 14px 18px;
   background-color: var(--color-background-soft);
   border-radius: 20px;
   transition: all 0.5s;
@@ -69,6 +79,7 @@ const statesStore = useStatesStore()
   }
 }
 .post-group-skeleton {
+  padding: 12px 18px 14px 18px;
   .el-skeleton {
     :deep() {
       .el-skeleton__item {

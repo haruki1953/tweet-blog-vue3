@@ -7,7 +7,7 @@ import type {
   InfoBySendType,
   PostSendJsonType
 } from '@/types'
-import { useImageStore, usePostStore } from '@/stores'
+import { useImageStore, useLayoutStore, usePostStore } from '@/stores'
 import { postConfig } from '@/config'
 import { formatTime, imageToImageStoreData } from '@/utils'
 import InfoEditDialog from './components/InfoEditDialog.vue'
@@ -144,6 +144,8 @@ onMounted(() => {
 
 const refImageBox = ref<HTMLElement | null>(null)
 const imageBoxSize = useElementSize(refImageBox)
+
+const layoutStore = useLayoutStore()
 </script>
 <template>
   <div>
@@ -188,7 +190,7 @@ const imageBoxSize = useElementSize(refImageBox)
             ></PostGroup>
           </div>
         </template>
-        <template #colLeft>
+        <template #colLeft="{ warpScroll }">
           <TopBar :title="infoBySendType.topBarTitle">
             <el-button
               type="primary"
@@ -218,6 +220,7 @@ const imageBoxSize = useElementSize(refImageBox)
           <ImageSelector
             v-model="imagesData"
             :max="postConfig.postMaxImages"
+            :warpScroll="warpScroll"
           ></ImageSelector>
         </template>
         <template #colRight>
@@ -293,9 +296,10 @@ const imageBoxSize = useElementSize(refImageBox)
             </Transition>
           </div>
           <div
-            class="image-upload-select hidden-md-and-up"
+            class="image-upload-select"
             :style="{ transform: `translateY(${imageBoxSize.height.value}px)` }"
             :class="{ 'image-box-show': imagesData.length > 0 }"
+            v-if="!layoutStore.col2IsShow2Col"
           >
             <ImageUploader :onUploaded="addImage"></ImageUploader>
             <ImageSelector

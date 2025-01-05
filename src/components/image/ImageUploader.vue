@@ -79,7 +79,7 @@ const { files, uploadImage } = useImageUploadService({
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #8c939d;
+      color: var(--my-neutral);
       user-select: none;
       pointer-events: none; /* 允许点击穿透 */
       .icon {

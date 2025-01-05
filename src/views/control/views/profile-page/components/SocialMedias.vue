@@ -558,7 +558,7 @@ const refCompleteMessageContainer = ref<InstanceType<
     border-color: var(--el-color-primary);
   }
   .el-icon {
-    color: #8c939d;
+    color: var(--my-neutral);
   }
 }
 </style>
