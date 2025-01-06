@@ -1,10 +1,10 @@
-// 开发时使用的
-const apiBaseUrl = 'http://localhost:3000/api/'
-const staticBaseUrl = 'http://localhost:3000/'
+// // 开发时使用的
+// const apiBaseUrl = 'http://localhost:3000/api/'
+// const staticBaseUrl = 'http://localhost:3000/'
 
-// // 这是为了在手机上测试，需要的话要改为自己电脑的ip
-// const apiBaseUrl = 'http://192.168.2.110:3000/api/'
-// const staticBaseUrl = 'http://192.168.2.110:3000/'
+// 这是为了在手机上测试，需要的话要改为自己电脑的ip
+const apiBaseUrl = 'http://192.168.2.110:3000/api/'
+const staticBaseUrl = 'http://192.168.2.110:3000/'
 
 // // 部署时，将由后端来托管前端，设置为根路径
 // const apiBaseUrl = '/api/'

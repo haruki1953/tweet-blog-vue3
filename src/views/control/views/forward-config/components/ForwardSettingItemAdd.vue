@@ -84,9 +84,11 @@ const boxStyleHeight = computed(() => {
 }
 
 .info-divider {
-  height: 2px;
-  background-color: var(--color-background);
-  transition: background-color 0.5s;
+  // height: 2px;
+  // background-color: var(--color-background);
+  // transition: background-color 0.5s;
+  border-top: 2.4px solid var(--color-background); // divider
+  transition: border 0.5s;
 }
 
 .top-line {

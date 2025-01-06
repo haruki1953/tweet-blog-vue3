@@ -55,10 +55,14 @@ const statesStore = useStatesStore()
 .post-row {
   padding: 12px 18px 14px 18px;
 }
+// .post-divider {
+//   height: 2px;
+//   background-color: var(--color-background);
+//   transition: background-color 0.5s;
+// }
 .post-divider {
-  height: 2px;
-  background-color: var(--color-background);
-  transition: background-color 0.5s;
+  border-top: 2.4px solid var(--color-background); // divider
+  transition: border 0.5s;
 }
 .post-group {
   margin-bottom: 15px;

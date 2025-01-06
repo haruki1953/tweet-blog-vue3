@@ -257,9 +257,11 @@ const {
   margin: 0 0 2px 8px;
 }
 .control-divider {
-  height: 2px;
-  background-color: var(--color-background);
-  // background-color: var(--el-bg-color);
-  transition: background-color 0.5s;
+  // height: 2px;
+  // background-color: var(--color-background);
+  // // background-color: var(--el-bg-color);
+  // transition: background-color 0.5s;
+  border-top: 2.4px solid var(--color-background); // divider
+  transition: border 0.5s;
 }
 </style>

@@ -104,7 +104,8 @@ useDialogOptimization({
     }
     .i-e-c-control-box {
       .control-divider {
-        background-color: var(--el-bg-color);
+        // background-color: var(--el-bg-color);
+        border-color: var(--el-bg-color);
       }
     }
   }
