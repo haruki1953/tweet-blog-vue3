@@ -7,7 +7,10 @@ import {
 } from '@/config'
 import type { ImportPostList } from '@/types'
 import { ref } from 'vue'
-import { processJsonToImportPostsByPlatform } from '../services'
+import {
+  processHarToJsonList,
+  processJsonToImportPostsByPlatform
+} from './dependencies'
 import { sakiMessage } from '@/utils'
 
 const model = defineModel<ImportPostList>({
@@ -26,29 +29,40 @@ const isJsonProcessing = ref(false)
 const jsonProcess = async () => {
   isJsonProcessing.value = true
   try {
-    const importPosts = processJsonToImportPostsByPlatform({
-      jsonData: jsonData.value,
-      platform: platform.value
+    // 首先尝试作为 har 解析（批量解析）
+    let jsonList = processHarToJsonList({
+      harData: jsonData.value
     })
-    if (importPosts == null) {
-      sakiMessage({
-        type: 'error',
-        message: '解析失败'
-      })
-      return
-    } else if (importPosts.length === 0) {
-      sakiMessage({
-        type: 'warning',
-        message: '未解析到推文'
-      })
+    if (jsonList == null || jsonList.length === 0) {
+      // 解析失败则单个解析
+      jsonList = [jsonData.value]
     }
-    importPostsAdd(importPosts)
-    // console.log(importPosts)
-    // console.log(model.value)
+
+    let haveSuccess = false
+    for (const jsonItem of jsonList) {
+      try {
+        const importPosts = processJsonToImportPostsByPlatform({
+          jsonData: jsonItem,
+          platform: platform.value
+        })
+        if (importPosts == null) {
+          continue
+        }
+        haveSuccess = true
+        importPostsAdd(importPosts)
+      } catch (error) {
+        //
+      }
+    }
+
+    if (!haveSuccess) {
+      throw new Error()
+    }
     sakiMessage({
       type: 'success',
       message: '解析成功'
     })
+    // 清空
     jsonCancel()
   } catch (error) {
     sakiMessage({
