@@ -1,12 +1,13 @@
 import { adminGetTaskApi } from '@/api'
 import type { TaskStoreModuleDependencies } from './dependencies'
-import type { BackendTaskCache } from '@/types'
+import type { BackendTaskStore } from '@/types'
 import { computed, ref, type Ref } from 'vue'
-import { loadByData_processImportTaskListPart } from './import-task'
+import { loadByData_handleImportTaskListPart } from './import-task'
 import { taskConfig } from '@/config'
+import { delayWithInterrupt } from '@/utils'
 
 export const useLoadModule = (dependencies: TaskStoreModuleDependencies) => {
-  const { taskCache } = dependencies
+  const { store } = dependencies
 
   const isPollingMark = ref(false)
   const isPolling = computed(() => isPollingMark.value)
@@ -17,42 +18,68 @@ export const useLoadModule = (dependencies: TaskStoreModuleDependencies) => {
     return info
   }
 
-  const loadByData = (data: { taskCache: BackendTaskCache }) => {
-    const { taskCache: dataTaskCache } = data
+  const loadByData = (data: { taskStore: BackendTaskStore }) => {
+    const { taskStore: newStore } = data
 
-    const refTaskCache = taskCache
-    // 处理 importTaskList
-    const processImportTaskListPartInfo = loadByData_processImportTaskListPart(
-      { refTaskCache },
-      { dataTaskCache }
-    )
+    const dataForHandle = {
+      oldStore: store.value,
+      newStore
+    }
+    // 处理 taskImportList
+    const handleImportTaskListPartInfo =
+      loadByData_handleImportTaskListPart(dataForHandle)
+
+    // 赋值store
+    store.value = newStore
 
     const info = {
-      isExistsTask: processImportTaskListPartInfo.isExistsInData
+      // 是否存在运行中的任务
+      isHaveRunning: handleImportTaskListPartInfo.isHaveRunning,
+      // 是否存在已更新的任务
+      isHaveUpdated: handleImportTaskListPartInfo.isHaveUpdated,
+      // 是否存在刚完成的任务
+      isNewlyCompleted: handleImportTaskListPartInfo.isNewlyCompleted
     }
     return info
   }
 
+  // 记录轮询时无更新的次数，实现退避
+  let notUpdateCount = taskConfig.pollingNotUpdateCountStartNumber
   // 轮询
   const polling = async () => {
     // 防止多个轮询同时存在
     if (isPolling.value) {
+      // 轮询中再次调用的话，重置退避
+      notUpdateCount = taskConfig.pollingNotUpdateCountStartNumber
       return
     }
     isPollingMark.value = true
     try {
-      // 存在任务则轮询
-      let isExistsTask = true
-      while (isExistsTask) {
+      // 如果存在运行中的任务则轮询
+      let isHaveRunning = true
+      while (isHaveRunning) {
         // 轮询间隔
-        await new Promise((resolve) =>
-          setTimeout(resolve, taskConfig.pollingInterval)
-        )
+        const pollingInterval = taskConfig.pollingIntervalBackoffCalc({
+          notUpdateCount
+        })
+        const notUpdateCountNow = notUpdateCount
+        await delayWithInterrupt({
+          durationMs: pollingInterval,
+          // 中断条件：notUpdateCount变化
+          interruptCondition: () => notUpdateCountNow !== notUpdateCount
+        })
         const info = await load().catch(() => null)
         if (info == null) {
+          // 请求出错，重置 notUpdateCount 并继续
+          notUpdateCount = taskConfig.pollingNotUpdateCountStartNumber
           continue
         }
-        isExistsTask = info.isExistsTask
+        isHaveRunning = info.isHaveRunning
+        notUpdateCount += 1
+        if (info.isHaveUpdated) {
+          // 有更新，重置 notUpdateCount
+          notUpdateCount = taskConfig.pollingNotUpdateCountStartNumber
+        }
       }
     } finally {
       isPollingMark.value = false
@@ -62,16 +89,16 @@ export const useLoadModule = (dependencies: TaskStoreModuleDependencies) => {
   const pollLoad = async () => {
     // 会等待一次请求
     const info = await load()
-    if (info.isExistsTask) {
+    if (info.isHaveRunning) {
       // 之后异步轮询
       polling()
     }
     return info
   }
 
-  const pollLoadByData = (data: { taskCache: BackendTaskCache }) => {
+  const pollLoadByData = (data: { taskStore: BackendTaskStore }) => {
     const info = loadByData(data)
-    if (info.isExistsTask) {
+    if (info.isHaveRunning) {
       // 之后异步轮询
       polling()
     }

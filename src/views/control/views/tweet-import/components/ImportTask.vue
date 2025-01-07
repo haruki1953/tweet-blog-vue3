@@ -1,46 +1,110 @@
 <script setup lang="ts">
+import { taskStatusMap } from '@/config'
 import { useTaskStore } from '@/stores'
 import { formatTimeAgoChs } from '@/utils'
-import { Check } from '@element-plus/icons-vue'
-import { computed } from 'vue'
+import { Check, CloseBold, Select, SemiSelect } from '@element-plus/icons-vue'
+import { computed, ref } from 'vue'
 
 const taskStore = useTaskStore()
 
-const importTaskList = computed(() => taskStore.importTaskList)
-// const importTaskList = computed(() => [
-//   {
-//     uuid: 'aaa',
-//     startAt: '2024-12-15',
-//     completedCount: 10,
-//     totalCount: 20
-//   }
-// ])
+const taskImportList = computed(() => taskStore.taskImportList)
 
-type ImageTaskItem = (typeof taskStore.importTaskList)[number]
+type ImportTaskItem = (typeof taskStore.taskImportList)[number]
 
-const isComplete = (importTaskItem: ImageTaskItem) => {
-  return importTaskItem.completedCount >= importTaskItem.totalCount
+const isRunning = (taskImportItem: ImportTaskItem) => {
+  return taskImportItem.status === taskStatusMap.running.key
+}
+const isCompleted = (taskImportItem: ImportTaskItem) => {
+  return taskImportItem.status === taskStatusMap.completed.key
+}
+const isAborted = (taskImportItem: ImportTaskItem) => {
+  return taskImportItem.status === taskStatusMap.aborted.key
+}
+const isStopped = (taskImportItem: ImportTaskItem) => {
+  return taskImportItem.status === taskStatusMap.stopped.key
 }
 
-const couldDelete = (importTaskItem: ImageTaskItem) => {
-  return isComplete(importTaskItem)
+const taskStatusInfo = (taskImportItem: ImportTaskItem) => {
+  if (isRunning(taskImportItem)) {
+    return {
+      progressStatus: '',
+      message: '正在导入',
+      buttonType: 'danger',
+      buttonIcon: SemiSelect,
+      atClick: taskAbort
+    } as const
+  }
+  if (isCompleted(taskImportItem)) {
+    return {
+      progressStatus: 'success',
+      message: '导入完成',
+      buttonType: 'success',
+      buttonIcon: Select,
+      atClick: taskDelete
+    } as const
+  }
+  if (isAborted(taskImportItem)) {
+    return {
+      progressStatus: 'exception',
+      message: '导入中止',
+      buttonType: 'danger',
+      buttonIcon: CloseBold,
+      atClick: taskDelete
+    } as const
+  }
+  // if
+  isStopped(taskImportItem)
+  return {
+    progressStatus: 'exception',
+    message: '导入停止',
+    buttonType: 'danger',
+    buttonIcon: CloseBold,
+    atClick: taskDelete
+  } as const
 }
 
-const tryDelete = (importTaskItem: ImageTaskItem) => {
-  if (couldDelete(importTaskItem)) {
-    taskStore.manageDeleteImportTask(importTaskItem.uuid)
+const loadingMarkList = ref<string[]>([])
+const taskIsLoading = (taskImportItem: ImportTaskItem) => {
+  return loadingMarkList.value.includes(taskImportItem.uuid)
+}
+const taskSetLoading = (
+  taskImportItem: ImportTaskItem,
+  set: boolean = true
+) => {
+  if (set) {
+    loadingMarkList.value.push(taskImportItem.uuid)
+  } else {
+    loadingMarkList.value = loadingMarkList.value.filter(
+      (i) => i !== taskImportItem.uuid
+    )
+  }
+}
+const taskAbort = (taskImportItem: ImportTaskItem) => {
+  taskSetLoading(taskImportItem, true)
+  try {
+    //
+  } finally {
+    taskSetLoading(taskImportItem, false)
+  }
+}
+const taskDelete = (taskImportItem: ImportTaskItem) => {
+  taskSetLoading(taskImportItem, true)
+  try {
+    //
+  } finally {
+    taskSetLoading(taskImportItem, false)
   }
 }
 </script>
 <template>
   <div class="import-task">
     <Transition name="fade">
-      <div class="task-list" v-if="importTaskList.length > 0">
+      <div class="task-list" v-if="taskImportList.length > 0">
         <TransitionGroup name="fade-slide-list">
           <div
             class="task-item"
-            v-for="importTaskItem in importTaskList"
-            :key="importTaskItem.uuid"
+            v-for="taskImportItem in taskImportList"
+            :key="taskImportItem.uuid"
           >
             <div class="info-box">
               <div class="info-row">
@@ -49,15 +113,13 @@ const tryDelete = (importTaskItem: ImageTaskItem) => {
                   <div class="progress-box">
                     <el-progress
                       :percentage="
-                        (importTaskItem.completedCount /
-                          (importTaskItem.totalCount || 1)) *
+                        (taskImportItem.completedCount /
+                          (taskImportItem.totalCount || 1)) *
                         100
                       "
                       :show-text="false"
                       :stroke-width="8"
-                      :status="
-                        isComplete(importTaskItem) ? 'success' : undefined
-                      "
+                      :status="taskStatusInfo(taskImportItem).progressStatus"
                     />
                   </div>
                 </div>
@@ -66,32 +128,28 @@ const tryDelete = (importTaskItem: ImageTaskItem) => {
                     <div class="text">
                       <span class="count">
                         {{
-                          `${importTaskItem.completedCount}/${importTaskItem.totalCount}`
+                          `${taskImportItem.completedCount}/${taskImportItem.totalCount}`
                         }}
                       </span>
                       <span class="message">
-                        {{
-                          `${isComplete(importTaskItem) ? '导入完成' : '正在导入'}`
-                        }}
+                        {{ taskStatusInfo(taskImportItem).message }}
                       </span>
                     </div>
                   </div>
                   <div class="date-button">
                     <div class="date">
                       <div class="text">
-                        {{ formatTimeAgoChs(importTaskItem.startAt) }}
+                        {{ formatTimeAgoChs(taskImportItem.startedAt) }}
                       </div>
                     </div>
                     <div class="button">
                       <el-button
-                        :type="
-                          isComplete(importTaskItem) ? 'success' : 'primary'
-                        "
+                        :type="taskStatusInfo(taskImportItem).buttonType"
                         :icon="Check"
                         circle
                         size="small"
-                        :loading="!couldDelete(importTaskItem)"
-                        @click="tryDelete(importTaskItem)"
+                        :loading="taskIsLoading(taskImportItem)"
+                        @click="taskStatusInfo(taskImportItem).atClick"
                       />
                     </div>
                   </div>

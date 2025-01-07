@@ -1,7 +1,7 @@
 import type { PlatformKeyEnumValues } from '@/config'
 import type {
   BackendForwardStore,
-  BackendTaskCache,
+  BackendTaskStore,
   ImageForwardData,
   ImportPostListForApi,
   PostForwardData,
@@ -14,8 +14,8 @@ export type PostControlImportJsonType = {
 }
 
 export type PostControlImportData = {
-  importTask: BackendTaskCache['importTaskList'][number]
-  taskCache: BackendTaskCache
+  taskImport: BackendTaskStore['taskImportList'][number]
+  taskCache: BackendTaskStore
 }
 export type PostControlImportRes = ResData<PostControlImportData>
 

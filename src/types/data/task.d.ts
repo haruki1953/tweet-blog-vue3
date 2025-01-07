@@ -1,7 +1,11 @@
-export type BackendTaskCache = {
-  importTaskList: {
+import type { TaskStatusEnumValues } from '@/config'
+
+export type BackendTaskStore = {
+  taskImportList: {
+    status: TaskStatusEnumValues
     uuid: string
-    startAt: string
+    startedAt: string
+    updatedAt: string
     totalCount: number
     completedCount: number
   }[]

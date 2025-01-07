@@ -6,7 +6,7 @@ import {
   type PlatformKeyEnumValues
 } from '@/config'
 import type { ImportPostList } from '@/types'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import {
   processHarToJsonList,
   processJsonToImportPostsByPlatform
@@ -28,6 +28,8 @@ const jsonCancel = () => {
 const isJsonProcessing = ref(false)
 const jsonProcess = async () => {
   isJsonProcessing.value = true
+  await nextTick()
+  await new Promise((resolve) => setTimeout(resolve, 100))
   try {
     // 首先尝试作为 har 解析（批量解析）
     let jsonList = processHarToJsonList({

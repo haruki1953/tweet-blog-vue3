@@ -1,4 +1,4 @@
-import type { BackendTaskCache, Image, LogData, ResData } from './base'
+import type { BackendTaskStore, Image, LogData, ResData } from './base'
 
 export type AdminGetInfoData = {
   imageLargeMaxLength: number
@@ -52,7 +52,7 @@ export type AdminDeleteAllOriginalImageRes =
   ResData<AdminDeleteAllOriginalImageData>
 
 export type AdminGetTaskData = {
-  taskCache: BackendTaskCache
+  taskStore: BackendTaskStore
 }
 export type AdminGetTaskRes = ResData<AdminGetTaskData>
 

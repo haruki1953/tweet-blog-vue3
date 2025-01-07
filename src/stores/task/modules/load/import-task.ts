@@ -1,9 +1,9 @@
+import { taskStatusMap } from '@/config'
 import { useImageStore } from '@/stores/image'
 import { useLogStore } from '@/stores/log'
 import { usePostStore } from '@/stores/post'
 import { useProfileStore } from '@/stores/profile'
-import type { BackendTaskCache } from '@/types'
-import type { Ref } from 'vue'
+import type { BackendTaskStore } from '@/types'
 
 // 在 导入任务完成时，更新数据
 const handleImportTaskComplete = () => {
@@ -18,56 +18,69 @@ const handleImportTaskComplete = () => {
   profileStore.load()
 }
 
-// 处理请求数据中的 importTaskList
-export const loadByData_processImportTaskListPart = (
-  dependencies: {
-    refTaskCache: Ref<BackendTaskCache>
-  },
-  data: {
-    dataTaskCache: BackendTaskCache
-  }
-) => {
-  const { refTaskCache } = dependencies
-  const { dataTaskCache } = data
-  // 遍历 将本地的与请求的合并
-  for (const dataItem of dataTaskCache.importTaskList) {
-    const findItemIndex = refTaskCache.value.importTaskList.findIndex(
-      (i) => i.uuid === dataItem.uuid
-    )
-    // 请求中的 importTask 未在本地中找到，进行添加，并继续下一个
-    if (findItemIndex === -1) {
-      refTaskCache.value.importTaskList.push(dataItem)
-      continue
-    }
-    // 请求中的 importTask 可以在本地中找到，进行更新
-    refTaskCache.value.importTaskList[findItemIndex] = dataItem
-  }
-  let isHaveCompleted = false
-  // 遍历 处理本地中有，而请求中没有的。即为已完成
-  for (const valueItem of refTaskCache.value.importTaskList) {
-    const findItemIndex = dataTaskCache.importTaskList.findIndex(
-      (i) => i.uuid === valueItem.uuid
-    )
-    if (findItemIndex === -1) {
-      if (valueItem.completedCount < valueItem.totalCount) {
-        isHaveCompleted = true
+// 在 导入任务更新时，进行一些处理
+const handleImportTaskUpdate = () => {
+  const postStore = usePostStore()
+  const imageStore = useImageStore()
+
+  postStore.setNeedReget(true)
+  imageStore.setNeedReget(true)
+}
+
+// 处理请求数据中的 taskImportList
+export const loadByData_handleImportTaskListPart = (data: {
+  oldStore: BackendTaskStore
+  newStore: BackendTaskStore
+}) => {
+  const { oldStore, newStore } = data
+
+  const oldTaskImportList = oldStore.taskImportList
+  const newTaskImportList = newStore.taskImportList
+
+  // 判断新数据中是否有 running 的任务
+  const isHaveRunning = Boolean(
+    newTaskImportList.find((i) => i.status === taskStatusMap.running.key)
+  )
+
+  // 判断新数据中是否有更新的任务
+  const isHaveUpdated = Boolean(
+    newTaskImportList.find((itemNew) => {
+      const itemOld = oldTaskImportList.find((i) => i.uuid === itemNew.uuid)
+      if (!itemOld) {
+        return true
       }
-      valueItem.completedCount = valueItem.totalCount
-    }
+      if (itemNew.updatedAt !== itemOld.updatedAt) {
+        return true
+      }
+    })
+  )
+
+  // 判断新数据中是否有刚完成的任务
+  const isNewlyCompleted = Boolean(
+    newTaskImportList.find((itemNew) => {
+      const itemOld = oldTaskImportList.find((i) => i.uuid === itemNew.uuid)
+      if (!itemOld) {
+        return false
+      }
+      if (
+        itemNew.status === taskStatusMap.completed.key &&
+        itemOld.status !== taskStatusMap.completed.key
+      ) {
+        return true
+      }
+    })
+  )
+
+  if (isHaveUpdated) {
+    handleImportTaskUpdate()
   }
-  // 有刚完成的，则调用 handleImportTaskComplete
-  if (isHaveCompleted) {
+  if (isNewlyCompleted) {
     handleImportTaskComplete()
   }
 
-  // 判断请求中是否有importTask
-  const isExistsInData = (() => {
-    if (dataTaskCache.importTaskList.length === 0) {
-      return false
-    }
-    return true
-  })()
   return {
-    isExistsInData
+    isHaveRunning,
+    isHaveUpdated,
+    isNewlyCompleted
   }
 }
