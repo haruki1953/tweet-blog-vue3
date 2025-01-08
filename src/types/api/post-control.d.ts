@@ -2,6 +2,7 @@ import type { PlatformKeyEnumValues } from '@/config'
 import type {
   BackendForwardStore,
   BackendTaskStore,
+  ForwardSettingPostCount,
   ImageForwardData,
   ImportPostListForApi,
   PostForwardData,
@@ -15,7 +16,7 @@ export type PostControlImportJsonType = {
 
 export type PostControlImportData = {
   taskImport: BackendTaskStore['taskImportList'][number]
-  taskCache: BackendTaskStore
+  taskStore: BackendTaskStore
 }
 export type PostControlImportRes = ResData<PostControlImportData>
 
@@ -48,6 +49,10 @@ export type PostControlGetForwardData = {
   forwardStore: BackendForwardStore
 }
 export type PostControlGetForwardRes = ResData<PostControlGetForwardData>
+
+export type PostControlForwardSettingPostCountData = ForwardSettingPostCount
+export type PostControlForwardSettingPostCountRes =
+  ResData<ForwardSettingPostCount>
 
 export type PostControlDeleteForwardDataData = PostForwardData
 export type PostControlDeleteForwardDataRes =

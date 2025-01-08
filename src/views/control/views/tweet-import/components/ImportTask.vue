@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { adminTaskAbortApi, adminTaskDeleteApi } from '@/api'
 import { taskStatusMap } from '@/config'
 import { useTaskStore } from '@/stores'
 import { formatTimeAgoChs } from '@/utils'
@@ -29,9 +30,9 @@ const taskStatusInfo = (taskImportItem: ImportTaskItem) => {
     return {
       progressStatus: '',
       message: '正在导入',
-      buttonType: 'danger',
+      buttonType: 'info',
       buttonIcon: SemiSelect,
-      atClick: taskAbort
+      atClick: () => taskAbort(taskImportItem)
     } as const
   }
   if (isCompleted(taskImportItem)) {
@@ -40,7 +41,7 @@ const taskStatusInfo = (taskImportItem: ImportTaskItem) => {
       message: '导入完成',
       buttonType: 'success',
       buttonIcon: Select,
-      atClick: taskDelete
+      atClick: () => taskDelete(taskImportItem)
     } as const
   }
   if (isAborted(taskImportItem)) {
@@ -49,7 +50,7 @@ const taskStatusInfo = (taskImportItem: ImportTaskItem) => {
       message: '导入中止',
       buttonType: 'danger',
       buttonIcon: CloseBold,
-      atClick: taskDelete
+      atClick: () => taskDelete(taskImportItem)
     } as const
   }
   // if
@@ -59,7 +60,7 @@ const taskStatusInfo = (taskImportItem: ImportTaskItem) => {
     message: '导入停止',
     buttonType: 'danger',
     buttonIcon: CloseBold,
-    atClick: taskDelete
+    atClick: () => taskDelete(taskImportItem)
   } as const
 }
 
@@ -79,18 +80,20 @@ const taskSetLoading = (
     )
   }
 }
-const taskAbort = (taskImportItem: ImportTaskItem) => {
+const taskAbort = async (taskImportItem: ImportTaskItem) => {
   taskSetLoading(taskImportItem, true)
   try {
-    //
+    const res = await adminTaskAbortApi(taskImportItem.uuid)
+    taskStore.pollLoadByData(res.data.data)
   } finally {
     taskSetLoading(taskImportItem, false)
   }
 }
-const taskDelete = (taskImportItem: ImportTaskItem) => {
+const taskDelete = async (taskImportItem: ImportTaskItem) => {
   taskSetLoading(taskImportItem, true)
   try {
-    //
+    const res = await adminTaskDeleteApi(taskImportItem.uuid)
+    taskStore.pollLoadByData(res.data.data)
   } finally {
     taskSetLoading(taskImportItem, false)
   }
@@ -142,16 +145,18 @@ const taskDelete = (taskImportItem: ImportTaskItem) => {
                         {{ formatTimeAgoChs(taskImportItem.startedAt) }}
                       </div>
                     </div>
-                    <div class="button">
-                      <el-button
-                        :type="taskStatusInfo(taskImportItem).buttonType"
-                        :icon="Check"
-                        circle
-                        size="small"
-                        :loading="taskIsLoading(taskImportItem)"
-                        @click="taskStatusInfo(taskImportItem).atClick"
-                      />
-                    </div>
+                    <Transition name="fade" mode="out-in">
+                      <div class="button" :key="taskImportItem.status">
+                        <el-button
+                          :type="taskStatusInfo(taskImportItem).buttonType"
+                          :icon="taskStatusInfo(taskImportItem).buttonIcon"
+                          circle
+                          size="small"
+                          :loading="taskIsLoading(taskImportItem)"
+                          @click="taskStatusInfo(taskImportItem).atClick"
+                        />
+                      </div>
+                    </Transition>
                   </div>
                 </div>
               </div>
@@ -275,6 +280,7 @@ const taskDelete = (taskImportItem: ImportTaskItem) => {
 .el-progress {
   :deep() {
     .el-progress-bar__outer {
+      background-color: var(--color-background);
       transition: background-color 0.5s;
     }
   }

@@ -33,6 +33,7 @@ type ForwardSettingItem = {
 }[PlatformKeys]
 
 export type ForwardSettingList = ForwardSettingItem[]
+
 // BackendForwardStore
 export type BackendForwardStore = {
   forwardSettingList: ForwardSettingList
@@ -43,3 +44,12 @@ export type ForwardSettingItemInForm = ForwardSettingItem & {
   isDeleted: boolean
 }
 export type ForwardSettingListInForm = ForwardSettingItemInForm[]
+
+// 转发帖子统计
+export type ForwardSettingPostCount = {
+  totalPostCount: number
+  forwardSettingPostList: {
+    uuid: string
+    count: number
+  }[]
+}

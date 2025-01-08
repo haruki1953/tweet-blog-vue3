@@ -71,10 +71,6 @@ export const adminDeleteAllOriginalImageApi =
     return http.delete('/image/original/all')
   }
 
-export const adminGetTaskApi = (): AdminGetTaskRes => {
-  return http.get('/admin/task')
-}
-
 export const adminLogGetByCursorApi = (
   cursorId: string,
   query: AdminLogGetByCursorQueryType
@@ -87,4 +83,16 @@ export const adminLogGetByCursorApi = (
 
 export const adminLogDeleteApi = (num: number): AdminLogDeleteRes => {
   return http.delete(`/admin/log/keep/${num}`)
+}
+
+export const adminGetTaskApi = (): AdminGetTaskRes => {
+  return http.get('/admin/task')
+}
+
+export const adminTaskAbortApi = (uuid: string): AdminGetTaskRes => {
+  return http.put(`/admin/task/abort/uuid/${uuid}`)
+}
+
+export const adminTaskDeleteApi = (uuid: string): AdminGetTaskRes => {
+  return http.delete(`/admin/task/delete/uuid/${uuid}`)
 }

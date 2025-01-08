@@ -117,9 +117,9 @@ const router = createRouter({
   ],
   // 路由滚动行为定制
   scrollBehavior: async (to, from, savedPosition) => {
-    // console.log(to, from)
-    // console.log(to.path, from.path)
-    // console.log(to.matched, from.matched)
+    console.log(to, from)
+    console.log(to.path, from.path)
+    console.log(to.matched, from.matched)
 
     // 点中当前路径时，不滚动
     if (to.path === from.path) {
@@ -132,6 +132,34 @@ const router = createRouter({
       await new Promise((resolve) => setTimeout(resolve, 10))
       return savedPosition
     }
+    // 【250108】发现原先的无限滚动重置有缺陷，（滚动加载的项目很多的情况下）跳转至首页时还会卡顿
+    // 可能是因为渲染页面抢先了，抢先在了原先的重置无限滚动之前
+    // 应该在从首页跳出时，判断到达的页面是否会返回至首页，如果不是可能返回首页的页面，则立刻重置
+    if (from.path === '/') {
+      // 不是可能返回至首页的页面
+      if (
+        typeof to.name !== 'string' ||
+        !['send', 'post', 'post-forward'].includes(to.name)
+      ) {
+        // 重置无限滚动限制
+        const postStore = usePostStore()
+        postStore.resetLimited()
+      }
+    }
+    // 图片选择器中也包含无限滚动，在相册和发送页面都有，也要做处理
+    if (from.path === '/album') {
+      if (typeof to.name !== 'string' || !['post'].includes(to.name)) {
+        const imageStore = useImageStore()
+        imageStore.resetLimited()
+      }
+    }
+    if (from.path === '/send') {
+      // 没有页面会可能返回至发送页面，所以不用判断了
+      const imageStore = useImageStore()
+      imageStore.resetLimited()
+      // 还残留有一个小问题，在发送页面跳转至相册时会卡顿，暂时没办法，以后再说吧
+    }
+    // 【250108 原先的无限滚动重置】
     // 跳转至首页或其他包含无限滚动的页面时，重置显示限制
     // 放在 if savedPosition 之后就是为了不让 resetLimited 打乱滚动位置
     if (to.path === '/') {

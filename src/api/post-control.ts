@@ -1,6 +1,7 @@
 import { platformKeyMap } from '@/config'
 import type {
   ForwardSettingListInForm,
+  ForwardSettingPostCount,
   PostControlDeleteForwardDataRes,
   PostControlDeleteImportAllImageRes,
   PostControlDeleteImportAllPostRes,
@@ -10,6 +11,7 @@ import type {
   PostControlForwardManualLinkingRes,
   PostControlForwardPostJsonType,
   PostControlForwardPostRes,
+  PostControlForwardSettingPostCountRes,
   PostControlGetForwardRes,
   PostControlImportJsonType,
   PostControlImportRes
@@ -47,6 +49,11 @@ export const postControlDeleteImportAllImageApi =
 export const postControlGetForwardApi = (): PostControlGetForwardRes => {
   return http.get('/post-control/forward')
 }
+
+export const postControlForwardSettingPostCountApi =
+  (): PostControlForwardSettingPostCountRes => {
+    return http.get('/post-control/forward-setting/post-count')
+  }
 
 export const postControlForwardSettingSetApi = (
   forwardSettingListInForm: ForwardSettingListInForm

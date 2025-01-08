@@ -164,10 +164,16 @@ export const delayWithInterrupt = async (data: {
     interruptCheckInterval = 1000
   } = data
 
-  let remainingMs = durationMs
+  // 持续时间小于中断判断间隔，则直接简单的等待
+  if (durationMs < interruptCheckInterval) {
+    return await new Promise((resolve) => setTimeout(resolve, durationMs))
+  }
 
+  // 以中断判断间隔循环，并累减剩余时间
+  let remainingMs = durationMs
   while (remainingMs > 0) {
     if (interruptCondition(remainingMs)) {
+      // 中断条件为真，返回
       return
     }
     await new Promise((resolve) => setTimeout(resolve, interruptCheckInterval))

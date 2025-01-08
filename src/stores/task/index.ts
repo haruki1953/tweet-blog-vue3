@@ -2,7 +2,6 @@ import type { BackendTaskStore } from '@/types'
 import { defineStore } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
 import { useLoadModule } from './modules/load'
-import { useManageModule } from './modules/manage'
 
 export type TaskStoreModuleDependencies = {
   store: Ref<BackendTaskStore>
@@ -29,11 +28,9 @@ export const useTaskStore = defineStore(
     }
 
     const loadModule = useLoadModule(dependencies)
-    const manageModule = useManageModule(dependencies)
 
     return {
       ...loadModule,
-      ...manageModule,
       store,
       taskImportList
     }

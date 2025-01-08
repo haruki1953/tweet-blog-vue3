@@ -1,10 +1,11 @@
-import type { BackendForwardStore } from '@/types'
+import type { BackendForwardStore, ForwardSettingPostCount } from '@/types'
 import { defineStore } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
 import { useLoadModule } from './modules/load'
 
 export type ForwardStoreModuleDependencies = {
   store: Ref<BackendForwardStore>
+  forwardSettingPostCount: Ref<ForwardSettingPostCount | null>
 }
 
 export const useForwardStore = defineStore(
@@ -14,9 +15,11 @@ export const useForwardStore = defineStore(
       forwardSettingList: []
     })
     const forwardSettingList = computed(() => store.value.forwardSettingList)
+    const forwardSettingPostCount = ref<ForwardSettingPostCount | null>(null)
 
     const dependencies = {
-      store
+      store,
+      forwardSettingPostCount
     }
 
     const loadModule = useLoadModule(dependencies)
