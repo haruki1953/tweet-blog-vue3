@@ -117,9 +117,9 @@ const router = createRouter({
   ],
   // 路由滚动行为定制
   scrollBehavior: async (to, from, savedPosition) => {
-    console.log(to, from)
-    console.log(to.path, from.path)
-    console.log(to.matched, from.matched)
+    // console.log(to, from)
+    // console.log(to.path, from.path)
+    // console.log(to.matched, from.matched)
 
     // 点中当前路径时，不滚动
     if (to.path === from.path) {

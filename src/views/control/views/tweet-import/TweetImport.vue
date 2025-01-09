@@ -17,7 +17,7 @@ const options = [
     value: 'import'
   },
   {
-    label: '导入设置',
+    label: '设置',
     value: 'setting'
   }
 ] as const

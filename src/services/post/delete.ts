@@ -79,6 +79,7 @@ export const usePostDeleteEverlastService = (dependencies: {
         message: '推文已永久删除'
       })
       postStore.updatePostListToRemove(propsdata.value.id)
+      postStore.resetPostRequested()
       if (res.data.data.deletedImages.find((i) => i != null)) {
         imageStore.setNeedReget()
       }

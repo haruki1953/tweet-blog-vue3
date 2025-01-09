@@ -36,8 +36,14 @@ export const usePoolModule = (dependencies: {
     statesStore.setPostIdLoading(id)
     let res
     try {
-      res = await postGetByIdApi(id)
+      // 【250109】添加了query，也查询在回收站中的
+      res = await postGetByIdApi(id, { keepIsDetele: 'true' })
     } catch (error) {
+      // 获取失败，如果帖子在回收站，则删除
+      const index = postPool.value.findIndex((p) => p.id === id)
+      if (index >= 0 && postPool.value[index].mainPost.isDeleted) {
+        postPool.value.splice(index, 1)
+      }
       return
     } finally {
       statesStore.setPostIdLoaded(id)

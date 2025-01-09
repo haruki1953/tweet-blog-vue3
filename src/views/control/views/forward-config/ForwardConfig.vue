@@ -11,6 +11,10 @@ const options = [
   {
     label: '自动转发',
     value: 'ForwardAutoPage'
+  },
+  {
+    label: '设置',
+    value: 'DataSettingPage'
   }
 ] as const
 const segmentedOptions = [...options] // el-segmented直接传options会有类型错误
@@ -29,7 +33,9 @@ const segmentedValue = ref<(typeof options)[number]['value']>(options[0].value)
       <ForwardSettingPage
         v-if="segmentedValue === 'ForwardSettingPage'"
       ></ForwardSettingPage>
-      <ForwardAutoPage v-else></ForwardAutoPage>
+      <ForwardAutoPage
+        v-else-if="segmentedValue === 'ForwardAutoPage'"
+      ></ForwardAutoPage>
     </Transition>
   </div>
 </template>

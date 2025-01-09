@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import ForwardAutoItem from './ForwardAutoItem.vue'
 
 const forwardStore = useForwardStore()
+forwardStore.forwardSettingPostCountLoadHandleLoading()
 
 // Store中的数据，也就是请求的数据
 const forwardSettingList = computed(() => forwardStore.forwardSettingList)

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { platformKeyMap } from '@/config'
+import { useForwardStore } from '@/stores'
 import type { ForwardSettingItem } from '@/types'
-import { Notification } from '@element-plus/icons-vue'
+import { Connection, Loading, Notification } from '@element-plus/icons-vue'
 import { useElementSize } from '@vueuse/core'
 import { computed } from 'vue'
 import { ref } from 'vue'
@@ -9,6 +10,42 @@ import { ref } from 'vue'
 const props = defineProps<{
   item: ForwardSettingItem
 }>()
+
+const forwardStore = useForwardStore()
+const isLoading = computed(() => forwardStore.isForwardSettingPostCountLoading)
+
+const countInfo = computed(() => {
+  if (forwardStore.forwardSettingPostCount == null) {
+    return null
+  }
+  const totalPostCount = forwardStore.forwardSettingPostCount.totalPostCount
+  const forwardSettingPostCount =
+    forwardStore.forwardSettingPostCount.forwardSettingPostList.find(
+      (i) => i.uuid === props.item.uuid
+    )?.count
+  if (forwardSettingPostCount == null) {
+    return null
+  }
+  const state = (() => {
+    if (forwardSettingPostCount < totalPostCount) {
+      return {
+        key: 'not-all-forwarded',
+        icon: Notification,
+        color: 'var(--el-color-primary)'
+      } as const
+    }
+    return {
+      key: 'all-forwarded',
+      icon: Connection,
+      color: 'var(--el-color-success)'
+    } as const
+  })()
+  return {
+    totalPostCount,
+    forwardSettingPostCount,
+    state
+  }
+})
 
 const isEditing = ref(false)
 
@@ -43,18 +80,34 @@ const boxStyleHeight = computed(() => {
           </div>
           <div class="info-col right">
             <div></div>
-            <div class="content-flag">
-              <Transition name="fade" mode="out-in">
-                <div class="content" v-if="true">{{ '55/100' }}</div>
-              </Transition>
-              <Transition name="fade-pop" mode="out-in">
-                <div class="flag" :key="''">
-                  <el-icon :color="'var(--el-color-primary)'" size="20">
-                    <component :is="Notification"></component>
+            <Transition name="fade" mode="out-in">
+              <div class="content-flag" v-if="!isLoading && countInfo != null">
+                <div class="content">
+                  {{
+                    `${countInfo.forwardSettingPostCount}/${countInfo.totalPostCount}`
+                  }}
+                </div>
+                <Transition name="fade-pop" mode="out-in">
+                  <div class="flag" :key="countInfo.state.key">
+                    <el-icon :color="countInfo.state.color" size="20">
+                      <component :is="countInfo.state.icon"></component>
+                    </el-icon>
+                  </div>
+                </Transition>
+              </div>
+              <div class="content-flag" v-else>
+                <div class="content"></div>
+                <div class="flag">
+                  <el-icon
+                    :color="'var(--el-color-primary)'"
+                    size="20"
+                    class="is-loading"
+                  >
+                    <component :is="Loading"></component>
                   </el-icon>
                 </div>
-              </Transition>
-            </div>
+              </div>
+            </Transition>
           </div>
         </div>
       </div>

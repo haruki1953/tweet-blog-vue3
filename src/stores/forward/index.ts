@@ -27,7 +27,8 @@ export const useForwardStore = defineStore(
     return {
       ...loadModule,
       store,
-      forwardSettingList
+      forwardSettingList,
+      forwardSettingPostCount
     }
   },
   {
