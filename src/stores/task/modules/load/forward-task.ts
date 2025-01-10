@@ -1,11 +1,12 @@
 import { taskStatusMap } from '@/config'
+import { useForwardStore } from '@/stores/forward'
 import { useImageStore } from '@/stores/image'
 import { useLogStore } from '@/stores/log'
 import { usePostStore } from '@/stores/post'
 import { useProfileStore } from '@/stores/profile'
 import type { BackendTaskStore } from '@/types'
 
-// 在 导入任务完成时，更新数据
+// 在 转发任务完成时，更新数据
 const handleTaskComplete = () => {
   const postStore = usePostStore()
   const imageStore = useImageStore()
@@ -31,24 +32,27 @@ const handleTaskAbort = () => {
   profileStore.load()
 }
 
-// 在 导入任务更新时，进行一些处理
+// 在 转发任务更新时，进行一些处理
 const handleTaskUpdate = () => {
   const postStore = usePostStore()
   const imageStore = useImageStore()
+  const forwardStore = useForwardStore()
 
   postStore.setNeedReget(true)
   imageStore.setNeedReget(true)
+  // 更新转发计数
+  forwardStore.forwardSettingPostCountLoad()
 }
 
-// 处理请求数据中的 taskImportList
-export const loadByData_handleTaskImportListPart = (data: {
+// 处理请求数据中的 taskForwardList
+export const loadByData_handleTaskForwardListPart = (data: {
   oldStore: BackendTaskStore
   newStore: BackendTaskStore
 }) => {
   const { oldStore, newStore } = data
 
-  const oldTaskList = oldStore.taskImportList
-  const newTaskList = newStore.taskImportList
+  const oldTaskList = oldStore.taskForwardList
+  const newTaskList = newStore.taskForwardList
 
   // 判断新数据中是否有 running 的任务
   const isHaveRunning = Boolean(
@@ -113,6 +117,7 @@ export const loadByData_handleTaskImportListPart = (data: {
   return {
     isHaveRunning,
     isHaveUpdated,
-    isNewlyCompleted
+    isNewlyCompleted,
+    isNewlyAborted
   }
 }

@@ -17,6 +17,10 @@ const props = defineProps<{
 const isEditing = ref(false)
 
 const toggleEdit = () => {
+  if (isForwarding.value) {
+    isEditing.value = false
+    return
+  }
   isEditing.value = !isEditing.value
 }
 const closeEdit = () => {
@@ -54,7 +58,13 @@ const boxStyleHeight = computed(() => {
 <template>
   <div class="forward-submit-item">
     <div class="info-box">
-      <div @click="toggleEdit" class="top-line">
+      <div
+        @click="toggleEdit"
+        class="top-line"
+        :class="{
+          'is-forwarding': isForwarding
+        }"
+      >
         <div class="info-row">
           <div class="info-col left">
             <div class="icon-text">
@@ -157,6 +167,9 @@ const boxStyleHeight = computed(() => {
   height: 45px;
   cursor: pointer;
   user-select: none;
+  &.is-forwarding {
+    cursor: progress;
+  }
 }
 .info-row {
   margin: 0 16px 0 20px;

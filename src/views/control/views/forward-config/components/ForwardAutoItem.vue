@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { platformKeyMap } from '@/config'
-import { useForwardStore } from '@/stores'
+import { platformKeyMap, taskStatusMap } from '@/config'
+import { useForwardStore, useTaskStore } from '@/stores'
 import type { ForwardSettingItem } from '@/types'
 import { Connection, Loading, Notification } from '@element-plus/icons-vue'
 import { useElementSize } from '@vueuse/core'
 import { computed } from 'vue'
 import { ref } from 'vue'
+import ForwardAutoTaskList from './ForwardAutoTaskList.vue'
+import ForwardAutoForm from './ForwardAutoForm.vue'
 
 const props = defineProps<{
   item: ForwardSettingItem
@@ -26,30 +28,60 @@ const countInfo = computed(() => {
   if (forwardSettingPostCount == null) {
     return null
   }
-  const state = (() => {
-    if (forwardSettingPostCount < totalPostCount) {
-      return {
-        key: 'not-all-forwarded',
-        icon: Notification,
-        color: 'var(--el-color-primary)'
-      } as const
-    }
-    return {
-      key: 'all-forwarded',
-      icon: Connection,
-      color: 'var(--el-color-success)'
-    } as const
-  })()
   return {
     totalPostCount,
-    forwardSettingPostCount,
-    state
+    forwardSettingPostCount
   }
+})
+
+const stateInfo = computed(() => {
+  if (countInfo.value == null) {
+    return null
+  }
+  const { forwardSettingPostCount, totalPostCount } = countInfo.value
+  if (forwardSettingPostCount < totalPostCount) {
+    return {
+      key: 'not-all-forwarded',
+      icon: Notification,
+      color: 'var(--el-color-primary)'
+    } as const
+  }
+  return {
+    key: 'all-forwarded',
+    icon: Connection,
+    color: 'var(--el-color-success)'
+  } as const
+})
+
+const taskStore = useTaskStore()
+
+// 任务信息
+const taskForwardList = computed(() => taskStore.taskForwardList)
+// 属于本转发配置的任务
+const taskForwardThisSettingList = computed(() => {
+  return taskForwardList.value.filter(
+    (taskItem) => taskItem.forwardConfigId === props.item.uuid
+  )
+})
+
+// 存在运行中的转发任务，则是正在转发
+const isForwarding = computed(() => {
+  const find = taskForwardThisSettingList.value.find(
+    (i) => i.status === taskStatusMap.running.key
+  )
+  if (find != null) {
+    return true
+  }
+  return false
 })
 
 const isEditing = ref(false)
 
 const toggleEdit = () => {
+  if (isForwarding.value) {
+    isEditing.value = false
+    return
+  }
   isEditing.value = !isEditing.value
 }
 
@@ -62,7 +94,13 @@ const boxStyleHeight = computed(() => {
 <template>
   <div class="forward-auto-item">
     <div class="info-box">
-      <div @click="toggleEdit" class="top-line">
+      <div
+        @click="toggleEdit"
+        class="top-line"
+        :class="{
+          'is-forwarding': isForwarding
+        }"
+      >
         <div class="info-row">
           <div class="info-col left">
             <div class="icon-text">
@@ -81,16 +119,33 @@ const boxStyleHeight = computed(() => {
           <div class="info-col right">
             <div></div>
             <Transition name="fade" mode="out-in">
-              <div class="content-flag" v-if="!isLoading && countInfo != null">
-                <div class="content">
+              <div
+                class="content-flag"
+                v-if="!isLoading && countInfo != null && stateInfo != null"
+              >
+                <div
+                  class="content"
+                  :class="{
+                    'blinking-2s': isForwarding
+                  }"
+                >
                   {{
                     `${countInfo.forwardSettingPostCount}/${countInfo.totalPostCount}`
                   }}
                 </div>
                 <Transition name="fade-pop" mode="out-in">
-                  <div class="flag" :key="countInfo.state.key">
-                    <el-icon :color="countInfo.state.color" size="20">
-                      <component :is="countInfo.state.icon"></component>
+                  <div class="flag" key="isForwarding" v-if="isForwarding">
+                    <el-icon
+                      :color="stateInfo.color"
+                      size="20"
+                      class="is-loading"
+                    >
+                      <component :is="Loading"></component>
+                    </el-icon>
+                  </div>
+                  <div class="flag" :key="stateInfo.key" v-else>
+                    <el-icon :color="stateInfo.color" size="20">
+                      <component :is="stateInfo.icon"></component>
                     </el-icon>
                   </div>
                 </Transition>
@@ -122,21 +177,22 @@ const boxStyleHeight = computed(() => {
         <Transition name="fade05">
           <div v-if="isEditing" ref="boxRef">
             <div class="info-row form">
-              <!-- <ForwardSettingForm
-                :itemInForm="itemInForm"
-                :itemInStore="itemInStore"
-                :itemState="itemState"
-                :useForwardSettingListInFormControl="
-                  useForwardSettingListInFormControl
-                "
+              <ForwardAutoForm
+                :item="item"
+                :countInfo="countInfo"
                 :toggleEdit="toggleEdit"
-              ></ForwardSettingForm> -->
+                :isForwarding="isForwarding"
+              ></ForwardAutoForm>
             </div>
           </div>
         </Transition>
       </div>
     </div>
-    <div class="task-box"></div>
+    <div class="task-box">
+      <ForwardAutoTaskList
+        :list="taskForwardThisSettingList"
+      ></ForwardAutoTaskList>
+    </div>
   </div>
 </template>
 
@@ -171,6 +227,9 @@ const boxStyleHeight = computed(() => {
   height: 45px;
   cursor: pointer;
   user-select: none;
+  &.is-forwarding {
+    cursor: progress;
+  }
 }
 .info-row {
   margin: 0 16px 0 20px;
@@ -181,7 +240,7 @@ const boxStyleHeight = computed(() => {
   &.form {
     display: block;
     margin: 0 20px;
-    padding: 20px 0;
+    padding: 20px 0 16px 0;
   }
 }
 .info-col {

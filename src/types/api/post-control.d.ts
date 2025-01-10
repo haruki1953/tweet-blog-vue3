@@ -1,4 +1,4 @@
-import type { PlatformKeyEnumValues } from '@/config'
+import type { ForwardingOrderEnumValues, PlatformKeyEnumValues } from '@/config'
 import type {
   BackendForwardStore,
   BackendTaskStore,
@@ -79,3 +79,15 @@ export type PostControlForwardPostData = {
   ImageForwardData: ImageForwardData
 }
 export type PostControlForwardPostRes = ResData<PostControlForwardPostData>
+
+export type PostControlForwardAutoJsonType = {
+  forwardConfigId: string
+  forwardingOrder: ForwardingOrderEnumValues
+  forwardingNumber: number
+  forwardingIntervalSeconds: number
+}
+export type PostControlForwardAutoData = {
+  taskForward: BackendTaskStore['taskForwardList'][number]
+  taskStore: BackendTaskStore
+}
+export type PostControlForwardAutoRes = ResData<PostControlForwardAutoData>

@@ -12,10 +12,19 @@ export const useTaskStore = defineStore(
   'tweblog-task',
   () => {
     const store = ref<BackendTaskStore>({
-      taskImportList: []
+      taskImportList: [],
+      taskForwardList: []
     })
     const taskImportList = computed(() => {
       return store.value.taskImportList
+        .slice()
+        .sort(
+          (a, b) =>
+            new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime()
+        )
+    })
+    const taskForwardList = computed(() => {
+      return store.value.taskForwardList
         .slice()
         .sort(
           (a, b) =>
@@ -32,7 +41,8 @@ export const useTaskStore = defineStore(
     return {
       ...loadModule,
       store,
-      taskImportList
+      taskImportList,
+      taskForwardList
     }
   },
   {

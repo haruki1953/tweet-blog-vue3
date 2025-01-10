@@ -1,12 +1,13 @@
 import { platformKeyMap } from '@/config'
 import type {
   ForwardSettingListInForm,
-  ForwardSettingPostCount,
   PostControlDeleteForwardDataRes,
   PostControlDeleteImportAllImageRes,
   PostControlDeleteImportAllPostRes,
   PostControlDeleteImportDataRes,
   PostControlDeleteImportExcessRes,
+  PostControlForwardAutoJsonType,
+  PostControlForwardAutoRes,
   PostControlForwardManualLinkingJsonType,
   PostControlForwardManualLinkingRes,
   PostControlForwardPostJsonType,
@@ -108,4 +109,10 @@ export const postControlForwardPostApi = (
   json: PostControlForwardPostJsonType
 ): PostControlForwardPostRes => {
   return http.post(`/post-control/forward-post`, json)
+}
+
+export const postControlForwardAutoApi = (
+  json: PostControlForwardAutoJsonType
+): PostControlForwardAutoRes => {
+  return http.post(`/post-control/forward-auto`, json)
 }
