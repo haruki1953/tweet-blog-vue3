@@ -2,6 +2,19 @@
 import { ref } from 'vue'
 import ForwardSettingPage from './components/ForwardSettingPage.vue'
 import ForwardAutoPage from './components/ForwardAutoPage.vue'
+import { useForwardStore } from '@/stores'
+
+const forwardStore = useForwardStore()
+
+// 进入此页面时，默认的子页面
+const defaultPage = (() => {
+  if (forwardStore.forwardSettingList.length > 0) {
+    // 有转发配置时，直接显示自动转发页面
+    return 'ForwardAutoPage'
+  }
+  // else 否则显示转发配置页面
+  return 'ForwardSettingPage'
+})()
 
 const options = [
   {
@@ -18,7 +31,7 @@ const options = [
   }
 ] as const
 const segmentedOptions = [...options] // el-segmented直接传options会有类型错误
-const segmentedValue = ref<(typeof options)[number]['value']>(options[0].value)
+const segmentedValue = ref<(typeof options)[number]['value']>(defaultPage)
 </script>
 <template>
   <div class="forward-config">

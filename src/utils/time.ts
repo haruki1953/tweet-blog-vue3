@@ -100,6 +100,16 @@ export const formatTimeAgoChs = (dateString: string): string => {
   return formatTimeAgo(date, { messages: formatTimeAgoChsMessages, max: 'day' })
 }
 
+// 秒数转换常数
+const formatDurationUnits = [
+  // 为了方便步进，年以360天记
+  { label: '年', seconds: 360 * 24 * 60 * 60 },
+  { label: '个月', seconds: 30 * 24 * 60 * 60 },
+  { label: '天', seconds: 24 * 60 * 60 },
+  { label: '小时', seconds: 60 * 60 },
+  { label: '分钟', seconds: 60 },
+  { label: '秒', seconds: 1 }
+]
 /**
  * 将秒数转换为易读的时间长度字符串，如 "1年3个月" 或 "2小时15分钟"。
  * @param seconds - 输入的时间长度（以秒为单位）。
@@ -107,14 +117,6 @@ export const formatTimeAgoChs = (dateString: string): string => {
  * 例如，传入 2 则返回 "1年3个月" 或 "2小时15分钟"。
  * 如果为 0 或未传入，则显示所有单位。
  */
-const formatDurationUnits = [
-  { label: '年', seconds: 365 * 24 * 60 * 60 },
-  { label: '个月', seconds: 30 * 24 * 60 * 60 },
-  { label: '天', seconds: 24 * 60 * 60 },
-  { label: '小时', seconds: 60 * 60 },
-  { label: '分钟', seconds: 60 },
-  { label: '秒', seconds: 1 }
-]
 export const formatDuration = (
   seconds: number,
   unitLength: number = 0

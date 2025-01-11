@@ -2,7 +2,11 @@
 import { useAdminStore } from '@/stores'
 import { watch } from 'vue'
 import { ref } from 'vue'
-import { formatDuration, sakiMessage } from '@/utils'
+import {
+  formatDuration,
+  sakiMessage,
+  useInputNumberStepSecondOptimization
+} from '@/utils'
 import { adminUpdateInfoApi } from '@/api'
 
 const adminStore = useAdminStore()
@@ -10,6 +14,19 @@ const adminStore = useAdminStore()
 const jwtAdminExpSeconds = ref<number>(adminStore.jwtAdminExpSeconds || 1)
 const loginMaxFailCount = ref<number>(adminStore.loginMaxFailCount || 1)
 const loginLockSeconds = ref<number>(adminStore.loginLockSeconds || 1)
+
+const {
+  optimizationStep: jwtAdminExpSecondsStep,
+  optimizationOnBlur: jwtAdminExpSecondsOnBlur
+} = useInputNumberStepSecondOptimization({
+  refNumber: jwtAdminExpSeconds
+})
+const {
+  optimizationStep: loginLockSecondsStep,
+  optimizationOnBlur: loginLockSecondsOnBlur
+} = useInputNumberStepSecondOptimization({
+  refNumber: loginLockSeconds
+})
 
 const initData = () => {
   jwtAdminExpSeconds.value = adminStore.jwtAdminExpSeconds || 1
@@ -65,7 +82,8 @@ const submit = async () => {
           <el-input-number
             v-model="jwtAdminExpSeconds"
             :min="1"
-            :step="86400"
+            :step="jwtAdminExpSecondsStep"
+            @blur="jwtAdminExpSecondsOnBlur"
             class="control-input"
             size="large"
             title=""
@@ -79,6 +97,7 @@ const submit = async () => {
             :min="1"
             class="control-input"
             size="large"
+            step-strictly
           />
         </div>
         <div class="form-row second-input-box">
@@ -88,7 +107,8 @@ const submit = async () => {
           <el-input-number
             v-model="loginLockSeconds"
             :min="1"
-            :step="3600"
+            :step="loginLockSecondsStep"
+            @blur="loginLockSecondsOnBlur"
             class="control-input"
             size="large"
             title=""

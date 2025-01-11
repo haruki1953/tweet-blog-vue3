@@ -28,7 +28,7 @@ const menu = [
   },
   {
     index: '/control',
-    title: '功能',
+    title: '设置',
     icon: Tools
   },
   {

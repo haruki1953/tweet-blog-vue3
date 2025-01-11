@@ -4,7 +4,7 @@ import type ConfirmContainer from '@/components/layout/ConfirmContainer.vue'
 import { forwardingOrderMap, type ForwardingOrderEnumValues } from '@/config'
 import { useForwardStore, useTaskStore } from '@/stores'
 import type { ForwardSettingItem } from '@/types'
-import { formatDuration } from '@/utils'
+import { formatDuration, useInputNumberStepSecondOptimization } from '@/utils'
 import { computed, ref } from 'vue'
 
 const props = defineProps<{
@@ -29,14 +29,25 @@ const forwardingNumberMax = computed(() => {
   )
 })
 
+// 转发顺序
 const forwardingOrder = ref<ForwardingOrderEnumValues>(
   forwardingOrderMap['old-to-new'].key
 )
+// 转发个数
 const forwardingNumber = ref(forwardingNumberMax.value || 1)
+// 转发间隔
 // 初始化时使用上次用的间隔时间
 const forwardingIntervalSeconds = ref(
   forwardStore.autoLastUsedForwardingIntervalSeconds
 )
+const {
+  // 秒数输入框动态步进
+  optimizationStep: forwardingIntervalStep,
+  // 失焦时四舍五入为整数
+  optimizationOnBlur: forwardingIntervalOnBlur
+} = useInputNumberStepSecondOptimization({
+  refNumber: forwardingIntervalSeconds
+})
 
 const isSubmiting = ref(false)
 const submit = async () => {
@@ -98,6 +109,7 @@ const refConfirmContainer = ref<InstanceType<typeof ConfirmContainer> | null>(
             v-model="forwardingNumber"
             :min="1"
             :max="forwardingNumberMax"
+            step-strictly
             class="control-input"
             size="large"
           />
@@ -109,7 +121,8 @@ const refConfirmContainer = ref<InstanceType<typeof ConfirmContainer> | null>(
           <el-input-number
             v-model="forwardingIntervalSeconds"
             :min="1"
-            :step="10"
+            :step="forwardingIntervalStep"
+            @blur="forwardingIntervalOnBlur"
             class="control-input"
             size="large"
             title=""

@@ -2,7 +2,7 @@
 import { useAdminStore } from '@/stores'
 import { watch } from 'vue'
 import { ref } from 'vue'
-import { sakiMessage } from '@/utils'
+import { sakiMessage, useInputNumberStepIntOptimization } from '@/utils'
 import { adminUpdateImageConfigApi } from '@/api'
 
 const adminStore = useAdminStore()
@@ -10,6 +10,20 @@ const adminStore = useAdminStore()
 const imageLargeMaxLength = ref<number>(adminStore.imageLargeMaxLength || 1)
 const imageSmallMaxLength = ref<number>(adminStore.imageSmallMaxLength || 1)
 const imageQuality = ref<number>(adminStore.imageQuality || 1)
+
+// 十进制整数动态步进
+const {
+  optimizationStep: imageLargeMaxLengthStep,
+  optimizationOnBlur: imageLargeMaxLengthOnBlur
+} = useInputNumberStepIntOptimization({
+  refNumber: imageLargeMaxLength
+})
+const {
+  optimizationStep: imageSmallMaxLengthStep,
+  optimizationOnBlur: imageSmallMaxLengthOnBlur
+} = useInputNumberStepIntOptimization({
+  refNumber: imageSmallMaxLength
+})
 
 const initData = () => {
   imageLargeMaxLength.value = adminStore.imageLargeMaxLength || 1
@@ -62,8 +76,9 @@ const submit = async () => {
           <div class="input-lable">大图的边长最大值</div>
           <el-input-number
             v-model="imageLargeMaxLength"
-            :min="1"
-            :step="100"
+            :min="imageSmallMaxLength"
+            :step="imageLargeMaxLengthStep"
+            @blur="imageLargeMaxLengthOnBlur"
             class="control-input"
             size="large"
             title=""
@@ -75,7 +90,9 @@ const submit = async () => {
           <el-input-number
             v-model="imageSmallMaxLength"
             :min="1"
-            :step="100"
+            :max="imageLargeMaxLength"
+            :step="imageSmallMaxLengthStep"
+            @blur="imageSmallMaxLengthOnBlur"
             class="control-input"
             size="large"
             title=""

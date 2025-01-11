@@ -178,7 +178,7 @@ const taskDelete = async (taskImportItem: ImportTaskItem) => {
 
 .task-item {
   width: 100%;
-  $media-max-width: 991px;
+  $media-max-width: 992px;
 
   .info-box {
     margin-bottom: 10px;

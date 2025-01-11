@@ -428,8 +428,8 @@ const refCompleteMessageContainer = ref<InstanceType<
                   <div class="form-row">
                     <div class="control-radio">
                       <el-radio-group v-model="isCircle">
-                        <el-radio :value="true"> 圆形 </el-radio>
                         <el-radio :value="false"> 方形 </el-radio>
+                        <el-radio :value="true"> 圆形 </el-radio>
                       </el-radio-group>
                     </div>
                   </div>

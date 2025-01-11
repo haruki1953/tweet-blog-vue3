@@ -51,8 +51,10 @@ const friendLinksInfo = computed(() => {
 
 <style lang="scss" scoped>
 .about-page-box {
-  margin: var(--layout-top) 0 var(--layout-bottom) 0;
-  min-height: calc(100vh - 60px - 20px - 10vh);
+  // margin: var(--layout-top) 0 var(--layout-bottom) 0;
+  // min-height: calc(100vh - 60px - 20px - 10vh);
+  min-height: 100vh;
+  padding: var(--layout-top) 0 var(--layout-bottom) 0;
   display: flex;
   flex-direction: column;
   justify-content: center;

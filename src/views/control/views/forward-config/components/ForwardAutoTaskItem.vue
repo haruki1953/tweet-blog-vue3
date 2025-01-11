@@ -6,6 +6,8 @@ import { computed, ref } from 'vue'
 import { CloseBold, Select, SemiSelect } from '@element-plus/icons-vue'
 import { adminTaskAbortApi, adminTaskDeleteApi } from '@/api'
 import { formatTimeAgoChs } from '@/utils'
+import { useElementSize } from '@vueuse/core'
+import ForwardAutoTaskForm from './ForwardAutoTaskForm.vue'
 
 const props = defineProps<{
   item: TaskForwardItem
@@ -87,69 +89,106 @@ const taskDelete = async () => {
     taskIsLoading.value = false
   }
 }
+
+const isEditing = ref(false)
+
+const toggleEdit = () => {
+  isEditing.value = !isEditing.value
+}
+
+const boxRef = ref<HTMLElement | null>(null)
+const boxSize = useElementSize(boxRef)
+const boxStyleHeight = computed(() => {
+  return `${boxSize.height.value}px`
+})
 </script>
 <template>
   <div class="forward-auto-task-item">
     <div class="info-box">
-      <div class="info-row">
-        <div class="info-col progress">
-          <div class="progress-box">
-            <el-progress
-              :percentage="
-                (taskForwardItem.completedCount /
-                  (taskForwardItem.totalCount || 1)) *
-                100
-              "
-              :show-text="false"
-              :stroke-width="8"
-              :status="taskStatusInfo.progressStatus"
-            />
-          </div>
-        </div>
-        <div class="info-col lable-date-button">
-          <div class="lable">
-            <div class="text">
-              <span class="count">
-                {{
-                  `${taskForwardItem.completedCount}/${taskForwardItem.totalCount}`
-                }}
-              </span>
-              <span class="message">
-                {{ taskStatusInfo.message }}
-              </span>
+      <div @click="toggleEdit" class="top-line">
+        <div class="info-row">
+          <div class="info-col progress">
+            <div class="progress-box">
+              <el-progress
+                :percentage="
+                  (taskForwardItem.completedCount /
+                    (taskForwardItem.totalCount || 1)) *
+                  100
+                "
+                :show-text="false"
+                :stroke-width="8"
+                :status="taskStatusInfo.progressStatus"
+              />
             </div>
           </div>
-          <div class="date-button">
-            <div class="date">
+          <div class="info-col lable-date-button">
+            <div class="lable">
               <div class="text">
-                {{ formatTimeAgoChs(taskForwardItem.startedAt) }}
+                <span class="count">
+                  {{
+                    `${taskForwardItem.completedCount}/${taskForwardItem.totalCount}`
+                  }}
+                </span>
+                <span class="message">
+                  {{ taskStatusInfo.message }}
+                </span>
               </div>
             </div>
-            <Transition name="fade" mode="out-in">
-              <div class="button" :key="taskForwardItem.status">
-                <el-button
-                  :type="taskStatusInfo.buttonType"
-                  :icon="taskStatusInfo.buttonIcon"
-                  circle
-                  size="small"
-                  :loading="taskIsLoading"
-                  @click="taskStatusInfo.atClick"
-                />
+            <div class="date-button">
+              <div class="date">
+                <div class="text">
+                  {{ formatTimeAgoChs(taskForwardItem.startedAt) }}
+                </div>
               </div>
-            </Transition>
+              <Transition name="fade" mode="out-in">
+                <div class="button" :key="taskForwardItem.status">
+                  <el-button
+                    :type="taskStatusInfo.buttonType"
+                    :icon="taskStatusInfo.buttonIcon"
+                    circle
+                    size="small"
+                    :loading="taskIsLoading"
+                    @click.stop="taskStatusInfo.atClick"
+                  />
+                </div>
+              </Transition>
+            </div>
           </div>
         </div>
+      </div>
+      <div
+        class="style-box"
+        :style="{
+          height: boxStyleHeight
+        }"
+      >
+        <Transition name="fade05">
+          <div v-if="isEditing" ref="boxRef">
+            <div class="info-divider"></div>
+            <div class="info-row form">
+              <ForwardAutoTaskForm
+                :item="item"
+                :toggleEdit="toggleEdit"
+              ></ForwardAutoTaskForm>
+            </div>
+          </div>
+        </Transition>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-$media-max-width: 991px;
+.style-box {
+  overflow: hidden;
+  transition: height 0.8s ease-in-out;
+  // transition: height 1s;
+}
+
+$media-max-width: 992px;
 .info-box {
   margin-bottom: 10px;
   background-color: var(--color-background-soft);
-  transition: background-color 0.5s;
   border-radius: 20px;
   transition:
     background-color 0.5s,
@@ -157,7 +196,6 @@ $media-max-width: 991px;
 
   &:hover {
     box-shadow: var(--el-box-shadow-lighter);
-    // background-color: var(--color-background-mute);
   }
 }
 
@@ -169,13 +207,25 @@ $media-max-width: 991px;
   transition: border 0.5s;
 }
 
+.top-line {
+  // height: 45px;
+  cursor: pointer;
+  user-select: none;
+  &.is-forwarding {
+    cursor: progress;
+  }
+}
 .info-row {
   margin: 0 20px;
   padding: 6px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  &.form {
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
   @media (max-width: $media-max-width) {
     display: block;
   }
