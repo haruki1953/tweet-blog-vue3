@@ -1,7 +1,10 @@
 import { platformKeyMap } from '@/config'
 import type {
   ForwardSettingListInForm,
+  PostControlDeleteForwardAllImageRes,
+  PostControlDeleteForwardAllPostRes,
   PostControlDeleteForwardDataRes,
+  PostControlDeleteForwardNotSettingRes,
   PostControlDeleteImportAllImageRes,
   PostControlDeleteImportAllPostRes,
   PostControlDeleteImportDataRes,
@@ -116,3 +119,18 @@ export const postControlForwardAutoApi = (
 ): PostControlForwardAutoRes => {
   return http.post(`/post-control/forward-auto`, json)
 }
+
+export const postControlDeleteForwardNotSettingApi =
+  (): PostControlDeleteForwardNotSettingRes => {
+    return http.delete('/post-control/forward-data/not-setting')
+  }
+
+export const postControlDeleteForwardAllPostApi =
+  (): PostControlDeleteForwardAllPostRes => {
+    return http.delete('/post-control/forward-data/all/post')
+  }
+
+export const postControlDeleteForwardAllImageApi =
+  (): PostControlDeleteForwardAllImageRes => {
+    return http.delete('/post-control/forward-data/all/image')
+  }

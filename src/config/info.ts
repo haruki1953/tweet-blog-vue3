@@ -32,5 +32,10 @@ export const appInfo = {
   forwardSettingDocs: {
     text: '配置说明',
     link: 'https://tweblog.com/guide/feature/tweet-forward'
+  },
+  // 删除转发记录
+  forwardDeleteDocs: {
+    text: '说明',
+    link: 'https://tweblog.com/guide/feature/tweet-forward#转发记录设置'
   }
 } as const

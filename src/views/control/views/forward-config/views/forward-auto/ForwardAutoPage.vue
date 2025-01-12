@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useForwardStore, useTaskStore } from '@/stores'
 import { computed } from 'vue'
-import ForwardAutoItem from './ForwardAutoItem.vue'
-import ForwardAutoTaskList from './ForwardAutoTaskList.vue'
+import ForwardAutoItem from './components/ForwardAutoItem.vue'
+import ForwardAutoTaskList from './components/ForwardAutoTaskList.vue'
 
 const taskStore = useTaskStore()
 

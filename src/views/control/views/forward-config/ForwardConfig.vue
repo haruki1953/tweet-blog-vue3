@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import ForwardSettingPage from './components/ForwardSettingPage.vue'
-import ForwardAutoPage from './components/ForwardAutoPage.vue'
+import ForwardSettingPage from './views/forward-setting/ForwardSettingPage.vue'
+import ForwardAutoPage from './views/forward-auto/ForwardAutoPage.vue'
+import SettingPage from './views/setting/SettingPage.vue'
 import { useForwardStore } from '@/stores'
 
 const forwardStore = useForwardStore()
@@ -27,7 +28,7 @@ const options = [
   },
   {
     label: '设置',
-    value: 'DataSettingPage'
+    value: 'SettingPage'
   }
 ] as const
 const segmentedOptions = [...options] // el-segmented直接传options会有类型错误
@@ -49,6 +50,7 @@ const segmentedValue = ref<(typeof options)[number]['value']>(defaultPage)
       <ForwardAutoPage
         v-else-if="segmentedValue === 'ForwardAutoPage'"
       ></ForwardAutoPage>
+      <SettingPage v-else></SettingPage>
     </Transition>
   </div>
 </template>

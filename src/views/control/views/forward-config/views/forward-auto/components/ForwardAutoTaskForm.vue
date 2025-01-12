@@ -105,10 +105,10 @@ $media-max-width: 992px;
   justify-content: space-between;
 }
 .left {
-  width: 50%;
+  width: calc(50% - 20px);
 }
 .right {
-  width: calc(50% - 30px);
+  width: calc(50% - 20px);
 }
 
 .lable-text {

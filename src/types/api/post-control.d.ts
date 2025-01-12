@@ -1,4 +1,4 @@
-import type { ForwardingOrderEnumValues, PlatformKeyEnumValues } from '@/config'
+import type { ForwardingOrderEnumValues } from '@/config'
 import type {
   BackendForwardStore,
   BackendTaskStore,
@@ -25,7 +25,7 @@ export type PostControlDeleteImportDataData = PostImportData
 export type PostControlDeleteImportDataRes =
   ResData<PostControlDeleteImportDataData>
 
-export type PostControlDeleteImportExcessData = {
+export type PostControlDeleteImportData = {
   postImport: {
     count: number
   }
@@ -33,15 +33,15 @@ export type PostControlDeleteImportExcessData = {
     count: number
   }
 }
+export type PostControlDeleteImportExcessData = PostControlDeleteImportData
 export type PostControlDeleteImportExcessRes =
   ResData<PostControlDeleteImportExcessData>
 
-export type PostControlDeleteImportAllPostData =
-  PostControlDeleteImportExcessData
+export type PostControlDeleteImportAllPostData = PostControlDeleteImportData
 export type PostControlDeleteImportAllPostRes =
   ResData<PostControlDeleteImportAllPostData>
-export type PostControlDeleteImportAllImageData =
-  PostControlDeleteImportExcessData
+
+export type PostControlDeleteImportAllImageData = PostControlDeleteImportData
 export type PostControlDeleteImportAllImageRes =
   ResData<PostControlDeleteImportAllImageData>
 
@@ -91,3 +91,24 @@ export type PostControlForwardAutoData = {
   taskStore: BackendTaskStore
 }
 export type PostControlForwardAutoRes = ResData<PostControlForwardAutoData>
+
+export type PostControlDeleteForwardData = {
+  postForward: {
+    count: number
+  }
+  imageForward: {
+    count: number
+  }
+}
+export type PostControlDeleteForwardNotSettingData =
+  PostControlDeleteForwardData
+export type PostControlDeleteForwardNotSettingRes =
+  ResData<PostControlDeleteForwardNotSettingData>
+
+export type PostControlDeleteForwardAllPostData = PostControlDeleteForwardData
+export type PostControlDeleteForwardAllPostRes =
+  ResData<PostControlDeleteForwardAllPostData>
+
+export type PostControlDeleteForwardAllImageData = PostControlDeleteForwardData
+export type PostControlDeleteForwardAllImageRes =
+  ResData<PostControlDeleteForwardAllImageData>
