@@ -3,6 +3,7 @@ import { useForwardStore, useTaskStore } from '@/stores'
 import { computed } from 'vue'
 import ForwardAutoItem from './components/ForwardAutoItem.vue'
 import ForwardAutoTaskList from './components/ForwardAutoTaskList.vue'
+import { appInfo } from '@/config'
 
 const taskStore = useTaskStore()
 
@@ -36,10 +37,16 @@ const taskForwardNotSettingList = computed(() => {
           :list="taskForwardNotSettingList"
         ></ForwardAutoTaskList>
       </div>
-      <el-divider
-        v-if="taskForwardNotSettingList.length > 0"
-        border-style="dotted"
-      />
+      <el-divider content-position="right" border-style="dotted">
+        <a
+          :href="appInfo.forwardAutoDocs.link"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="divider-link"
+        >
+          {{ appInfo.forwardAutoDocs.text }}
+        </a>
+      </el-divider>
       <template v-for="(item, index) in forwardSettingList" :key="item.uuid">
         <div class="forward-item">
           <ForwardAutoItem :item="item"></ForwardAutoItem>
@@ -66,5 +73,21 @@ const taskForwardNotSettingList = computed(() => {
   margin: 0 auto;
   transition: all 0.5s;
   --el-border-color: var(--color-border);
+  :deep() {
+    .el-divider__text {
+      background-color: var(--color-background);
+      transition: background-color 0.5s;
+    }
+  }
+}
+.divider-link {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--el-color-primary); // 未访问链接的颜色
+  text-decoration: none; // 平时不显示下划线
+
+  &:hover {
+    color: var(--el-color-success); // 悬停时的颜色
+  }
 }
 </style>

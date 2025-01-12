@@ -1,15 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import ImportProcess from './components/ImportProcess.vue'
-import ImportSubmit from './components/ImportSubmit.vue'
-import ImportTask from './components/ImportTask.vue'
-
-import type { ImportPostList } from '@/types'
-import SettingExcessImportDelete from './components/SettingExcessImportDelete.vue'
-import SettingAllPostImportDelete from './components/SettingAllPostImportDelete.vue'
-import SettingAllImageImportDelete from './components/SettingAllImageImportDelete.vue'
-
-const importPosts = ref<ImportPostList>([])
+import ImportPage from './views/import/ImportPage.vue'
+import SettingPage from './views/setting/SettingPage.vue'
 
 const options = [
   {
@@ -34,31 +26,8 @@ const segmentedValue = ref<(typeof options)[number]['value']>(options[0].value)
       />
     </div>
     <Transition name="fade" mode="out-in">
-      <div class="import-page" v-if="segmentedValue === 'import'">
-        <ImportProcess v-model="importPosts"></ImportProcess>
-        <ImportTask></ImportTask>
-        <Transition name="fade">
-          <ImportSubmit
-            v-model="importPosts"
-            v-if="importPosts.length !== 0"
-          ></ImportSubmit>
-        </Transition>
-      </div>
-      <div class="setting-page" v-else>
-        <div class="control-box">
-          <div class="control-row">
-            <SettingExcessImportDelete></SettingExcessImportDelete>
-          </div>
-          <div class="control-divider"></div>
-          <div class="control-row">
-            <SettingAllPostImportDelete></SettingAllPostImportDelete>
-          </div>
-          <div class="control-divider"></div>
-          <div class="control-row">
-            <SettingAllImageImportDelete></SettingAllImageImportDelete>
-          </div>
-        </div>
-      </div>
+      <ImportPage v-if="segmentedValue === 'import'"></ImportPage>
+      <SettingPage v-else></SettingPage>
     </Transition>
   </div>
 </template>
