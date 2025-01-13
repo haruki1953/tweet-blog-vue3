@@ -125,13 +125,6 @@ const router = createRouter({
     if (to.path === from.path) {
       return
     }
-    // 保留有位置信息时滚动到原先位置
-    if (savedPosition) {
-      // 延迟一点会使滚动更准确
-      await nextTick()
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      return savedPosition
-    }
     // 【250108】发现原先的无限滚动重置有缺陷，（滚动加载的项目很多的情况下）跳转至首页时还会卡顿
     // 可能是因为渲染页面抢先了，抢先在了原先的重置无限滚动之前
     // 应该在从首页跳出时，判断到达的页面是否会返回至首页，如果不是可能返回首页的页面，则立刻重置
@@ -158,6 +151,13 @@ const router = createRouter({
       const imageStore = useImageStore()
       imageStore.resetLimited()
       // 还残留有一个小问题，在发送页面跳转至相册时会卡顿，暂时没办法，以后再说吧
+    }
+    // 保留有位置信息时滚动到原先位置
+    if (savedPosition) {
+      // 延迟一点会使滚动更准确
+      await nextTick()
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      return savedPosition
     }
     // 【250108 原先的无限滚动重置】
     // 跳转至首页或其他包含无限滚动的页面时，重置显示限制

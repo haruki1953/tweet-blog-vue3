@@ -282,5 +282,6 @@ useDialogOptimization({
   // transition: background-color 0.5s;
   border-top: 2.4px solid var(--color-background); // divider
   transition: border 0.5s;
+  border-color: var(--el-bg-color);
 }
 </style>
