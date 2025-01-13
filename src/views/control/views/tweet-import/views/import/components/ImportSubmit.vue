@@ -2,15 +2,13 @@
 import { postControlImportApi } from '@/api'
 import { appInfo } from '@/config'
 import type { ImportPostList } from '@/types'
-import { formatTimeAgoChs, sakiMessage } from '@/utils'
-import {
-  ChatSquare,
-  Link,
-  PictureRounded,
-  Remove
-} from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { useTaskStore } from '@/stores'
+import { useForwardStore, useTaskStore } from '@/stores'
+import ImportSubmitList from './ImportSubmitList.vue'
+import { useElementSize } from '@vueuse/core'
+import { computed } from 'vue'
+import ImportSubmitAdvanced from './ImportSubmitAdvanced.vue'
+import type ConfirmContainer from '@/components/layout/ConfirmContainer.vue'
 
 const model = defineModel<ImportPostList>({
   required: true
@@ -24,246 +22,177 @@ const taskStore = useTaskStore()
 
 const isSubmiting = ref(false)
 const submit = async () => {
+  await refConfirmContainer.value?.confirm()
   isSubmiting.value = true
   try {
     const res = await postControlImportApi({
-      importPosts: model.value
+      importPosts: model.value,
+      advancedSettings: advancedSettingsCorrect.value
     })
     taskStore.pollLoadByData(res.data.data)
-
-    // sakiMessage({
-    //   type: 'success',
-    //   message: '正在导入'
-    // })
     model.value = []
   } finally {
     isSubmiting.value = false
   }
 }
 
-const removeByIndex = (index: number) => {
-  model.value.splice(index, 1)
+const defaultAdvancedSettings = () => {
+  return {
+    forwardConfigId: ''
+  }
 }
+
+// 高级功能开关
+const isEditing = ref(false)
+const toggleEdit = () => {
+  advancedSettings.value = defaultAdvancedSettings()
+  isEditing.value = !isEditing.value
+}
+
+const advancedSettings = ref(defaultAdvancedSettings())
+
+const forwardStore = useForwardStore()
+const forwardSettingList = computed(() => forwardStore.forwardSettingList)
+const findForwardSetting = computed(() =>
+  forwardSettingList.value.find(
+    (i) => i.uuid === advancedSettings.value.forwardConfigId
+  )
+)
+
+// 处理advancedSettings确保正确
+const advancedSettingsCorrect = computed(() => {
+  // 高级功能需开启
+  if (!isEditing.value) {
+    return undefined
+  }
+  // 转发配置需存在
+  if (findForwardSetting.value == null) {
+    return undefined
+  }
+  return advancedSettings.value
+})
+
+const boxRef = ref<HTMLElement | null>(null)
+const boxSize = useElementSize(boxRef)
+const boxStyleHeight = computed(() => {
+  return `${boxSize.height.value}px`
+})
+
+const refConfirmContainer = ref<InstanceType<typeof ConfirmContainer> | null>(
+  null
+)
+// 根据高级设置情况，会有不同的标题
+const confirmContainerTitle = computed(() => {
+  if (
+    advancedSettingsCorrect.value != null &&
+    findForwardSetting.value != null
+  ) {
+    return `确认要导入并关联至 ${findForwardSetting.value.name} 转发记录吗`
+  }
+  return `确认要导入以下 ${model.value.length} 条推文吗`
+})
 </script>
 <template>
   <div class="import-submit">
-    <div class="control-box">
+    <div class="control-box submit">
       <div class="control-row">
-        <div class="control-lable">已解析 {{ model.length }} 条推文</div>
-        <div class="button-box">
-          <el-button
-            @click="submit"
-            :loading="isSubmiting"
-            type="primary"
-            round
-          >
-            导入
-          </el-button>
-          <el-button @click="importCancel" type="info" round> 取消 </el-button>
-        </div>
+        <ConfirmContainer
+          ref="refConfirmContainer"
+          backgroundColor="var(--color-background-soft)"
+          :title="confirmContainerTitle"
+          size="small"
+        >
+          <div class="control-lable-with-link">
+            <div class="lable">已解析 {{ model.length }} 条推文</div>
+            <a class="link" href="javascript:;" @click="toggleEdit">
+              高级功能
+            </a>
+          </div>
+          <div class="button-box">
+            <el-button
+              @click="submit"
+              :loading="isSubmiting"
+              type="primary"
+              round
+            >
+              导入
+            </el-button>
+            <el-button @click="importCancel" type="info" round>
+              取消
+            </el-button>
+          </div>
+        </ConfirmContainer>
       </div>
     </div>
-    <div class="tweet-list">
-      <TransitionGroup name="fade-slide-list">
-        <div
-          class="tweet-item"
-          v-for="(importPostsItem, index) in model"
-          :key="`${importPostsItem.platform} ${importPostsItem.platformId}`"
-        >
-          <div class="info-box">
-            <div class="info-row">
-              <!-- <div class="info-id"></div> -->
-              <div
-                class="info-col content-imagenum"
-                :class="{
-                  'imagenum-none': importPostsItem.importImages.length === 0,
-                  'content-none':
-                    importPostsItem.importImages.length !== 0 &&
-                    importPostsItem.content === ''
-                }"
-              >
-                <div class="content icon-text">
-                  <el-icon>
-                    <ChatSquare />
-                  </el-icon>
-                  <div class="text">
-                    {{ importPostsItem.content }}
-                  </div>
-                </div>
-                <div class="imagenum icon-text">
-                  <el-icon>
-                    <PictureRounded />
-                  </el-icon>
-                  <div class="text">
-                    {{ importPostsItem.importImages.length }}
-                  </div>
-                </div>
-              </div>
-              <div class="info-col date-button">
-                <div class="date">
-                  <div class="text">
-                    {{ formatTimeAgoChs(importPostsItem.createdAt) }}
-                  </div>
-                </div>
-                <div class="button">
-                  <el-button
-                    type="primary"
-                    :icon="Link"
-                    circle
-                    size="small"
-                    tag="a"
-                    :href="importPostsItem.platformLink"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                  <el-button
-                    type="danger"
-                    :icon="Remove"
-                    circle
-                    size="small"
-                    @click="removeByIndex(index)"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+    <div
+      class="style-box"
+      :style="{
+        height: boxStyleHeight
+      }"
+    >
+      <Transition name="fade05">
+        <div v-if="isEditing" ref="boxRef">
+          <ImportSubmitAdvanced
+            v-model="advancedSettings"
+            :toggleEdit="toggleEdit"
+          ></ImportSubmitAdvanced>
         </div>
-      </TransitionGroup>
+      </Transition>
+    </div>
+    <Transition name="fade10">
+      <el-divider
+        content-position="right"
+        border-style="dotted"
+        v-if="isEditing"
+      >
+        <a href="javascript:;" @click="toggleEdit" class="divider-link">
+          取消
+        </a>
+      </el-divider>
+    </Transition>
+    <div class="submit-list-box">
+      <ImportSubmitList v-model="model"></ImportSubmitList>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-// @use '../../../styles/control.scss';
-
-.tweet-list {
-  position: relative;
+.style-box {
+  overflow: hidden;
+  transition: height 0.8s ease-in-out;
+  // transition: height 1s;
 }
 
-.tweet-item {
-  width: 100%;
-  $media-max-width: 600px;
-
-  .info-box {
-    margin-bottom: 10px;
-    background-color: var(--color-background-soft);
-    transition: background-color 0.5s;
-    border-radius: 20px;
-    transition:
-      background-color 0.5s,
-      box-shadow 0.5s;
-
-    &:hover {
-      box-shadow: var(--el-box-shadow-lighter);
-      // background-color: var(--color-background-mute);
+.el-divider {
+  width: 90%;
+  height: 0;
+  margin: 0 auto;
+  transition: all 0.5s;
+  --el-border-color: var(--color-border);
+  :deep() {
+    .el-divider__text {
+      background-color: var(--color-background);
+      transition: background-color 0.5s;
+      border-radius: 10px;
+      overflow: hidden;
     }
   }
+}
+.divider-link {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--el-color-primary); // 未访问链接的颜色
+  text-decoration: none; // 平时不显示下划线
 
-  .info-divider {
-    // height: 2px;
-    // background-color: var(--color-background);
-    // transition: background-color 0.5s;
-    border-top: 2.4px solid var(--color-background); // divider
-    transition: border 0.5s;
+  &:hover {
+    color: var(--el-color-success); // 悬停时的颜色
   }
+}
 
-  .info-row {
-    margin: 0 20px;
-    padding: 6px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    @media (max-width: $media-max-width) {
-      display: block;
-    }
-  }
-
-  .info-col {
-    // margin: 0 10px;
-    padding: 4px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .content-imagenum {
-    width: 60%;
-    justify-content: space-between;
-
-    @media (max-width: $media-max-width) {
-      width: auto;
-      justify-content: space-between;
-    }
-
-    .icon-text {
-      display: flex;
-      align-items: center;
-
-      .el-icon {
-        margin-right: 10px;
-      }
-
-      .text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-
-    .content {
-      width: calc(100% - 60px);
-
-      .text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-
-    .imagenum {
-      //
-    }
-
-    &.content-none {
-      .content {
-        display: none;
-      }
-    }
-
-    &.imagenum-none {
-      .imagenum {
-        display: none;
-      }
-
-      .content {
-        width: 100%;
-        margin-right: 0;
-      }
-    }
-  }
-
-  .date-button {
-    width: calc(40% - 40px);
-
-    @media (max-width: $media-max-width) {
-      width: auto;
-    }
-
-    .date {
-      display: flex;
-      align-items: center;
-      color: var(--color-text-soft);
-    }
-
-    .button {
-      display: flex;
-      align-items: center;
-
-      .el-button {
-        display: flex;
-      }
-    }
-  }
+.control-box.submit {
+  margin-bottom: 0;
+}
+.submit-list-box {
+  margin-top: 20px;
 }
 </style>

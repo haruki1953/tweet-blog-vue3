@@ -12,6 +12,9 @@ import type { ResData } from './base'
 
 export type PostControlImportJsonType = {
   importPosts: ImportPostListForApi
+  advancedSettings?: {
+    forwardConfigId?: string
+  }
 }
 
 export type PostControlImportData = {

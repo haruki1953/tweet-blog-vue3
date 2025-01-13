@@ -19,6 +19,11 @@ export const appInfo = {
     text: '导入说明',
     link: 'https://tweblog.com/guide/feature/tweet-import'
   },
+  // 导入的高级功能说明
+  importAdvancedDocs: {
+    text: '请看文档',
+    link: 'https://tweblog.com/guide/feature/tweet-import#高级功能'
+  },
   // 删除导入记录
   importDeleteDocs: {
     text: '说明',
