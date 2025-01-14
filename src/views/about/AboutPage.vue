@@ -82,7 +82,11 @@ const friendLinksInfo = computed(() => {
   background-color: var(--color-background-soft);
   transition:
     background-color 0.5s,
-    color 0.2s;
+    color 0.2s,
+    box-shadow 0.5s;
+  &:hover {
+    box-shadow: var(--el-box-shadow-lighter);
+  }
 }
 
 @media (max-width: 500px) {

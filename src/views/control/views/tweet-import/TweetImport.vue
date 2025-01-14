@@ -40,6 +40,7 @@ const segmentedValue = ref<(typeof options)[number]['value']>(options[0].value)
   margin: 0 auto;
   margin-bottom: 20px;
   padding: 0 10px;
+  user-select: none;
   --el-border-radius-base: 20px;
   :deep() {
     .el-segmented {

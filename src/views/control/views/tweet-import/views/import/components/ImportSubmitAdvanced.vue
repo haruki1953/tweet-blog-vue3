@@ -42,6 +42,11 @@ const forwardSettingList = computed(() => forwardStore.forwardSettingList)
         ></ImportSubmitAdvancedForwardSettingItem>
       </div>
     </div>
+    <TweetEmpty
+      description="暂无转发配置"
+      v-if="forwardSettingList.length === 0"
+      size="small"
+    ></TweetEmpty>
   </div>
 </template>
 
@@ -57,8 +62,7 @@ const forwardSettingList = computed(() => forwardStore.forwardSettingList)
   }
 }
 
-// .forward-list {
-//   width: 95%;
-//   margin: 0 auto;
-// }
+.tweet-empty.tweet-empty {
+  padding: 5px 0 20px 0;
+}
 </style>

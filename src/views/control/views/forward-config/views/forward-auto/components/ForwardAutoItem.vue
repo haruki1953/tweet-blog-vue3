@@ -78,6 +78,10 @@ const isForwarding = computed(() => {
 const isEditing = ref(false)
 
 const toggleEdit = () => {
+  if (stateInfo.value?.key === 'all-forwarded') {
+    isEditing.value = false
+    return
+  }
   if (isForwarding.value) {
     isEditing.value = false
     return
@@ -98,7 +102,8 @@ const boxStyleHeight = computed(() => {
         @click="toggleEdit"
         class="top-line"
         :class="{
-          'is-forwarding': isForwarding
+          'is-forwarding': isForwarding,
+          'all-forwarded': stateInfo?.key === 'all-forwarded'
         }"
       >
         <div class="info-row">
@@ -227,8 +232,11 @@ const boxStyleHeight = computed(() => {
   height: 45px;
   cursor: pointer;
   user-select: none;
+  &.all-forwarded {
+    cursor: not-allowed;
+  }
   &.is-forwarding {
-    cursor: progress;
+    cursor: wait;
   }
 }
 .info-row {

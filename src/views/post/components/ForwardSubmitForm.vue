@@ -151,6 +151,7 @@ const couldNotLinking = computed(
   margin: 0 auto;
   margin-bottom: 15px;
   // padding: 0 10px;
+  user-select: none;
   --el-border-radius-base: 20px;
   :deep() {
     .el-segmented {

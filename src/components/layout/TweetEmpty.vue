@@ -3,10 +3,16 @@ import { logoImage } from '@/config'
 
 defineProps<{
   description: string
+  size?: '' | 'small'
 }>()
 </script>
 <template>
-  <div class="tweet-empty">
+  <div
+    class="tweet-empty"
+    :class="{
+      small: size === 'small'
+    }"
+  >
     <el-image class="empty-img" :src="logoImage" fit="cover"></el-image>
     <div class="empty-description">{{ description }}</div>
   </div>
@@ -18,6 +24,16 @@ defineProps<{
   flex-direction: column;
   align-items: center;
   padding: 40px 0;
+  &.small {
+    padding: 20px 0;
+    .empty-img {
+      max-width: 100px;
+      margin-bottom: 10px;
+    }
+    .empty-description {
+      font-size: 14px;
+    }
+  }
 }
 
 .empty-img {
