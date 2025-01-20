@@ -102,33 +102,35 @@ const forwardStore = useForwardStore()
           </div>
         </template>
         <template #colRight>
-          <div
-            v-if="
-              postPoolItem == null ||
-              (postPoolItem.mainPost.postForwards.length === 0 &&
-                postPoolItem.mainPost.postImports.length === 0 &&
-                forwardStore.forwardSettingList.length === 0)
-            "
-          >
-            <TweetEmpty description="暂无转发记录"></TweetEmpty>
-          </div>
-          <div v-else>
-            <ForwardSubmitList
-              :postPoolItem="postPoolItem"
-              :isSubmitting="isSubmitting"
-              :submitControl="submitControl"
-            ></ForwardSubmitList>
-            <ForwardInfo
-              :postPoolItem="postPoolItem"
-              :isSubmitting="isSubmitting"
-              :submitControl="submitControl"
-            ></ForwardInfo>
-            <ImportInfo
-              :postPoolItem="postPoolItem"
-              :isSubmitting="isSubmitting"
-              :submitControl="submitControl"
-            ></ImportInfo>
-          </div>
+          <Transition name="fade" mode="out-in">
+            <div
+              v-if="
+                postPoolItem == null ||
+                (postPoolItem.mainPost.postForwards.length === 0 &&
+                  postPoolItem.mainPost.postImports.length === 0 &&
+                  forwardStore.forwardSettingList.length === 0)
+              "
+            >
+              <TweetEmpty description="暂无转发记录"></TweetEmpty>
+            </div>
+            <div v-else>
+              <ForwardSubmitList
+                :postPoolItem="postPoolItem"
+                :isSubmitting="isSubmitting"
+                :submitControl="submitControl"
+              ></ForwardSubmitList>
+              <ForwardInfo
+                :postPoolItem="postPoolItem"
+                :isSubmitting="isSubmitting"
+                :submitControl="submitControl"
+              ></ForwardInfo>
+              <ImportInfo
+                :postPoolItem="postPoolItem"
+                :isSubmitting="isSubmitting"
+                :submitControl="submitControl"
+              ></ImportInfo>
+            </div>
+          </Transition>
         </template>
       </Col2Layout>
     </DataContainerMountedMask>

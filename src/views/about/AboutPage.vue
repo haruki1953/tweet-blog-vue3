@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import markdownit from 'markdown-it'
+import markdownItLinkAttributes from 'markdown-it-link-attributes'
 import { useProfileStore } from '@/stores'
 import { computed } from 'vue'
 
 const profileStore = useProfileStore()
-const md = markdownit()
+
+const md = markdownit({
+  html: true // 启用 HTML 标签支持
+}).use(markdownItLinkAttributes, {
+  attrs: {
+    target: '_blank',
+    rel: 'noopener noreferrer'
+  }
+})
 
 const aboutMdHtml = computed(() => {
   const htmlStr = md.render(profileStore.aboutMarkdown)

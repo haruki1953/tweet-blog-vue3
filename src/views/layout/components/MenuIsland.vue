@@ -74,7 +74,18 @@ const scrollbarHeight = computed(() => {
           :key="item.index"
           @click="router.push(item.index)"
           :class="{
-            'is-index': $route.path === item.index
+            // 'is-index': $route.path === item.index
+            // 使在子路由也激活对应菜单项
+            // 'is-index': $route.matched.some(
+            //   (record) => record.path === item.index
+            // )
+            // 修复根路径一致被激活的问题
+            'is-index': (() => {
+              if (item.index === '/') {
+                return $route.path === item.index
+              }
+              return $route.matched.some((record) => record.path === item.index)
+            })()
           }"
         >
           <el-icon :size="item.size || 20">
