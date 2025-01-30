@@ -57,9 +57,9 @@ export const imageConfig = {
   // 无限滚动中的数量限制
   limitShow: {
     // 最初的数量
-    startAmounts: 15,
+    startAmounts: 18,
     // 每次增加的数量
-    limitAmounts: 15
+    limitAmounts: 12
   },
   // 修改alt时的最大字数
   maxAltCharactersOnSend: 1000

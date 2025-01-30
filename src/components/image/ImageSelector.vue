@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useImageStore } from '@/stores'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { imgSamllUrl } from '@/utils'
 import type { ImageStoreData } from '@/types'
 import { CircleCheckFilled } from '@element-plus/icons-vue'
@@ -135,6 +135,7 @@ watch(
     </el-row>
     <div class="load-button-box" v-if="imageStore.isHaveMoreLimited">
       <el-button
+        text
         type="primary"
         round
         size="small"

@@ -153,6 +153,7 @@ export const dataProcessXtwitterService_ProcessPostInItemcontent = (data: {
     // const platform = platformKeyMap.X.key
     const platformId = id_str
     return {
+      createdAt,
       link,
       alt,
       platform,

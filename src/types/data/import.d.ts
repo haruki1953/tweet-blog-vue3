@@ -31,6 +31,8 @@ export type ImportPostList = ImportPostItem[]
 // 将在接口中使用
 export type ImportPostItemForApi = {
   importImages: {
+    // createdAt?: Date | undefined
+    createdAt?: string | undefined
     link: string
     alt?: string | undefined
     platform?: PlatformKeyEnumValues | undefined

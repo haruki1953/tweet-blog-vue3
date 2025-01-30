@@ -180,6 +180,7 @@ const scrollLoad = () => {
         v-if="logStore.isHaveMoreLimited && logStore.limitedList.length"
       >
         <el-button
+          text
           type="primary"
           round
           size="small"

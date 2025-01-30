@@ -100,6 +100,7 @@ const postMode = computed(() => postStore.postsGetMode)
               v-if="postStore.isHaveMoreLimited && postStore.limitedList.length"
             >
               <el-button
+                text
                 type="primary"
                 round
                 size="small"
