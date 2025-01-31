@@ -20,8 +20,6 @@ export const axiosConfig = {
 export const webName = 'Tweblog'
 
 // logo图标
-// import logoImage from '@/assets/logo.png'
-// import logoImage from '@/assets/icon2x.png'
 import logoImage from '@/assets/tweet.svg'
 export { logoImage }
 
@@ -88,8 +86,3 @@ export const postConfig = {
   // 超过限制时移除的数量
   postPoolSizeRemove: 50
 }
-
-// 占位图片
-import sakiPlaceholder from '@/assets/saki-placeholder.jpg'
-import sakiError from '@/assets/saki-error.jpg'
-export { sakiPlaceholder, sakiError }
