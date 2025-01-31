@@ -15,6 +15,8 @@ export type ImportPostItem = {
   platformParentId: string | null
   // 帖子的图片
   importImages: {
+    // 图片时间
+    createdAt: string
     // 图片链接，后端将请求此url来获取图片
     link: string
     // 图片描述
