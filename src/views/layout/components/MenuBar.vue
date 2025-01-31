@@ -43,7 +43,7 @@ useDrawerOptimization({
 })
 // 为防止在抽屉跳转路由后又被返回，故先返回
 const menuDrawerSelect = async (index: string) => {
-  console.log(index)
+  // console.log(index)
   window.history.back()
   await nextTick()
   await new Promise((resolve) => setTimeout(resolve, 10))

@@ -75,7 +75,7 @@ const isSelectedEdit = (info: ExternalLinkItem) => {
 const isSelectedAdd = computed(() => mode.value === 'add')
 
 const selectEdit = async (info: ExternalLinkItem) => {
-  console.log(externalLinksInfo.value)
+  // console.log(externalLinksInfo.value)
   if (mode.value === 'edit' && selectedUuid.value === info.uuid) {
     mode.value = 'none'
     selectedIconInit.value = undefined

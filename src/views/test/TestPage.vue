@@ -28,7 +28,7 @@ const addMenuItemPeriodically = async () => {
       icon: PictureFilled
     })
     count++
-    console.log('Added new item to menu:', menu.value)
+    // console.log('Added new item to menu:', menu.value)
   }
 }
 

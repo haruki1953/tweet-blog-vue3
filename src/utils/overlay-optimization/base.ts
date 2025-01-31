@@ -95,7 +95,7 @@ export const optimizationScrollOnOverlayClose = () => {
     if (!(message instanceof HTMLElement)) {
       return
     }
-    console.log(message.style.left, typeof message.style.left)
+    // console.log(message.style.left, typeof message.style.left)
     if (message.style.left === '') {
       // 未设置，说明是在禁止滚动时弹出的，应向右偏移
       message.style.left = `calc(50% + ${scrollbarWidth / 2}px)`

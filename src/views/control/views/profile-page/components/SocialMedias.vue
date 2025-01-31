@@ -58,7 +58,7 @@ const isSelectedEdit = (info: BackendProfileStore['socialMedias'][number]) => {
 const isSelectedAdd = computed(() => mode.value === 'add')
 
 const selectEdit = (info: BackendProfileStore['socialMedias'][number]) => {
-  console.log(socialMediasInfo.value)
+  // console.log(socialMediasInfo.value)
   if (mode.value === 'edit' && selectedUuid.value === info.uuid) {
     mode.value = 'none'
     return
