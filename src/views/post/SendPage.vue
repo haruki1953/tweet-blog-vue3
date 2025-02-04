@@ -138,9 +138,11 @@ const resetFuncForInfoEditDialog = computed(() => {
   return initFormModelForUpdate
 })
 
-onMounted(() => {
-  initFormModelForUpdate()
-})
+// 数据初始化不要放在onMounted里就不会有动画了
+// onMounted(() => {
+//   initFormModelForUpdate()
+// })
+initFormModelForUpdate()
 
 const refImageBox = ref<HTMLElement | null>(null)
 const imageBoxSize = useElementSize(refImageBox)
