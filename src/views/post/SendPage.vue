@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChatLineSquare, EditPen, Edit } from '@element-plus/icons-vue'
+import { ChatLineSquare, EditPen, Edit, Delete } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import type {
   Image,
@@ -25,11 +25,12 @@ const imagesData = ref<ImageStoreData[]>([])
 const imageStore = useImageStore()
 
 const addImage = (image: Image) => {
-  // push to imagesData, and limit length
-  imagesData.value.push(imageToImageStoreData(image))
-  if (imagesData.value.length > postConfig.postMaxImages) {
-    imagesData.value = imagesData.value.slice(-postConfig.postMaxImages)
-  }
+  // 上传图片的同时添加图片，其实不要也行
+  // // push to imagesData, and limit length
+  // imagesData.value.push(imageToImageStoreData(image))
+  // if (imagesData.value.length > postConfig.postMaxImages) {
+  //   imagesData.value = imagesData.value.slice(-postConfig.postMaxImages)
+  // }
 }
 
 const postStore = usePostStore()
@@ -144,10 +145,13 @@ const resetFuncForInfoEditDialog = computed(() => {
 // })
 initFormModelForUpdate()
 
-const refImageBox = ref<HTMLElement | null>(null)
-const imageBoxSize = useElementSize(refImageBox)
-
 const layoutStore = useLayoutStore()
+
+const boxRef = ref<HTMLElement | null>(null)
+const boxSize = useElementSize(boxRef)
+const boxStyleHeight = computed(() => {
+  return `${boxSize.height.value}px`
+})
 </script>
 <template>
   <div>
@@ -267,42 +271,52 @@ const layoutStore = useLayoutStore()
             </div>
           </div>
           <div class="image-box-container">
-            <Transition name="fade-slide">
-              <div
-                class="image-box"
-                v-if="imagesData.length > 0"
-                ref="refImageBox"
-              >
-                <div class="image-group-transition-container">
-                  <Transition name="fade-slide" mode="out-in">
-                    <ImageGroup
-                      :data="imagesData"
-                      backgroundColor="soft"
-                      aspectRatio169
-                      :key="imagesData.map((i) => i.id).toString()"
-                    ></ImageGroup>
-                  </Transition>
+            <div
+              class="style-box"
+              :style="{
+                height: boxStyleHeight
+              }"
+            >
+              <Transition name="fade-slide">
+                <div
+                  class="image-box"
+                  v-if="imagesData.length > 0"
+                  ref="boxRef"
+                >
+                  <div class="image-group-transition-container">
+                    <Transition name="fade-slide" mode="out-in">
+                      <ImageGroupUnlimited
+                        :data="imagesData"
+                        backgroundColor="soft"
+                        :key="imagesData.map((i) => i.id).toString()"
+                      ></ImageGroupUnlimited>
+                    </Transition>
+                  </div>
+                  <div class="image-edit-button">
+                    <el-button
+                      type="danger"
+                      :icon="Delete"
+                      round
+                      size="small"
+                      @click="imagesData = []"
+                    >
+                      全部取消
+                    </el-button>
+                    <el-button
+                      type="primary"
+                      :icon="Edit"
+                      round
+                      size="small"
+                      @click="refImageEditDialog?.open()"
+                    >
+                      修改图片
+                    </el-button>
+                  </div>
                 </div>
-                <div class="image-edit-button">
-                  <el-button
-                    type="primary"
-                    :icon="Edit"
-                    round
-                    size="small"
-                    @click="refImageEditDialog?.open()"
-                  >
-                    修改图片
-                  </el-button>
-                </div>
-              </div>
-            </Transition>
+              </Transition>
+            </div>
           </div>
-          <div
-            class="image-upload-select"
-            :style="{ transform: `translateY(${imageBoxSize.height.value}px)` }"
-            :class="{ 'image-box-show': imagesData.length > 0 }"
-            v-if="!layoutStore.col2IsShow2Col"
-          >
+          <div class="image-upload-select" v-if="!layoutStore.col2IsShow2Col">
             <ImageUploader :onUploaded="addImage"></ImageUploader>
             <ImageSelector
               v-model="imagesData"
@@ -317,6 +331,12 @@ const layoutStore = useLayoutStore()
 </template>
 
 <style lang="scss" scoped>
+.style-box {
+  // overflow: hidden;
+  transition: height 0.5s ease;
+  // transition: height 1s;
+}
+
 .top-bar {
   margin-bottom: 20px;
 }
@@ -392,10 +412,10 @@ const layoutStore = useLayoutStore()
 }
 
 .image-box-container {
-  position: relative;
+  // position: relative;
 }
 .image-box {
-  position: absolute;
+  // position: absolute;
   width: 100%;
   // padding-bottom: 15px;
   &::after {
@@ -410,14 +430,14 @@ const layoutStore = useLayoutStore()
     justify-content: flex-end;
   }
 }
-.image-group-transition-container {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  .image-group {
-    position: absolute;
-    width: 100%;
-  }
-}
+// .image-group-transition-container {
+//   position: relative;
+//   aspect-ratio: 16 / 9;
+//   .image-group {
+//     position: absolute;
+//     width: 100%;
+//   }
+// }
 .image-upload-select {
   transition: transform 0.3s;
   &.image-box-show {

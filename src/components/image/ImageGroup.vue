@@ -11,19 +11,26 @@ const imgIndex = defineModel<number>('index')
 
 const props = withDefaults(
   defineProps<{
+    // data 不超过4个，更多的图片通过多个ImageGroup实现
     data: Image[]
+    // dataAll 通过多个ImageGroup实现时，全部的数据
+    dataAll?: Image[]
     backgroundColor?: '' | 'soft'
     notPreview?: boolean
     mini?: boolean
     aspectRatio169?: boolean
     notAlt?: boolean
+    notRadiusTop?: boolean
+    notRadiusBottom?: boolean
   }>(),
   {
     backgroundColor: '',
     notPreview: false,
     mini: false,
     aspectRatio169: false,
-    notAlt: false
+    notAlt: false,
+    notRadiusTop: false,
+    notRadiusBottom: false
   }
 )
 
@@ -74,10 +81,20 @@ const imgSmallList = computed(() => {
 })
 
 const isIndex = (num: number) => {
-  if (num === imgIndex.value) {
-    return true
+  if (props.dataAll == null) {
+    if (num === imgIndex.value) {
+      return true
+    } else {
+      return false
+    }
   } else {
-    return false
+    // 有 dataAll 时以其为准
+    const imgIndexDataAll = imgIndexDataAllCalc(num)
+    if (imgIndexDataAll === imgIndex.value) {
+      return true
+    } else {
+      return false
+    }
   }
 }
 
@@ -89,16 +106,62 @@ const previewSrcList = computed(() => {
   }
 })
 
+// 计算当前data的索引对于dataAll的索引
+const imgIndexDataAllCalc = (num: number) => {
+  // 没有dataAll，返回null
+  if (props.dataAll == null) {
+    return null
+  }
+  if (props.data.length < num - 1) {
+    return null
+  }
+  const imgIndexDataAll = props.dataAll.findIndex(
+    (i) => i.id === props.data[num].id
+  )
+  if (imgIndexDataAll === -1) {
+    return null
+  }
+  return imgIndexDataAll
+}
+
+const initialIndexCalc = (num: number) => {
+  if (props.dataAll == null) {
+    return num
+  } else {
+    // 有 dataAll 时以其为准
+    const imgIndexDataAll = imgIndexDataAllCalc(num)
+    if (imgIndexDataAll == null) {
+      return 0
+    }
+    return imgIndexDataAll
+  }
+}
+
 const onImgClick = (num: number) => {
   if (imgIndex.value === undefined) {
     return
   }
-  imgIndex.value = num
+  if (props.dataAll == null) {
+    imgIndex.value = num
+    return
+  } else {
+    // 有 dataAll 时以其为准
+    const imgIndexDataAll = imgIndexDataAllCalc(num)
+    if (imgIndexDataAll == null) {
+      return
+    }
+    imgIndex.value = imgIndexDataAll
+  }
 }
 
 // 图片预览优化
 const imageViewerOptimization = useImageViewerOptimization({
-  images: computed(() => props.data)
+  images: computed(() => {
+    if (props.dataAll != null) {
+      return props.dataAll
+    }
+    return props.data
+  })
 })
 const onViewerShow = imageViewerOptimization.enableOnViewerShow
 const onViewerClose = imageViewerOptimization.disableOnViewerClose
@@ -113,7 +176,11 @@ const onAltClick = (num: number) => {
 <template>
   <div
     class="image-group"
-    :class="{ 'img-background-soft': backgroundColor === 'soft' }"
+    :class="{
+      'img-background-soft': backgroundColor === 'soft',
+      'not-radius-top': notRadiusTop,
+      'not-radius-bottom': notRadiusBottom
+    }"
     v-if="data.length > 0"
   >
     <el-row v-if="data.length === 1">
@@ -126,7 +193,7 @@ const onAltClick = (num: number) => {
             :src="imgSmallList[0]"
             :alt="data[0].alt"
             @click="onImgClick(0)"
-            :initial-index="0"
+            :initial-index="initialIndexCalc(0)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -159,7 +226,7 @@ const onAltClick = (num: number) => {
             :alt="data[0].alt"
             @click="onImgClick(0)"
             :class="{ 'is-index': isIndex(0) }"
-            :initial-index="0"
+            :initial-index="initialIndexCalc(0)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -184,7 +251,7 @@ const onAltClick = (num: number) => {
             :alt="data[1].alt"
             @click="onImgClick(1)"
             :class="{ 'is-index': isIndex(1) }"
-            :initial-index="1"
+            :initial-index="initialIndexCalc(1)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -212,7 +279,7 @@ const onAltClick = (num: number) => {
             :alt="data[0].alt"
             @click="onImgClick(0)"
             :class="{ 'is-index': isIndex(0) }"
-            :initial-index="0"
+            :initial-index="initialIndexCalc(0)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -237,7 +304,7 @@ const onAltClick = (num: number) => {
             :alt="data[1].alt"
             @click="onImgClick(1)"
             :class="{ 'is-index': isIndex(1) }"
-            :initial-index="1"
+            :initial-index="initialIndexCalc(1)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -260,7 +327,7 @@ const onAltClick = (num: number) => {
             :alt="data[2].alt"
             @click="onImgClick(2)"
             :class="{ 'is-index': isIndex(2) }"
-            :initial-index="2"
+            :initial-index="initialIndexCalc(2)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -288,7 +355,7 @@ const onAltClick = (num: number) => {
             :alt="data[0].alt"
             @click="onImgClick(0)"
             :class="{ 'is-index': isIndex(0) }"
-            :initial-index="0"
+            :initial-index="initialIndexCalc(0)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -311,7 +378,7 @@ const onAltClick = (num: number) => {
             :alt="data[2].alt"
             @click="onImgClick(2)"
             :class="{ 'is-index': isIndex(2) }"
-            :initial-index="2"
+            :initial-index="initialIndexCalc(2)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -336,7 +403,7 @@ const onAltClick = (num: number) => {
             :alt="data[1].alt"
             @click="onImgClick(1)"
             :class="{ 'is-index': isIndex(1) }"
-            :initial-index="1"
+            :initial-index="initialIndexCalc(1)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -359,7 +426,7 @@ const onAltClick = (num: number) => {
             :alt="data[3].alt"
             @click="onImgClick(3)"
             :class="{ 'is-index': isIndex(3) }"
-            :initial-index="3"
+            :initial-index="initialIndexCalc(3)"
             :preview-src-list="previewSrcList"
             hide-on-click-modal
             @close="onViewerClose"
@@ -380,6 +447,28 @@ const onAltClick = (num: number) => {
 </template>
 
 <style lang="scss" scoped>
+.image-group {
+  &.not-radius-top {
+    .post-img {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      &.is-index::before {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+  }
+  &.not-radius-bottom {
+    .post-img {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      &.is-index::before {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+  }
+}
 .image-box {
   position: relative;
   .alt-btn {

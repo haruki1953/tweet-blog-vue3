@@ -55,6 +55,7 @@ declare module 'vue' {
     ImageEditCard: typeof import('./src/components/image/image-edit/ImageEditCard.vue')['default']
     ImageEditDialog: typeof import('./src/components/image/image-edit/ImageEditDialog.vue')['default']
     ImageGroup: typeof import('./src/components/image/ImageGroup.vue')['default']
+    ImageGroupUnlimited: typeof import('./src/components/image/ImageGroupUnlimited.vue')['default']
     ImageSelector: typeof import('./src/components/image/ImageSelector.vue')['default']
     ImageUploader: typeof import('./src/components/image/ImageUploader.vue')['default']
     PageFooter: typeof import('./src/components/layout/PageFooter.vue')['default']

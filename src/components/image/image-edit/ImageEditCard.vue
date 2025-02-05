@@ -62,12 +62,12 @@ const isMultiple = computed(() => {
     <div v-if="selectedImages.length > 0">
       <!-- 图片预览 -->
       <div class="image-box">
-        <ImageGroup
+        <ImageGroupUnlimited
           :data="selectedImages"
           v-model:index="imgIndex"
           :notPreview="notPreview"
           notAlt
-        ></ImageGroup>
+        ></ImageGroupUnlimited>
         <div class="image-select-box" v-if="imageSelect">
           <div class="lable">
             <template v-if="isMultiple">

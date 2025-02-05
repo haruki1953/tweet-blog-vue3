@@ -65,7 +65,8 @@ export const imageConfig = {
 
 export const postConfig = {
   // 帖子最多可包含的图片数
-  postMaxImages: 4,
+  // postMaxImages: 4,
+  postMaxImages: 40,
   // 一次请求中帖子的一般数量
   postNumInOnceRequest: 20,
   // 无限滚动中的数量限制

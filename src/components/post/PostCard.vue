@@ -120,12 +120,12 @@ const { setFavorite, topFavorite, removeFavorite, isFavorite } =
       </div>
     </div>
     <div class="image-box" v-if="data.images.length > 0">
-      <ImageGroup
+      <ImageGroupUnlimited
         :data="data.images"
         :mini="mini"
         :notPreview="notPreview"
         :notAlt="notAlt"
-      ></ImageGroup>
+      ></ImageGroupUnlimited>
     </div>
     <template v-if="mini"></template>
     <template v-else-if="forward">

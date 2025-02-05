@@ -52,12 +52,11 @@ watch(
           </div>
         </div>
         <div class="image-box">
-          <ImageGroup
+          <ImageGroupUnlimited
             :data="[imageStore.altDialogImageData]"
-            mini
             notPreview
             notAlt
-          ></ImageGroup>
+          ></ImageGroupUnlimited>
         </div>
       </template>
     </el-dialog>
