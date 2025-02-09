@@ -14,8 +14,8 @@ import InfoEditDialog from './components/InfoEditDialog.vue'
 import type ImageEditDialog from '@/components/image/image-edit/ImageEditDialog.vue'
 import { useElementSize, useNow } from '@vueuse/core'
 import { computed } from 'vue'
-import { onMounted } from 'vue'
-import CharProgress from './components/CharProgress.vue'
+import CharProgressGroup from './components/CharProgressGroup.vue'
+// import CharProgress from './components/CharProgress.vue'
 import { usePostSendService } from '@/services'
 
 const formModel = ref<PostSendJsonType>({})
@@ -262,12 +262,15 @@ const boxStyleHeight = computed(() => {
               class="content-textarea"
             />
             <div class="char-progress-box">
-              <Transition name="fade-pop">
+              <!-- <Transition name="fade-pop">
                 <CharProgress
                   v-if="formModel.content"
                   v-model="formModel.content"
                 ></CharProgress>
-              </Transition>
+              </Transition> -->
+              <CharProgressGroup
+                v-model="formModel.content"
+              ></CharProgressGroup>
             </div>
           </div>
           <div class="image-box-container">

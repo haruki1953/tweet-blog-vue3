@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { postConfig } from '@/config'
+import {
+  platformKeyMap,
+  postConfig,
+  type PlatformKeyEnumValues
+} from '@/config'
 import { textToPostContentPartCalcCharNumber } from '@/utils'
 import { computed } from 'vue'
 
@@ -8,25 +12,63 @@ const model = defineModel<string>({ required: true })
 //   text: string
 // }>()
 
+const props = withDefaults(
+  defineProps<{
+    platform: PlatformKeyEnumValues
+  }>(),
+  {
+    platform: platformKeyMap.X.key
+  }
+)
+
+// 【250209】根据不同平台进行不同的计数方法
+const platformCountInfo = computed(() => {
+  // Telegram
+  if (props.platform === platformKeyMap.Telegram.key) {
+    return {
+      calcCharNumber: (str: string) => str.length,
+      maxPostCharacters: postConfig.maxPostCharactersOnSendTelegram,
+      remainingCharsToWarning: postConfig.remainingCharsToWarningTelegram
+    }
+  }
+  // X
+  return {
+    calcCharNumber: textToPostContentPartCalcCharNumber,
+    maxPostCharacters: postConfig.maxPostCharactersOnSend,
+    remainingCharsToWarning: postConfig.remainingCharsToWarning
+  }
+})
+
 const charNum = computed(() => {
   // console.log(textToPostContentPartCalcCharNumber(model.value))
-  return textToPostContentPartCalcCharNumber(model.value)
+  // return textToPostContentPartCalcCharNumber(model.value)
+  // 【250209】根据不同平台进行不同的计数方法
+  return platformCountInfo.value.calcCharNumber(model.value)
 })
 
 const percentage = computed(() => {
+  // const rawPercentage =
+  //   (charNum.value / postConfig.maxPostCharactersOnSend) * 100
+  // 【250209】根据不同平台进行不同的计数方法
   const rawPercentage =
-    (charNum.value / postConfig.maxPostCharactersOnSend) * 100
+    (charNum.value / platformCountInfo.value.maxPostCharacters) * 100
   return Math.min(100, Math.max(0, Math.round(rawPercentage)))
 })
 
 const remainingChars = computed(() => {
-  return postConfig.maxPostCharactersOnSend - charNum.value
+  // return postConfig.maxPostCharactersOnSend - charNum.value
+  // 【250209】根据不同平台进行不同的计数方法
+  return platformCountInfo.value.maxPostCharacters - charNum.value
 })
 
 const progressStatus = computed(() => {
   if (remainingChars.value <= 0) {
     return 'exception'
-  } else if (remainingChars.value <= postConfig.remainingCharsToWarning) {
+    // } else if (remainingChars.value <= postConfig.remainingCharsToWarning) {
+    // 【250209】根据不同平台进行不同的计数方法
+  } else if (
+    remainingChars.value <= platformCountInfo.value.remainingCharsToWarning
+  ) {
     return 'warning'
   } else {
     return ''
@@ -35,26 +77,33 @@ const progressStatus = computed(() => {
 </script>
 <template>
   <div class="char-progress">
-    <Transition name="fade-pop">
-      <div class="progress-circle" v-show="remainingChars >= -99">
-        <el-progress
-          type="circle"
-          :percentage="percentage"
-          :status="progressStatus"
-          :class="progressStatus"
-          :width="30"
-          :stroke-width="3"
-          :show-text="false"
-        />
-      </div>
-    </Transition>
+    <!-- <Transition name="fade-pop"> -->
+    <div class="progress-circle">
+      <!-- v-show="remainingChars >= -99 || remainingChars < -999" -->
+      <el-progress
+        type="circle"
+        :percentage="percentage"
+        :status="progressStatus"
+        :class="progressStatus"
+        :width="30"
+        :stroke-width="3"
+        :show-text="false"
+      />
+    </div>
+    <!-- </Transition> -->
     <Transition name="fade-pop">
       <div
         class="progress-lable"
         :class="progressStatus"
-        v-show="remainingChars <= postConfig.remainingCharsToWarning"
+        v-if="
+          remainingChars <= platformCountInfo.remainingCharsToWarning &&
+          remainingChars >= -99
+        "
       >
         {{ remainingChars }}
+      </div>
+      <div class="progress-lable" :class="progressStatus" v-else>
+        <el-icon :class="platformKeyMap[platform].fontawesomeClass"></el-icon>
       </div>
     </Transition>
   </div>
@@ -109,6 +158,7 @@ $progressHeight: 30px;
     font-size: 12px;
     font-weight: bold;
     color: var(--color-text-soft);
+    // color: var(--el-color-primary);
     transition: all 0.5s;
   }
   .warning {

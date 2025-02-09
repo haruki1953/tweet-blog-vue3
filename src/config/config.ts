@@ -79,9 +79,15 @@ export const postConfig = {
   // 在推特发送推文输入链接是，好像不管链接长度，所代表的字数都会是23
   linkCharacterCountRepresentationInPost: 23,
   // 发推时的最大字数（只是提示，不会约束）
+  // X 的
   maxPostCharactersOnSend: 280,
+  // Telegram 的
+  maxPostCharactersOnSendTelegram: 1024,
   // 开始警告的剩余字数
+  // X 的
   remainingCharsToWarning: 20,
+  // Telegram 的
+  remainingCharsToWarningTelegram: 20,
   // 持久化保存的帖子数据的最大数量
   postPoolSizeLimit: 100,
   // 超过限制时移除的数量
