@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import type { PostDeleteAllData } from '@/types'
 import { postDeleteAllApi } from '@/api'
-import { useImageStore } from '@/stores'
+import { useImageStore, useProfileStore } from '@/stores'
 import {
   generateRandomClassName,
   sakiMessage,
@@ -40,6 +40,7 @@ defineExpose({
 })
 
 const imageStore = useImageStore()
+const profileStore = useProfileStore()
 
 const isDeleteRelatedImage = ref(false)
 
@@ -48,7 +49,9 @@ const deletePost = async () => {
   modelIsDeleteEverlasting.value = true
   try {
     // TODO 帖子永久删除对话框，可选是否删除图片
-    const res = await postDeleteAllApi()
+    const res = await postDeleteAllApi({
+      delateImage: isDeleteRelatedImage.value ? 'true' : 'false'
+    })
     sakiMessage({
       type: 'success',
       message: '回收站已清空'
@@ -60,6 +63,7 @@ const deletePost = async () => {
     ) {
       imageStore.setNeedReget()
     }
+    profileStore.loadAll()
     emit('deleted', res.data.data)
   } finally {
     modelIsDeleteEverlasting.value = false

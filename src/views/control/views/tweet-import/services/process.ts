@@ -1,5 +1,8 @@
 import { platformKeyMap, type PlatformKeyEnumValues } from '@/config'
-import { dataProcessXtwitterService } from './data-process'
+import {
+  dataProcessTelegramService,
+  dataProcessXtwitterService
+} from './data-process'
 import type { ImportPostList } from '@/types'
 import { z } from 'zod'
 
@@ -11,6 +14,9 @@ export const processJsonToImportPostsByPlatform = (data: {
   let importPosts: ImportPostList | null = null
   if (platform === platformKeyMap.X.key) {
     importPosts = dataProcessXtwitterService(jsonData)
+  }
+  if (platform === platformKeyMap.Telegram.key) {
+    importPosts = dataProcessTelegramService(jsonData)
   }
 
   return importPosts
@@ -34,8 +40,15 @@ const devtoolsHarSchema = z.object({
 // 返回null代表解析失败
 export const processHarToJsonList = (data: { harData: string }) => {
   const { harData } = data
+  let harObj
+  try {
+    harObj = JSON.parse(harData)
+  } catch (error) {
+    return null
+  }
+
   // 尝试解析
-  const harResult = devtoolsHarSchema.safeParse(JSON.parse(harData))
+  const harResult = devtoolsHarSchema.safeParse(harObj)
   if (!harResult.success) {
     return null
   }
