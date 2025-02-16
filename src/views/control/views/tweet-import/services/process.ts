@@ -1,5 +1,6 @@
 import { platformKeyMap, type PlatformKeyEnumValues } from '@/config'
 import {
+  dataProcessDiscordService,
   dataProcessTelegramService,
   dataProcessXtwitterService
 } from './data-process'
@@ -7,16 +8,20 @@ import type { ImportPostList } from '@/types'
 import { z } from 'zod'
 
 export const processJsonToImportPostsByPlatform = (data: {
-  jsonData: string
   platform: PlatformKeyEnumValues
+  jsonData: string
+  jsonOption: string
 }) => {
-  const { jsonData, platform } = data
+  const { jsonData, platform, jsonOption } = data
   let importPosts: ImportPostList | null = null
   if (platform === platformKeyMap.X.key) {
     importPosts = dataProcessXtwitterService(jsonData)
   }
   if (platform === platformKeyMap.Telegram.key) {
     importPosts = dataProcessTelegramService(jsonData)
+  }
+  if (platform === platformKeyMap.Discord.key) {
+    importPosts = dataProcessDiscordService(jsonData, jsonOption)
   }
 
   return importPosts

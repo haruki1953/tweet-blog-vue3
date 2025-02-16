@@ -216,4 +216,16 @@
       font-weight: bold;
     }
   }
+
+  .el-textarea.consolas {
+    .el-textarea__inner {
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+  }
+
+  .el-textarea.bold {
+    .el-textarea__inner {
+      font-weight: bold;
+    }
+  }
 }

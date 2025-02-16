@@ -20,9 +20,11 @@ const model = defineModel<ImportPostList>({
 const platform = ref<PlatformKeyEnumValues>(platformKeyMap.X.key)
 
 const jsonData = ref('')
+const jsonOption = ref('')
 
 const jsonCancel = () => {
   jsonData.value = ''
+  // jsonOption.value = ''
 }
 
 const isJsonProcessing = ref(false)
@@ -44,8 +46,9 @@ const jsonProcess = async () => {
     for (const jsonItem of jsonList) {
       try {
         const importPosts = processJsonToImportPostsByPlatform({
+          platform: platform.value,
           jsonData: jsonItem,
-          platform: platform.value
+          jsonOption: jsonOption.value
         })
         if (importPosts == null) {
           continue
@@ -129,7 +132,18 @@ const importPostsAdd = (importPosts: ImportPostList) => {
               type="textarea"
               :rows="10"
               resize="none"
-              class="control-textarea"
+              class="control-textarea consolas"
+            ></el-input>
+          </div>
+          <div class="form-row">
+            <div class="input-lable">json选项</div>
+            <el-input
+              v-model="jsonOption"
+              placeholder="选填，某些平台的导入会用到"
+              type="textarea"
+              :autosize="{ minRows: 1, maxRows: 10 }"
+              resize="none"
+              class="control-textarea consolas"
             ></el-input>
           </div>
         </div>

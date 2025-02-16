@@ -11,6 +11,15 @@ const model = defineModel<string>()
         <CharProgress
           v-if="model"
           v-model="model"
+          :platform="platformKeyMap.Discord.key"
+        ></CharProgress>
+      </Transition>
+    </div>
+    <div class="progress-box">
+      <Transition name="fade-pop">
+        <CharProgress
+          v-if="model"
+          v-model="model"
           :platform="platformKeyMap.Telegram.key"
         ></CharProgress>
       </Transition>

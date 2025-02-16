@@ -14,10 +14,10 @@ import { z } from 'zod'
 // 转发配置中，各平台所对应的 data 数据结构
 // X / Twitter
 const forwardSettingDataSchemaX = z.object({
-  'API Key': z.string(),
-  'API Key Secret': z.string(),
-  'Access Token': z.string(),
-  'Access Token Secret': z.string()
+  'API Key': z.string().default(''),
+  'API Key Secret': z.string().default(''),
+  'Access Token': z.string().default(''),
+  'Access Token Secret': z.string().default('')
 })
 // data 数据例，前端要用
 const forwardSettingDataDefaultX: z.infer<typeof forwardSettingDataSchemaX> = {
@@ -28,8 +28,8 @@ const forwardSettingDataDefaultX: z.infer<typeof forwardSettingDataSchemaX> = {
 }
 // 添加 Telegram 所需的认证信息
 const forwardSettingDataSchemaTelegram = z.object({
-  'Bot Token': z.string(),
-  'Chat Id': z.string()
+  'Bot Token': z.string().default(''),
+  'Chat Id': z.string().default('')
 })
 const forwardSettingDataDefaultTelegram: z.infer<
   typeof forwardSettingDataSchemaTelegram
@@ -37,10 +37,24 @@ const forwardSettingDataDefaultTelegram: z.infer<
   'Bot Token': '',
   'Chat Id': ''
 }
+// Discord
+const forwardSettingDataSchemaDiscord = z.object({
+  Authorization: z.string().default(''),
+  'Guild Id': z.string().default(''),
+  'Channel Id': z.string().default('')
+})
+const forwardSettingDataDefaultDiscord: z.infer<
+  typeof forwardSettingDataSchemaDiscord
+> = {
+  Authorization: '',
+  'Guild Id': '',
+  'Channel Id': ''
+}
 // 全部平台的 forwardSettingDataDefault
 export const forwardSettingDataDefaultAll = {
   ...forwardSettingDataDefaultX,
-  ...forwardSettingDataDefaultTelegram
+  ...forwardSettingDataDefaultTelegram,
+  ...forwardSettingDataDefaultDiscord
 }
 
 // 关于导入与导出所需的平台数据
@@ -65,10 +79,19 @@ export const platformKeyMap = {
     couldForward: true,
     forwardSettingDataSchema: forwardSettingDataSchemaTelegram,
     forwardSettingDataDefault: forwardSettingDataDefaultTelegram
+  },
+  Discord: {
+    key: 'Discord',
+    name: 'Discord',
+    fontawesomeClass: 'fa-brands fa-discord',
+    couldImport: true,
+    couldForward: true,
+    forwardSettingDataSchema: forwardSettingDataSchemaDiscord,
+    forwardSettingDataDefault: forwardSettingDataDefaultDiscord
   }
 } as const
 // 这个手动写出来的原因是，zod枚举需要字面量类型数组
-export const platformKeyEnum = ['X', 'Telegram'] as const
+export const platformKeyEnum = ['X', 'Telegram', 'Discord'] as const
 
 // 类型检查以确保 platformKeyEnum 与 platformKeyMap 的值是同步的
 export type PlatformKeyMapValues =

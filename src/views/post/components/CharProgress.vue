@@ -23,6 +23,14 @@ const props = withDefaults(
 
 // 【250209】根据不同平台进行不同的计数方法
 const platformCountInfo = computed(() => {
+  // Discord
+  if (props.platform === platformKeyMap.Discord.key) {
+    return {
+      calcCharNumber: (str: string) => str.length,
+      maxPostCharacters: postConfig.maxPostCharactersOnSendDiscord,
+      remainingCharsToWarning: postConfig.remainingCharsToWarningDiscord
+    }
+  }
   // Telegram
   if (props.platform === platformKeyMap.Telegram.key) {
     return {

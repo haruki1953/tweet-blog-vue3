@@ -1,14 +1,14 @@
-// // 开发时使用的
-// const apiBaseUrl = 'http://localhost:3000/api/'
-// const staticBaseUrl = 'http://localhost:3000/'
+// 开发时使用的
+const apiBaseUrl = 'http://localhost:3000/api/'
+const staticBaseUrl = 'http://localhost:3000/'
 
 // // 这是为了在手机上测试，需要的话要改为自己电脑的ip
 // const apiBaseUrl = 'http://192.168.2.110:3000/api/'
 // const staticBaseUrl = 'http://192.168.2.110:3000/'
 
-// 部署时，将由后端来托管前端，设置为根路径
-const apiBaseUrl = '/api/'
-const staticBaseUrl = '/'
+// // 部署时，将由后端来托管前端，设置为根路径
+// const apiBaseUrl = '/api/'
+// const staticBaseUrl = '/'
 
 export const axiosConfig = {
   baseUrl: apiBaseUrl,
@@ -83,11 +83,15 @@ export const postConfig = {
   maxPostCharactersOnSend: 280,
   // Telegram 的
   maxPostCharactersOnSendTelegram: 1024,
+  // Discord 的
+  maxPostCharactersOnSendDiscord: 2000,
   // 开始警告的剩余字数
   // X 的
   remainingCharsToWarning: 20,
   // Telegram 的
   remainingCharsToWarningTelegram: 20,
+  // Discord 的
+  remainingCharsToWarningDiscord: 20,
   // 持久化保存的帖子数据的最大数量
   postPoolSizeLimit: 100,
   // 超过限制时移除的数量
