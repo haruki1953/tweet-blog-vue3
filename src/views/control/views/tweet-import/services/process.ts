@@ -1,5 +1,6 @@
 import { platformKeyMap, type PlatformKeyEnumValues } from '@/config'
 import {
+  dataProcessBlueskyService,
   dataProcessDiscordService,
   dataProcessTelegramService,
   dataProcessXtwitterService
@@ -22,6 +23,9 @@ export const processJsonToImportPostsByPlatform = (data: {
   }
   if (platform === platformKeyMap.Discord.key) {
     importPosts = dataProcessDiscordService(jsonData, jsonOption)
+  }
+  if (platform === platformKeyMap.Bluesky.key) {
+    importPosts = dataProcessBlueskyService(jsonData, jsonOption)
   }
 
   return importPosts

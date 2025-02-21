@@ -56,7 +56,9 @@ export const textCalcCharNumber = (str: string): number => {
 
   for (const char of str) {
     // 判断是否为宽字符（包括中文、日文、韩文以及其他全角字符）
-    if (/[\u3000-\u303F\uFF00-\uFFEF\u4E00-\u9FFF\uAC00-\uD7AF]/.test(char)) {
+    // if (/[\u3000-\u303F\uFF00-\uFFEF\u4E00-\u9FFF\uAC00-\uD7AF]/.test(char)) {
+    // 【250221】推特字数计算更正，ByteLengt大于2的算作2字符，其余是1字符
+    if (getStringByteLength(char) > 2) {
       length += 2 // 宽字符长度计为2
     } else {
       length += 1 // 其他字符长度计为1
@@ -82,4 +84,11 @@ export const textCalcPostContentCharNumber = (
 
 export const textToPostContentPartCalcCharNumber = (text: string) => {
   return textCalcPostContentCharNumber(textToPostContentPart(text))
+}
+
+// 获取字符串字节数
+const getStringByteLength = (str: string): number => {
+  const encoder = new TextEncoder()
+  const encodedStr = encoder.encode(str) // 将字符串编码为 Uint8Array
+  return encodedStr.length // 返回字节数
 }

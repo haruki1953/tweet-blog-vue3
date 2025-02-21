@@ -60,3 +60,12 @@ export const formatFileSize = (bytes: number) => {
   const size = bytes / Math.pow(k, i)
   return (i < 2 ? size.toFixed(0) : size.toFixed(1)) + sizes[i]
 }
+
+// 拼接 url
+export const urlJoinUtil = (...segments: string[]): string => {
+  // 合并路径并确保正确的斜杠
+  return segments
+    .map((segment) => segment.replace(/(^\/+|\/+$)/g, '')) // 去除前后多余的斜杠
+    .filter(Boolean) // 删除空值
+    .join('/') // 用单个斜杠连接
+}

@@ -1,35 +1,21 @@
 <script setup lang="ts">
-import { platformKeyMap } from '@/config'
+import { platformKeyEnum } from '@/config'
 import CharProgress from './CharProgress.vue'
 
 const model = defineModel<string>()
 </script>
 <template>
   <div class="char-progress-group">
-    <div class="progress-box">
+    <div
+      class="progress-box"
+      v-for="item in platformKeyEnum.slice().reverse()"
+      :key="item"
+    >
       <Transition name="fade-pop">
         <CharProgress
           v-if="model"
           v-model="model"
-          :platform="platformKeyMap.Discord.key"
-        ></CharProgress>
-      </Transition>
-    </div>
-    <div class="progress-box">
-      <Transition name="fade-pop">
-        <CharProgress
-          v-if="model"
-          v-model="model"
-          :platform="platformKeyMap.Telegram.key"
-        ></CharProgress>
-      </Transition>
-    </div>
-    <div class="progress-box">
-      <Transition name="fade-pop">
-        <CharProgress
-          v-if="model"
-          v-model="model"
-          :platform="platformKeyMap.X.key"
+          :platform="item"
         ></CharProgress>
       </Transition>
     </div>

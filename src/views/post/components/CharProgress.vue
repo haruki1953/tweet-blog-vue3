@@ -4,7 +4,11 @@ import {
   postConfig,
   type PlatformKeyEnumValues
 } from '@/config'
-import { textToPostContentPartCalcCharNumber } from '@/utils'
+import type { PostContentPart } from '@/types'
+import {
+  textToPostContentPart,
+  textToPostContentPartCalcCharNumber
+} from '@/utils'
 import { computed } from 'vue'
 
 const model = defineModel<string>({ required: true })
@@ -23,6 +27,19 @@ const props = withDefaults(
 
 // 【250209】根据不同平台进行不同的计数方法
 const platformCountInfo = computed(() => {
+  // Bluesky
+  if (props.platform === platformKeyMap.Bluesky.key) {
+    return {
+      calcCharNumber: (str: string) => {
+        const contentPart = textToPostContentPart(str)
+        const contentForShow =
+          textByPostContentPartAndLinkByContent(contentPart)
+        return contentForShow.length
+      },
+      maxPostCharacters: postConfig.maxPostCharactersOnSendBluesky,
+      remainingCharsToWarning: postConfig.remainingCharsToWarningBluesky
+    }
+  }
   // Discord
   if (props.platform === platformKeyMap.Discord.key) {
     return {
@@ -82,6 +99,23 @@ const progressStatus = computed(() => {
     return ''
   }
 })
+
+// 【bluesky】将PostContentPart[]拼接为字符串，这个将在解析链接后使用
+const textByPostContentPartAndLinkByContent = (
+  postContent: PostContentPart[]
+): string => {
+  let text = ''
+  for (const p of postContent) {
+    if (p.type === 'link') {
+      // text += p.href
+      // 【bluesky】应拼接链接显示的内容，因为之后会附加指定连接
+      text += p.content
+    } else {
+      text += p.content
+    }
+  }
+  return text
+}
 </script>
 <template>
   <div class="char-progress">
